@@ -39,7 +39,6 @@ public class UserControllerTest {
         testUser.setUsername("testUsername");
         testUser.setPassword("test");
         testUser.setBirthday("16.03.1994");
-        testUser.setDate("17-02-2019");
         userController.createUser(testUser);
         Assert.assertEquals(testUser.getStatus(), UserStatus.OFFLINE);
         testUser = userController.checkUser(testUser);
@@ -52,7 +51,6 @@ public class UserControllerTest {
         testUser.setUsername("testUsername");
         testUser.setPassword("test");
         testUser.setBirthday("16.03.1994");
-        testUser.setDate("17-02-2019");
         userController.createUser(testUser);
         Assert.assertEquals(testUser.getStatus(), UserStatus.OFFLINE);
         testUser = userController.checkUser(testUser);
@@ -69,8 +67,6 @@ public class UserControllerTest {
         testUser.setPassword("test");
         testUser.setUsername("testUsername");
         testUser.setBirthday("16.03.1994");
-        testUser.setDate("17-02-2019");
-
         userController.createUser(testUser);
         String id = String.valueOf(userRepository.findByUsername("testUsername").getId());
         Assert.assertEquals(userController.getUser(id), testUser);

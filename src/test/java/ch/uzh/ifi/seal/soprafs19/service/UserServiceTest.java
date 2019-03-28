@@ -40,7 +40,6 @@ public class UserServiceTest {
         testUser.setUsername("testUsername");
         testUser.setPassword("test");
         testUser.setBirthday("16.03.1994");
-        testUser.setDate("17-02-2019");
 
         User createdUser = userService.createUser(testUser);
 
@@ -65,14 +64,12 @@ public class UserServiceTest {
         testUser.setUsername("testUsername");
         testUser.setPassword("test");
         testUser.setBirthday("16.03.1994");
-        testUser.setDate("17-02-2019");
         User createdUser = userService.createUser(testUser);
 
         User testUser2 = new User();
         testUser2.setUsername("testUsername");
         testUser2.setPassword("test2");
         testUser2.setBirthday("16.03.1995");
-        testUser2.setDate("17-02-2019");
         User createdUser2 = userService.createUser(testUser2);
     }
 
