@@ -32,7 +32,7 @@ public class User implements Serializable {
 	private UserStatus status;
 
 	@Column(nullable = false)
-	private String date;
+	private String creationDate;
 
 	@Column(nullable = false)
 	private String birthday;
@@ -53,13 +53,6 @@ public class User implements Serializable {
 		this.password = password;
 	}
 
-	public void setDate(String date) {
-		this.date = date;
-	}
-
-	public String getDate() {
-		return date;
-	}
 
 	public String getUsername() {
 		return username;
@@ -76,6 +69,15 @@ public class User implements Serializable {
 	public void setToken(String token) {
 		this.token = token;
 	}
+
+	public String getCreationDate() {
+		return creationDate;
+	}
+
+	public void setCreationDate(String creationDate) {
+		this.creationDate = creationDate;
+	}
+
 
 	public UserStatus getStatus() {
 		return status;
