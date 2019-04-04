@@ -1,76 +1,64 @@
-package ch.uzh.ifi.seal.soprafs19.controller;
+package ch.uzh.ifi.seal.soprafs19.service;
 
 import ch.uzh.ifi.seal.soprafs19.Application;
-import ch.uzh.ifi.seal.soprafs19.constant.UserStatus;
+import ch.uzh.ifi.seal.soprafs19.controller.UserController;
 import ch.uzh.ifi.seal.soprafs19.entity.User;
 import ch.uzh.ifi.seal.soprafs19.repository.UserRepository;
-import ch.uzh.ifi.seal.soprafs19.service.UserService;
-import org.junit.Assert;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.ResultActions;
+
+import javax.transaction.Transactional;
+
+import static org.hamcrest.core.IsNull.notNullValue;
+import static org.hamcrest.core.IsEqual.equalTo;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * Test class for the UserResource REST resource.
  *
  * @see UserService
  */
-@WebAppConfiguration
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes= Application.class)
+@AutoConfigureMockMvc
+@Transactional
 public class UserControllerTest {
 
-
-    @Qualifier("userRepository")
     @Autowired
-    private UserRepository userRepository;
+    private MockMvc mvc;
 
-    @Autowired
-    private UserController userController;
 
     @Test
-    public void checkUser() {
-        userRepository.deleteAll();
-        User testUser = new User();
-        testUser.setUsername("testUsername");
-        testUser.setPassword("test");
-        testUser.setBirthday("16.03.1994");
-        userController.createUser(testUser);
-        Assert.assertEquals(testUser.getStatus(), UserStatus.OFFLINE);
-        testUser = userController.checkUser(testUser);
-        Assert.assertEquals(testUser.getStatus(), UserStatus.ONLINE);
-    }
+    @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+    public void createUser() throws Exception {
 
-    @Test
-    public void logoutUser() {
-        User testUser = new User();
-        testUser.setUsername("testUsername");
-        testUser.setPassword("test");
-        testUser.setBirthday("16.03.1994");
-        userController.createUser(testUser);
-        Assert.assertEquals(testUser.getStatus(), UserStatus.OFFLINE);
-        testUser = userController.checkUser(testUser);
-        Assert.assertEquals(testUser.getStatus(), UserStatus.ONLINE);
-        testUser = userController.logoutUser(testUser);
-        Assert.assertEquals(testUser.getStatus(), UserStatus.OFFLINE);
-        userRepository.deleteAll();
-    }
+        this.mvc.perform(post("/users")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"username\": \"testUser\", \"password\": \"testPassword\"}"))
+                .andExpect(status().is(201)).andDo(print())
+                //.andExpect(jsonPath("$._links", notNullValue()))
+                .andExpect(jsonPath("$.username", equalTo("testUser")));
 
-    @Test
-    public void getUser() {
-        userRepository.deleteAll();
-        User testUser = new User();
-        testUser.setPassword("test");
-        testUser.setUsername("testUsername");
-        testUser.setBirthday("16.03.1994");
-        userController.createUser(testUser);
-        String id = String.valueOf(userRepository.findByUsername("testUsername").getId());
-        Assert.assertEquals(userController.getUser(id), testUser);
-        userRepository.deleteAll();
+        this.mvc.perform(post("/users")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"username\": \"testUser\", \"password\": \"testPassword\"}"))
+                .andExpect(status().is(409));
     }
-
 }

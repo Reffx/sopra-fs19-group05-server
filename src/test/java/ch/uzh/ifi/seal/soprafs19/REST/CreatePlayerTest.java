@@ -72,11 +72,11 @@ public class CreatePlayerTest {
 
         mvc.perform(post("/players")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"userId\":" + testUser.getId()))
+                .content("{\"userId\":" + testUser.getId()+"}"))
                 .andDo(print())
                 .andExpect(jsonPath("$.url").exists())
                 .andExpect(jsonPath("$.playerId").exists())
-                .andExpect(status().is(400));;
+                .andExpect(status().is(201));
 
         Assert.assertNotNull(playerRepository.findByUserId(testUser.getId()));
 

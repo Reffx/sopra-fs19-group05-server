@@ -28,6 +28,8 @@ public class PlayerController {
     */
 
     @PostMapping("/players")
+    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseBody
     Player createPlayer(@RequestBody Player newPlayer) {
         return this.service.createPlayer(newPlayer);
     }

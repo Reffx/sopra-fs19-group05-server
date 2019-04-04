@@ -45,7 +45,7 @@ public class UserService {
         newUser.setToken(UUID.randomUUID().toString());
         newUser.setStatus(UserStatus.OFFLINE);
         newUser.setCreationDate((LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))));
-        newUser.setBirthday(newUser.getBirthday());
+        //newUser.setBirthday(newUser.getBirthday());
         userRepository.save(newUser);
         log.debug("Created Information for User: {}", newUser);
         return newUser;
