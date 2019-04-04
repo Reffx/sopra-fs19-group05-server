@@ -38,6 +38,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
+    @ResponseStatus(HttpStatus.ACCEPTED)
     User checkUser(@RequestBody User newUser) {
         return this.service.checkUser(newUser);
     }

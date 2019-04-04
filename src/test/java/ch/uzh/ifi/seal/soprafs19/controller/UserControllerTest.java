@@ -1,4 +1,4 @@
-package ch.uzh.ifi.seal.soprafs19.service;
+package ch.uzh.ifi.seal.soprafs19.controller;
 
 import ch.uzh.ifi.seal.soprafs19.Application;
 import ch.uzh.ifi.seal.soprafs19.controller.UserController;
@@ -6,6 +6,7 @@ import ch.uzh.ifi.seal.soprafs19.entity.User;
 import ch.uzh.ifi.seal.soprafs19.repository.UserRepository;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,11 +31,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-/**
- * Test class for the UserResource REST resource.
- *
- * @see UserService
- */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes= Application.class)
 @AutoConfigureMockMvc
@@ -46,19 +42,74 @@ public class UserControllerTest {
 
 
     @Test
-    @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
     public void createUser() throws Exception {
 
         this.mvc.perform(post("/users")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"username\": \"testUser\", \"password\": \"testPassword\"}"))
                 .andExpect(status().is(201)).andDo(print())
-                //.andExpect(jsonPath("$._links", notNullValue()))
                 .andExpect(jsonPath("$.username", equalTo("testUser")));
-
         this.mvc.perform(post("/users")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"username\": \"testUser\", \"password\": \"testPassword\"}"))
                 .andExpect(status().is(409));
+    }
+    //checks for not registered user that tries to log in
+    @Test
+    public void UserNotFound() throws Exception {
+
+        this.mvc.perform(post("/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"username\": \"testUser3\", \"password\": \"secret\"}"))
+                .andExpect(status().is(404)).andDo(print());
+    }
+    // creates user and then uses get method to ask for user
+    @Test
+    public void getUser() throws Exception {
+
+        this.mvc.perform(post("/users")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"username\": \"testUser\", \"password\": \"testPassword\"}"));
+
+        this.mvc.perform(get("/users/1"))
+                .andExpect(status().is(200))
+                .andExpect(jsonPath("$.username", equalTo("testUser")));
+    }
+    //checks if the the online status is set correctly after registration resp. login
+    @Test
+    public void changeOnlineStatus() throws Exception {
+
+        this.mvc.perform(post("/users")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"username\": \"testUser\", \"password\": \"testPassword\"}"))
+                .andExpect(status().is(201)).andDo(print())
+                .andExpect(jsonPath("$.username", equalTo("testUser")))
+                .andExpect(jsonPath("$.status", equalTo("OFFLINE")));
+
+        this.mvc.perform(post("/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content("{\"username\": \"testUser\", \"password\": \"testPassword\"}"))
+                .andExpect(status().is(202))
+                .andExpect(jsonPath("$.token", notNullValue()))
+                .andExpect(jsonPath("$.status", equalTo("ONLINE")));
+    }
+
+    @Test
+//Checks if a User with the same username can be created
+    public void UserAlreadyExistsCheck() throws Exception {
+
+        User testUser = new User();
+        testUser.setUsername("testUser");
+        testUser.setPassword("testPassword");
+
+
+
+        String creation = "{\"username\" : \"testUser\",\"password\" : \"testPassword\"}";
+
+        this.mvc.perform(post("/users")
+                .content(creation)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().is(201));
+
     }
 }
