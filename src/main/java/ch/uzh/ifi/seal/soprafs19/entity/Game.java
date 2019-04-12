@@ -31,7 +31,7 @@ public class Game implements Serializable {
     //  TO DO: add gameBoard attribute
 
     public void setPlayers(Player player) {
-        this.players.add(player);
+        this.players.add(player);           //  to limit the size to be no more than 2?
     }
     public List<Player> getPlayers() {
         return players;
@@ -58,15 +58,14 @@ public class Game implements Serializable {
         return isPlaying;
     }
 
-
     @Override
     public boolean equals(Object o) {
         if (o == this) return true;
         if (!(o instanceof Game)) {
             return false;
         }
-        Game Game = (Game) o;
-        return this.getId().equals(Game.getId());
+        Game game = (Game) o;
+        return this.getId().equals(game.getId());
     }
 
 }
