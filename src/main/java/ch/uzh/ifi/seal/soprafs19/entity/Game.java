@@ -1,6 +1,9 @@
 package ch.uzh.ifi.seal.soprafs19.entity;
 
+import ch.uzh.ifi.seal.soprafs19.constant.GameMode;
+
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.*;
 
 @Entity
@@ -13,36 +16,35 @@ public class Game implements Serializable {
     private Long id;
 
     @Column(nullable = false, unique = true)
-    private Long gameId;
-
-    @Column(nullable = false, unique = true)
-    private Long playerId;
+    private List<Player> players;
 
     @Column(nullable = false)
+    private GameMode gameMode;
 
-    public Long getId() {
-        return id;
+    @Column(nullable = true)
+    private String creationTime;
+
+    public void setPlayers(List<Player> players) {
+        this.players = players;
+    }
+    public List<Player> getPlayers() {
+        return players;
     }
 
     public void setId(Long id) {
         this.id = id;
     }
-
-    public Long getPlayerId() {
-        return playerId;
+    public Long getId() {
+        return id;
     }
 
-    public void setPlayerId(Long userId) {
-        this.playerId = playerId;
+    public void setCreationTime(String creationTime) {
+        this.creationTime = creationTime;
+    }
+    public String getCreationTime() {
+        return creationTime;
     }
 
-    public Long getGameId() {
-        return gameId;
-    }
-
-    public void setGameId(Long gameId) {
-        this.gameId = gameId;
-    }
 
     @Override
     public boolean equals(Object o) {
