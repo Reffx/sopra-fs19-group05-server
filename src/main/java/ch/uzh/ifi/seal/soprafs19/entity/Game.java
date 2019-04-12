@@ -3,6 +3,7 @@ package ch.uzh.ifi.seal.soprafs19.entity;
 import ch.uzh.ifi.seal.soprafs19.constant.GameMode;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
 
@@ -16,16 +17,21 @@ public class Game implements Serializable {
     private Long id;
 
     @Column(nullable = false, unique = true)
-    private List<Player> players;
+    private List<Player> players = new ArrayList<>(); // set default as empty list
 
     @Column(nullable = false)
-    private GameMode gameMode;
+    private GameMode gameMode = GameMode.GOD;   // set default value as GOD
 
     @Column(nullable = true)
     private String creationTime;
 
-    public void setPlayers(List<Player> players) {
-        this.players = players;
+    @Column(nullable = false)
+    private boolean isPlaying = false; // set default value as false
+
+    //  TO DO: add gameBoard attribute
+
+    public void setPlayers(Player player) {
+        this.players.add(player);
     }
     public List<Player> getPlayers() {
         return players;
@@ -43,6 +49,13 @@ public class Game implements Serializable {
     }
     public String getCreationTime() {
         return creationTime;
+    }
+
+    public void setIs_playing(boolean is_playing) {
+        this.isPlaying = is_playing;
+    }
+    public boolean getIs_playing() {
+        return isPlaying;
     }
 
 
