@@ -19,8 +19,11 @@ public class Game implements Serializable {
 //    @Column(nullable = false, unique = true)
 //    private List<Long> players = new ArrayList<>(); // set default as empty list
 
+//    @Column(nullable = false)
+//    private Long creator;       // userId, so can build the body to Game object, set userId and playerId the same
+
     @Column(nullable = false)
-    private Long player1;
+    private Long player1;       // playerId = userId
 
     @Column(nullable = true)
     private Long player2;
