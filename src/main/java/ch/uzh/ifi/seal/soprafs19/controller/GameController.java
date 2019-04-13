@@ -1,6 +1,7 @@
 package ch.uzh.ifi.seal.soprafs19.controller;
 
 import ch.uzh.ifi.seal.soprafs19.entity.Game;
+import ch.uzh.ifi.seal.soprafs19.entity.User;
 import ch.uzh.ifi.seal.soprafs19.service.GameService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,10 +26,14 @@ public class GameController {
         //  TO DO: display individual lobby
     }
 
-    @PutMapping("/games/{id}/players/player2")
-    ResponseEntity<String> addPlayer(@RequestBody Long player2) {
-        //  TO DO: add player2 to the game
+    @GetMapping("/games/{id}/players")   // or to fetch only player1 ?
+    ResponseEntity<HashMap<Integer, User>> getPlayers(@PathVariable Long id) {
+        //  TO DO: display individual lobby
     }
 
+    @PutMapping("/games/{id}/players/player2")
+    ResponseEntity<Void> addPlayer(@RequestBody Long player2) {
+        //  TO DO: add player2 to the game
+    }
 
 }
