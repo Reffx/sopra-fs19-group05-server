@@ -16,13 +16,19 @@ public class Game implements Serializable {
     @GeneratedValue
     private Long id;
 
-    @Column(nullable = false, unique = true)
-    private List<Player> players = new ArrayList<>(); // set default as empty list
+//    @Column(nullable = false, unique = true)
+//    private List<Long> players = new ArrayList<>(); // set default as empty list
 
     @Column(nullable = false)
-    private GameMode gameMode = GameMode.GOD;   // set default value as GOD
+    private Long player1;
 
     @Column(nullable = true)
+    private Long player2;
+
+    @Column(nullable = false)
+    private GameMode gameMode;
+
+    @Column
     private String creationTime;
 
     @Column(nullable = false)
@@ -30,10 +36,23 @@ public class Game implements Serializable {
 
     //  TO DO: add gameBoard attribute
 
-    public void setPlayers(Player player) {
-        this.players.add(player);           //  to limit the size to be no more than 2?
+    public void setPlayer1(Long player1Id) {
+        this.player1 = player1Id;
     }
-    public List<Player> getPlayers() {
+    public Long getPlayer1() {
+        return this.player1;
+    }
+
+    public void setPlayer2(Long player1Id) {
+        this.player2 = player1Id;
+    }
+    public Long getPlayer2() {
+        return this.player2;
+    }
+    public Long[] getPlayers() {
+        Long[] players = new Long[2];
+        players[0] = player1;
+        players[1] = player2;
         return players;
     }
 
@@ -51,12 +70,15 @@ public class Game implements Serializable {
         return creationTime;
     }
 
-    public void setIs_playing(boolean is_playing) {
-        this.isPlaying = is_playing;
+    public void setIsPlaying(boolean isPlaying) {
+        this.isPlaying = isPlaying;
     }
-    public boolean getIs_playing() {
+    public boolean getIsPlaying() {
         return isPlaying;
     }
+
+    public void setGameMode(GameMode gameMode) {this.gameMode = gameMode;}
+    public GameMode getGameMode() {return this.gameMode;}
 
     @Override
     public boolean equals(Object o) {
