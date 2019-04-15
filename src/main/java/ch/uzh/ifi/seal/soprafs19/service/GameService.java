@@ -16,10 +16,14 @@ public class GameService {
     private final GameRepository gameRepository;
 
     @Autowired
-    public GameService(GameRepository gameRepository) { this.gameRepository = gameRepository; }
+    public GameService(GameRepository gameRepository) {
+        this.gameRepository = gameRepository;
+    }
 
     //  find all the games
-    public Iterable<Game> getGames() { return this.gameRepository.findAll();}
+    public Iterable<Game> getGames() {
+        return this.gameRepository.findAll();
+    }
 
     //  create a game
     public ResponseEntity<Game> createGame(Game game) {
