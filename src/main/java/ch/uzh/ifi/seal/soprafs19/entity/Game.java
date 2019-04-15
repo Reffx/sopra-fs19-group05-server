@@ -1,5 +1,7 @@
 package ch.uzh.ifi.seal.soprafs19.entity;
 
+import ch.uzh.ifi.seal.soprafs19.constant.GameStatus;
+
 import java.io.Serializable;
 import javax.persistence.*;
 
@@ -10,30 +12,50 @@ public class Game implements Serializable {
 
     @Id
     @GeneratedValue
-    private Long id;
-
-    @Column(nullable = false, unique = true)
     private Long gameId;
 
+    // add attribute for player amount in lobby //
+    @Column(nullable = false)
+    private Integer lobbySize;
+
     @Column(nullable = false, unique = true)
-    private Long playerId;
+    private String gameName;
+
+    // Add variable game status, either isplaying or iswaiting //
+    @Column(nullable = false)
+    private GameStatus gameStatus;
 
     @Column(nullable = false)
+    private String gameMode;
 
-    public Long getId() {
-        return id;
+    // add methods to get/set gameStatus //
+    public GameStatus  getGameStatus(){
+        return gameStatus;
+    }
+    public void setGameStatus(GameStatus gameStatus) {
+        this.gameStatus = gameStatus;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    // add methods to get/set lobbysize //
+    public Integer getLobbySize(){
+        return lobbySize;
+    }
+    public void setLobbySize(Integer lobbySize){
+        this.lobbySize = lobbySize;
     }
 
-    public Long getPlayerId() {
-        return playerId;
+    // add methods to get/set gameMode //
+    public String getGameMode(){
+        return gameMode;
     }
-
-    public void setPlayerId(Long userId) {
-        this.playerId = playerId;
+    public void setGameMode(String gameMode){
+        this.gameMode = gameMode;
+    }
+    public String getGameName(){
+        return gameName;
+    }
+    public void setGameName(String gameName){
+        this.gameName = gameName;
     }
 
     public Long getGameId() {
@@ -51,7 +73,7 @@ public class Game implements Serializable {
             return false;
         }
         Game Game = (Game) o;
-        return this.getId().equals(Game.getId());
+        return this.getGameId().equals(Game.getGameId());
     }
 
 }

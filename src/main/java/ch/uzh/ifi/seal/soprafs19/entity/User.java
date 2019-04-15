@@ -34,7 +34,11 @@ public class User implements Serializable {
 	@Column(nullable = false)
 	private String creationDate;
 
+	@Column(nullable = false)
 	private String birthday;
+
+	@Column(nullable = false, unique = true)
+	private Long gameId;
 
 	public Long getId() {
 		return id;
@@ -50,6 +54,10 @@ public class User implements Serializable {
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public Long getGameId() {
+		return gameId;
 	}
 
 
