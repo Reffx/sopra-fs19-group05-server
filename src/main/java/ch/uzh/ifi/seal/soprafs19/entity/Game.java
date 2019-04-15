@@ -53,5 +53,4 @@ public class Game implements Serializable {
         Game Game = (Game) o;
         return this.getId().equals(Game.getId());
     }
-
 }
