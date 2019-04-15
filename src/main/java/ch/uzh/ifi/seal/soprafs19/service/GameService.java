@@ -25,6 +25,11 @@ public class GameService {
         return this.gameRepository.findAll();
     }
 
+    //  find all the NORMAL/GOD mode game
+    public ResponseEntity<Iterable<Game>> getModeGames(GameMode gameMode) {
+        return new ResponseEntity<Iterable<Game>>(gameRepository.findByGameMode(gameMode), HttpStatus.FOUND);
+    }
+
     //  create a game
     public ResponseEntity<Game> createGame(Game game) {
         Long userId = game.getPlayer1();            //  set the player1 as the creator
