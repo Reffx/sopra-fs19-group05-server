@@ -26,13 +26,14 @@ public class GameService {
         Long userId = game.getPlayer1();            //  set the player1 as the creator
 
         // TO DO:  create a player or delay it to the ready button
-
         gameRepository.save(game);
         return new ResponseEntity<Game>(game, HttpStatus.CREATED); //   response code:201, frontend fetch the gameId in the body
     }
 
     //  TO DO: update a game, add player ect.
     public ResponseEntity<String> updateGame(Long userId, Long gameId) {
+//        Game game = gameRepository.findById(
+
         return new ResponseEntity<String>(HttpStatus.OK);   // response code 200
     }
 

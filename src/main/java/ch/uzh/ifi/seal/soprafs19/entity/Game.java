@@ -22,6 +22,9 @@ public class Game implements Serializable {
 //    @Column(nullable = false)
 //    private Long creator;       // userId, so can build the body to Game object, set userId and playerId the same
 
+//    @Column(nullable = false)
+//    private String creator;
+
     @Column(nullable = false)
     private Long player1;       // playerId = userId
 
@@ -58,6 +61,13 @@ public class Game implements Serializable {
         players[1] = player2;
         return players;
     }
+
+//    public  void setCreator(String userName) {
+//        this.creator = userName;
+//    }
+//    public String getCreator() {
+//        return this.creator;
+//    }
 
     public void setId(Long id) {
         this.id = id;
