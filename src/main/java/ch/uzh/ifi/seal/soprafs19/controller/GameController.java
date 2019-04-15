@@ -32,5 +32,13 @@ public class GameController {
         return service.getGames();
     }
 
+    //used to display specific lobby in frontend
+    @GetMapping("/games/{id}")
+    Game getGame(@PathVariable String id) {
+        return this.service.getGame(Long.parseLong(id));
+    }
+
+
+
 
 }
