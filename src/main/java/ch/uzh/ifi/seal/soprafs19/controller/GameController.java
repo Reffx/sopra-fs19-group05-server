@@ -38,7 +38,4 @@ public class GameController {
         return this.service.getGame(Long.parseLong(id));
     }
 
-
-
-
 }

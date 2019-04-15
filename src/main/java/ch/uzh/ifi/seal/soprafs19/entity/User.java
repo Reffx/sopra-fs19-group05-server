@@ -37,7 +37,7 @@ public class User implements Serializable {
 	@Column(nullable = false)
 	private String birthday;
 
-	@Column(nullable = false, unique = true)
+	@Column(nullable = true, unique = true)
 	private Long gameId;
 
 	public Long getId() {
