@@ -9,4 +9,3 @@ public interface PlayerRepository extends CrudRepository<Player, Long> {
 	Player findByUserId(Long userId);
 //	Player findByGameId(Long gameId);
 }
-

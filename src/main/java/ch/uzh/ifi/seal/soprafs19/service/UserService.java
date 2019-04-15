@@ -39,7 +39,9 @@ public class UserService {
         if(userRepository.findByUsername(newUser.getUsername())!=null) {
             throw new DuplicateException("Username already taken" +newUser.getUsername());
         }
-
+       // if(userRepository.findByUsername(newUser.getBirthday())== null) {
+       //     throw new NonExistentBirthdayException("Birthday missing");
+       // }
         newUser.setToken(UUID.randomUUID().toString());
         newUser.setStatus(UserStatus.OFFLINE);
         newUser.setCreationDate((LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))));

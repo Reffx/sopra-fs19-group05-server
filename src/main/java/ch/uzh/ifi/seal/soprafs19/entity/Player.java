@@ -15,8 +15,9 @@ public class Player implements Serializable {
     @Column(nullable = false, unique = true)
     private Long userId;
 
-    @Column(nullable = false, unique = true)
     private Long gameId;
+
+    @Column(nullable = false)
 
     public Long getId() {
         return id;
