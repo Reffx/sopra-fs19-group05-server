@@ -48,8 +48,12 @@ public class GameService {
     //return lobby from GameRepository
     public Game getGame(long id) {
         Game tempGame = gameRepository.findByGameId(id);
-        if(tempGame !=null) {
+        if (tempGame != null) {
             return tempGame;
         }
+        else{
+            return null;
+        }
 
+    }
 }
