@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository("playerRepository")
 public interface PlayerRepository extends CrudRepository<Player, Long> {
-	Player findByUserId(Long userId);
-//	Player findByGameId(Long gameId);
+	Player getById(Long userId);
+	Player getByGameId(Long gameId);
 }
 

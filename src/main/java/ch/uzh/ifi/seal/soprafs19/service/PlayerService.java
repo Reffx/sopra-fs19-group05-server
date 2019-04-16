@@ -21,11 +21,14 @@ public class PlayerService {
     public PlayerService(PlayerRepository playerRepository) {
         this.playerRepository = playerRepository;
     }
+
+    //  create a new player
     public Player createPlayer(Player newPlayer) {
-/*
-    todo: properties implementation need to be here
-*/
+
         playerRepository.save(newPlayer);
         return newPlayer;
     }
+
+    //  set player color
+
 }

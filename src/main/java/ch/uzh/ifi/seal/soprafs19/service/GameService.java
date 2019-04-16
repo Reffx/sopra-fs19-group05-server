@@ -30,6 +30,11 @@ public class GameService {
         return new ResponseEntity<Iterable<Game>>(gameRepository.findByGameMode(gameMode), HttpStatus.FOUND);
     }
 
+    //  find a game by id
+    public ResponseEntity<Game> getGame(Long gameId) {
+        return new ResponseEntity<Game>(gameRepository.getById(gameId), HttpStatus.FOUND);
+    }
+
     //  create a game
     public ResponseEntity<Game> createGame(Game game) {
         Long userId = game.getPlayer1();            //  set the player1 as the creator
@@ -42,6 +47,9 @@ public class GameService {
     //  TO DO: update a game, add player ect.
     public ResponseEntity<String> updateGame(Long userId, Long gameId) {
         Game game = gameRepository.getById(gameId);
+        //  test
+        System.out.println(gameId);
+
         game.setPlayer2(userId);
         gameRepository.save(game);
         return new ResponseEntity<String>(HttpStatus.OK);   // response code 200

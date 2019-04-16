@@ -35,9 +35,17 @@ public class GameController {
         return gameService.getGames();  // for lobby in the frondend
     }
 
+
+    //  find game by id
+    @GetMapping("/games/{gameId}")
+    ResponseEntity<Game> getGame(Long gameId) {
+        return gameService.getGame(gameId);
+    }
+
     //  add player2
     @PutMapping("/games/{gameId}/player2")
     ResponseEntity<String> updateGame(@RequestBody Long userId, @PathVariable Long gameId) {
+        System.out.println("Entered!");
         return gameService.updateGame(userId, gameId);
     }
 
