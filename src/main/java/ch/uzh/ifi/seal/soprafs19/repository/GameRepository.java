@@ -6,7 +6,7 @@ import ch.uzh.ifi.seal.soprafs19.entity.Player;
 import org.springframework.data.repository.CrudRepository;
 
 public interface GameRepository extends CrudRepository<Game, Long> {
-    public Game findById(long id);
+    public Game getById(long id);
     public Game findByPlayer1(Long playerId);
     public Iterable<Game> findByGameMode(GameMode gameMode);      //  for lobby in the frontend
 }

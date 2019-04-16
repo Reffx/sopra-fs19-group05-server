@@ -55,12 +55,13 @@ public class Game implements Serializable {
     public Long getPlayer2() {
         return this.player2;
     }
-    public Long[] getPlayers() {
-        Long[] players = new Long[2];
-        players[0] = player1;
-        players[1] = player2;
-        return players;
-    }
+
+//    public Long[] getPlayers() {
+//        Long[] players = new Long[2];
+//        players[0] = player1;
+//        players[1] = player2;
+//        return players;
+//    }
 
 //    public  void setCreator(String userName) {
 //        this.creator = userName;

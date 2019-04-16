@@ -41,8 +41,9 @@ public class GameService {
 
     //  TO DO: update a game, add player ect.
     public ResponseEntity<String> updateGame(Long userId, Long gameId) {
-//        Game game = gameRepository.findById(
-
+        Game game = gameRepository.getById(gameId);
+        game.setPlayer2(userId);
+        gameRepository.save(game);
         return new ResponseEntity<String>(HttpStatus.OK);   // response code 200
     }
 

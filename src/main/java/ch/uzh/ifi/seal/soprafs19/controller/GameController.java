@@ -28,12 +28,18 @@ public class GameController {
     ResponseEntity<Iterable<Game>> getModeGames(@PathVariable GameMode gameMode) {
         return gameService.getModeGames(gameMode);
     }
+
     //  find all the games
     @GetMapping("/games")
     Iterable<Game> all() {
         return gameService.getGames();  // for lobby in the frondend
     }
 
+    //  add player2
+    @PutMapping("/games/{gameId}/player2")
+    ResponseEntity<String> updateGame(@RequestBody Long userId, @PathVariable Long gameId) {
+        return gameService.updateGame(userId, gameId);
+    }
 
 //    @GetMapping("/games/{id}")
 //    ResponseEntity<Game> getGame(@PathVariable Long id) {
