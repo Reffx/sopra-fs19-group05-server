@@ -24,7 +24,7 @@ public class GameController {
     }
 
     //  find all NORMAl or GOD game
-    @GetMapping("/games/{gameMode}")
+    @GetMapping("/games/mode/{gameMode}")
     ResponseEntity<Iterable<Game>> getModeGames(@PathVariable GameMode gameMode) {
         return gameService.getModeGames(gameMode);
     }
