@@ -49,7 +49,8 @@ public class GameController {
     @PutMapping("/games/{gameId}/player2")
     @CrossOrigin
     ResponseEntity<String> updateGame(@RequestBody Long userId, @PathVariable Long gameId) {
-        System.out.println("Entered!");
+
+//        System.out.println("Entered!");
         return gameService.updateGame(userId, gameId);
     }
 
