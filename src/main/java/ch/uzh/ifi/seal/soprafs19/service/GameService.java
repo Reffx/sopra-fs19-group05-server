@@ -4,6 +4,7 @@ import ch.uzh.ifi.seal.soprafs19.constant.GameMode;
 import ch.uzh.ifi.seal.soprafs19.entity.Game;
 import ch.uzh.ifi.seal.soprafs19.entity.Player;
 import ch.uzh.ifi.seal.soprafs19.repository.GameRepository;
+import ch.uzh.ifi.seal.soprafs19.repository.PlayerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,10 +15,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public class GameService {
     private final GameRepository gameRepository;
+    private final PlayerService playerService;
 
     @Autowired
-    public GameService(GameRepository gameRepository) {
+    public GameService(GameRepository gameRepository, PlayerService playerService) {
         this.gameRepository = gameRepository;
+        this.playerService = playerService;
     }
 
     //  find all the games
@@ -38,9 +41,13 @@ public class GameService {
 
     //  create a game
     public ResponseEntity<Game> createGame(Game game) {
-        Long userId = game.getPlayer1();            //  set the player1 as the creator
 
-        // TO DO:  create a player or delay it to the ready button
+        Player player1 = game.getPlayer1();   //  set the player1 as the creator
+        //  save the player1 to the playerRepository
+        playerService.createPlayer(player1);
+        System.out.println(player1);
+
+        game.setPlayer1(player1);
         gameRepository.save(game);
         return new ResponseEntity<Game>(game, HttpStatus.CREATED); //   response code:201, frontend fetch the gameId in the body
     }
@@ -48,10 +55,12 @@ public class GameService {
     //  TO DO: update a game, add player ect.
     public ResponseEntity<String> updateGame(Long userId, Long gameId) {
         Game game = gameRepository.getById(gameId);
-        //  test
-        System.out.println(gameId);
 
-        game.setPlayer2(userId);
+        //  create new player
+        Player player2 = new Player();
+        player2.setId(userId);
+
+        game.setPlayer2(player2);
         gameRepository.save(game);
         return new ResponseEntity<String>(HttpStatus.OK);   // response code 200
     }

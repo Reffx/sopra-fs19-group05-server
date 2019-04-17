@@ -25,14 +25,19 @@ public class Game implements Serializable {
 //    @Column(nullable = false)
 //    private String creator;
 
-    @Column(nullable = false)
-    private Long player1;       // playerId = userId
+//    @Column(nullable = false)
+    @OneToOne                   //  to map the player database to the player database
+    private Player player1;       // playerId = userId
 
-    @Column(nullable = true)
-    private Long player2;
+//    @Column(nullable = true)
+    @OneToOne
+    private Player player2;
 
     @Column(nullable = false)
     private GameMode gameMode;
+
+    @Column
+    private int size = 1;
 
     @Column
     private String creationTime;
@@ -42,17 +47,17 @@ public class Game implements Serializable {
 
     //  TO DO: add gameBoard attribute
 
-    public void setPlayer1(Long player1Id) {
-        this.player1 = player1Id;
+    public void setPlayer1(Player player1) {
+        this.player1 = player1;
     }
-    public Long getPlayer1() {
+    public Player getPlayer1() {
         return this.player1;
     }
 
-    public void setPlayer2(Long player1Id) {
-        this.player2 = player1Id;
+    public void setPlayer2(Player player2) {
+        this.player2 = player2;
     }
-    public Long getPlayer2() {
+    public Player getPlayer2() {
         return this.player2;
     }
 
@@ -93,6 +98,14 @@ public class Game implements Serializable {
 
     public void setGameMode(GameMode gameMode) {this.gameMode = gameMode;}
     public GameMode getGameMode() {return this.gameMode;}
+
+    public void setSize(int size) {
+        this.size = size;
+    }
+    public int getSize() {
+        return this.size;
+    }
+
 
     @Override
     public boolean equals(Object o) {

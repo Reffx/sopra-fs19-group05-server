@@ -13,7 +13,7 @@ public class Player implements Serializable {
     @Id
     private Long id;
 
-    @Column(nullable = false, unique = true)
+    @Column
     private Long gameId;
 
     @Column
