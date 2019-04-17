@@ -38,12 +38,16 @@ public class GameController {
 
     //  find game by id
     @GetMapping("/games/{gameId}")
-    ResponseEntity<Game> getGame(Long gameId) {
+    @CrossOrigin
+    ResponseEntity<Game> getGame(@PathVariable Long gameId) {
+        //TEST
+//        System.out.println(gameId);
         return gameService.getGame(gameId);
     }
 
     //  add player2
     @PutMapping("/games/{gameId}/player2")
+    @CrossOrigin
     ResponseEntity<String> updateGame(@RequestBody Long userId, @PathVariable Long gameId) {
         System.out.println("Entered!");
         return gameService.updateGame(userId, gameId);

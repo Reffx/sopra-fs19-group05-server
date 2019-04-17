@@ -31,7 +31,8 @@ public class GameService {
     }
 
     //  find a game by id
-    public ResponseEntity<Game> getGame(Long gameId) {
+    public ResponseEntity<Game> getGame(long gameId) {
+        System.out.println(gameRepository.getById(gameId));
         return new ResponseEntity<Game>(gameRepository.getById(gameId), HttpStatus.FOUND);
     }
 
