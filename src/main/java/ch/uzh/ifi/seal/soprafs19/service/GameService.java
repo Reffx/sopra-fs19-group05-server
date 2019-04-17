@@ -45,22 +45,33 @@ public class GameService {
         Player player1 = game.getPlayer1();   //  set the player1 as the creator
         //  save the player1 to the playerRepository
         playerService.createPlayer(player1);
-        System.out.println(player1);
 
         game.setPlayer1(player1);
         gameRepository.save(game);
         return new ResponseEntity<Game>(game, HttpStatus.CREATED); //   response code:201, frontend fetch the gameId in the body
     }
 
-    //  TO DO: update a game, add player ect.
-    public ResponseEntity<String> updateGame(Long userId, Long gameId) {
+    //  update a game, add player
+    public ResponseEntity<String> addPlayer2(Long userId, Long gameId) {
         Game game = gameRepository.getById(gameId);
 
         //  create new player
         Player player2 = new Player();
         player2.setId(userId);
+        //  save the player1 to the playerRepository
+        playerService.createPlayer(player2);
 
         game.setPlayer2(player2);
+        gameRepository.save(game);
+        return new ResponseEntity<String>(HttpStatus.OK);   // response code 200
+    }
+
+    //  TO DO: update a game, remove player ect.
+    public ResponseEntity<String> removePlayer(Long userId, Long gameId) {
+        Game game = gameRepository.getById(gameId);
+
+        //  to find the player in the database and remove it, cascade deletion of player2 in the Game instance
+
         gameRepository.save(game);
         return new ResponseEntity<String>(HttpStatus.OK);   // response code 200
     }

@@ -48,22 +48,13 @@ public class GameController {
     //  add player2
     @PutMapping("/games/{gameId}/player2")
     @CrossOrigin
-    ResponseEntity<String> updateGame(@RequestBody Long userId, @PathVariable Long gameId) {
+    ResponseEntity<String> addPlayer2(@RequestBody Long userId, @PathVariable Long gameId) {
 
-//        System.out.println("Entered!");
-        return gameService.updateGame(userId, gameId);
+        return gameService.addPlayer2(userId, gameId);
     }
 
-//    @GetMapping("/games/{id}")
-//    ResponseEntity<Game> getGame(@PathVariable Long id) {
-//        //  TO DO: display individual lobby
-//    }
-//
-//    @GetMapping("/games/{id}/players")   // or to fetch only player1 ?
-//    ResponseEntity<HashMap<Integer, User>> getPlayers(@PathVariable Long id) {
-//        //  TO DO: display individual lobby
-//    }
-//
+
+
 //    @PutMapping("/games/{id}/players/player2")
 //    ResponseEntity<Void> addPlayer(@RequestBody Long player2) {
 //        //  TO DO: add player2 to the game

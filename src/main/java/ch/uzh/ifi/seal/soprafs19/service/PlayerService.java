@@ -26,8 +26,12 @@ public class PlayerService {
 
     //  create a new player
     public ResponseEntity<Player> createPlayer(Player newPlayer) {
+
+        //  To Do: set the username here
+
         playerRepository.save(newPlayer);
         return new ResponseEntity<Player>(newPlayer, HttpStatus.CREATED);
+
     }
 
     //  set player color
