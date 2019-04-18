@@ -1,7 +1,9 @@
 package ch.uzh.ifi.seal.soprafs19.service;
 
 import ch.uzh.ifi.seal.soprafs19.entity.Player;
+import ch.uzh.ifi.seal.soprafs19.entity.User;
 import ch.uzh.ifi.seal.soprafs19.repository.PlayerRepository;
+import ch.uzh.ifi.seal.soprafs19.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,4 +38,17 @@ public class PlayerService {
 
     //  set player color
 
+
+  // public ResponseEntity<Player> createPlayer(Player newPlayer, User user) {
+        //DA: I would set both username & id here, currently id is assigned in Gameservice
+        //DA: In createGame, where player1 is created no id is assigned &
+        //DA: In addPlayer2 a id is assigned
+        //DA: I added the import of the user entity access id & username
+
+   //     newPlayer.setUsername(user.getUsername());
+   //     newPlayer.setId(user.getId());
+
+   //     playerRepository.save(newPlayer);
+
+   //     return new ResponseEntity<Player>(newPlayer, HttpStatus.CREATED);
 }

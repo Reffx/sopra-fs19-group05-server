@@ -2,6 +2,7 @@ package ch.uzh.ifi.seal.soprafs19.service;
 
 import ch.uzh.ifi.seal.soprafs19.constant.GameMode;
 import ch.uzh.ifi.seal.soprafs19.entity.Game;
+import ch.uzh.ifi.seal.soprafs19.entity.User;
 import ch.uzh.ifi.seal.soprafs19.entity.Player;
 import ch.uzh.ifi.seal.soprafs19.repository.GameRepository;
 import ch.uzh.ifi.seal.soprafs19.repository.PlayerRepository;
@@ -65,6 +66,20 @@ public class GameService {
         gameRepository.save(game);
         return new ResponseEntity<String>(HttpStatus.OK);   // response code 200
     }
+
+    // public ResponseEntity<String> addPlayer2(User user, Long gameId){
+
+        //DA: I would give the function the whole user (imported the entity and assign ID & username via createPlayer
+
+       // Game game = gameRepository.getById(gameId);
+
+        //Player player2 = new Player();
+        //playerService.createPlayer(player2);
+
+        //game.setPlayer2(player2);
+        //gameRepository.save(game);
+        //return new ResponseEntity<String>(HttpStatus.OK);
+   // }
 
     //  TO DO: update a game, remove player ect.
     public ResponseEntity<String> removePlayer(Long userId, Long gameId) {
