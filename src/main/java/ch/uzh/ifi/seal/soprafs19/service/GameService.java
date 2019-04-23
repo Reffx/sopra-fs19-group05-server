@@ -45,11 +45,18 @@ public class GameService {
         //  save the player1 to the playerRepository
         player1.setColor(Color.BLUE);
 
-//        playerService.createPlayer(player1);
-//        playerService.savePlayer(player1);
-
+        //  save first to get gameId
         game.setPlayer1(player1);
         gameRepository.save(game);
+
+        //  set player gameId
+        long gameId = game.getId();
+        System.out.println(gameId);
+        player1.setGameId(gameId);
+
+        //  save again to save the gameId in Player
+        gameRepository.save(game);
+
         return new ResponseEntity<Game>(game, HttpStatus.CREATED); //   response code:201, frontend fetch the gameId in the body
     }
 
