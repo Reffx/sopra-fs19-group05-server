@@ -1,11 +1,10 @@
 package ch.uzh.ifi.seal.soprafs19.service;
 
+import ch.uzh.ifi.seal.soprafs19.constant.Color;
 import ch.uzh.ifi.seal.soprafs19.constant.GameMode;
 import ch.uzh.ifi.seal.soprafs19.entity.Game;
-import ch.uzh.ifi.seal.soprafs19.entity.User;
 import ch.uzh.ifi.seal.soprafs19.entity.Player;
 import ch.uzh.ifi.seal.soprafs19.repository.GameRepository;
-import ch.uzh.ifi.seal.soprafs19.repository.PlayerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,7 +35,6 @@ public class GameService {
 
     //  find a game by id
     public ResponseEntity<Game> getGame(long gameId) {
-        System.out.println(gameRepository.getById(gameId));
         return new ResponseEntity<Game>(gameRepository.getById(gameId), HttpStatus.FOUND);
     }
 
@@ -45,7 +43,10 @@ public class GameService {
 
         Player player1 = game.getPlayer1();   //  set the player1 as the creator
         //  save the player1 to the playerRepository
-        playerService.createPlayer(player1);
+        player1.setColor(Color.BLUE);
+
+//        playerService.createPlayer(player1);
+//        playerService.savePlayer(player1);
 
         game.setPlayer1(player1);
         gameRepository.save(game);
@@ -59,40 +60,61 @@ public class GameService {
         //  create new player
         Player player2 = new Player();
         player2.setId(userId);
+        player2.setGameId(gameId);
         //  save the player1 to the playerRepository
-        playerService.createPlayer(player2);
+
+//        playerService.createPlayer(player2);
+//        playerService.savePlayer(player2);
 
         game.setPlayer2(player2);
+        game.setSize(2);
         gameRepository.save(game);
         return new ResponseEntity<String>(HttpStatus.OK);   // response code 200
     }
 
-    // public ResponseEntity<String> addPlayer2(User user, Long gameId){
-
-        //DA: I would give the function the whole user (imported the entity and assign ID & username via createPlayer
-
-       // Game game = gameRepository.getById(gameId);
-
-        //Player player2 = new Player();
-        //playerService.createPlayer(player2);
-
-        //game.setPlayer2(player2);
-        //gameRepository.save(game);
-        //return new ResponseEntity<String>(HttpStatus.OK);
-   // }
-
-    //  TO DO: update a game, remove player ect.
-    public ResponseEntity<String> removePlayer(Long userId, Long gameId) {
+    //  update a game, remove player2.
+    public ResponseEntity<String> removePlayer(Long gameId) {
         Game game = gameRepository.getById(gameId);
 
         //  to find the player in the database and remove it, cascade deletion of player2 in the Game instance
-
+        game.setPlayer2(null);
         gameRepository.save(game);
         return new ResponseEntity<String>(HttpStatus.OK);   // response code 200
     }
 
-    //  TO DO: delete a game. when finished or exit
-    public ResponseEntity<String> deleteGame(Long userId) {
+    //  set player color
+    public ResponseEntity<String> setColor(Long gameId, Long playerId, Color color) {
+        //  check if there's color conflict
+        Game game = gameRepository.getById(gameId);
+        Player playerX = playerService.getPlayer(playerId);
+
+        Player player1 = game.getPlayer1();
+        Player player2 = game.getPlayer2();
+
+        if (player1 == playerX) {
+            if (player2.getColor() == color) {
+                return new ResponseEntity<String>(HttpStatus.CONFLICT);
+            } else {
+                player1.setColor(color);
+                playerService.savePlayer(player1);
+                return new ResponseEntity<String>(color.toString(), HttpStatus.OK);
+            }
+        } else if (player2 == playerX) {
+            if (player1.getColor() == color) {
+                return new ResponseEntity<String>(HttpStatus.CONFLICT);
+            } else {
+                player2.setColor(color);
+                playerService.savePlayer(player1);
+                return new ResponseEntity<String>(color.toString(), HttpStatus.OK);
+            }
+        } else {
+            return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    //delete a game. when player1 exit
+    public ResponseEntity<String> deleteGame(Long gameId) {
+        gameRepository.deleteById(gameId);
         return new ResponseEntity<String>(HttpStatus.NO_CONTENT); // response code: 204
     }
 }

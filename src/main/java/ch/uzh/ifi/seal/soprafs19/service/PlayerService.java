@@ -1,54 +1,60 @@
 package ch.uzh.ifi.seal.soprafs19.service;
 
+import ch.uzh.ifi.seal.soprafs19.constant.Color;
+import ch.uzh.ifi.seal.soprafs19.entity.Game;
 import ch.uzh.ifi.seal.soprafs19.entity.Player;
 import ch.uzh.ifi.seal.soprafs19.entity.User;
 import ch.uzh.ifi.seal.soprafs19.repository.PlayerRepository;
-import ch.uzh.ifi.seal.soprafs19.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collection;
+
 @Service
 @Transactional
 public class PlayerService {
 
-    private final Logger log = LoggerFactory.getLogger(PlayerService.class);
-
     public final PlayerRepository playerRepository;
-
+    private final UserService userService;
 
     @Autowired
-    public PlayerService(PlayerRepository playerRepository) {
+    public PlayerService(PlayerRepository playerRepository, UserService userService) {
         this.playerRepository = playerRepository;
+        this.userService = userService;
     }
 
     //  create a new player
     public ResponseEntity<Player> createPlayer(Player newPlayer) {
 
-        //  To Do: set the username here
+        //  set the username here and save it to the player
+        Long userId = newPlayer.getId();
+        User user = userService.getUser(userId);
+        String username = user.getUsername();
+        newPlayer.setUsername(username);
 
         playerRepository.save(newPlayer);
         return new ResponseEntity<Player>(newPlayer, HttpStatus.CREATED);
-
     }
 
-    //  set player color
+    //  all players
+    public Iterable<Player> allPlayers() {
+        return playerRepository.findAll();
+    }
 
+    //  get player by id
+    Player getPlayer(Long playerId) {
+        return playerRepository.getById(playerId);
+    }
 
-  // public ResponseEntity<Player> createPlayer(Player newPlayer, User user) {
-        //DA: I would set both username & id here, currently id is assigned in Gameservice
-        //DA: In createGame, where player1 is created no id is assigned &
-        //DA: In addPlayer2 a id is assigned
-        //DA: I added the import of the user entity access id & username
+    //  save player
+    void savePlayer(Player player) {
+        playerRepository.save(player);
+    }
 
-   //     newPlayer.setUsername(user.getUsername());
-   //     newPlayer.setId(user.getId());
-
-   //     playerRepository.save(newPlayer);
-
-   //     return new ResponseEntity<Player>(newPlayer, HttpStatus.CREATED);
 }

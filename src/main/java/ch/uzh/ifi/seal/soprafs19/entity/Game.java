@@ -1,6 +1,7 @@
 package ch.uzh.ifi.seal.soprafs19.entity;
 
 import ch.uzh.ifi.seal.soprafs19.constant.GameMode;
+import org.hibernate.annotations.Cascade;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -16,21 +17,12 @@ public class Game implements Serializable {
     @GeneratedValue
     private Long id;
 
-//    @Column(nullable = false, unique = true)
-//    private List<Long> players = new ArrayList<>(); // set default as empty list
+    //  unique by onetoone
+    @OneToOne(cascade = CascadeType.ALL)        //  to map the player database to the player database
+    private Player player1;                    // playerId = userId
 
-//    @Column(nullable = false)
-//    private Long creator;       // userId, so can build the body to Game object, set userId and playerId the same
-
-//    @Column(nullable = false)
-//    private String creator;
-
-//    @Column(nullable = false)
-    @OneToOne                   //  to map the player database to the player database
-    private Player player1;       // playerId = userId
-
-//    @Column(nullable = true)
-    @OneToOne
+    //  unique by onetoone
+    @OneToOne(cascade = CascadeType.ALL)
     private Player player2;
 
     @Column(nullable = false)
@@ -43,7 +35,7 @@ public class Game implements Serializable {
     private String creationTime;
 
     @Column(nullable = false)
-    private boolean isPlaying = false; // set default value as false
+    private boolean isPlaying = false;
 
     //  TO DO: add gameBoard attribute
 
@@ -60,20 +52,6 @@ public class Game implements Serializable {
     public Player getPlayer2() {
         return this.player2;
     }
-
-//    public Long[] getPlayers() {
-//        Long[] players = new Long[2];
-//        players[0] = player1;
-//        players[1] = player2;
-//        return players;
-//    }
-
-//    public  void setCreator(String userName) {
-//        this.creator = userName;
-//    }
-//    public String getCreator() {
-//        return this.creator;
-//    }
 
     public void setId(Long id) {
         this.id = id;

@@ -1,5 +1,6 @@
 package ch.uzh.ifi.seal.soprafs19.controller;
 
+import ch.uzh.ifi.seal.soprafs19.constant.Color;
 import ch.uzh.ifi.seal.soprafs19.constant.GameMode;
 import ch.uzh.ifi.seal.soprafs19.entity.Game;
 import ch.uzh.ifi.seal.soprafs19.entity.User;
@@ -49,15 +50,26 @@ public class GameController {
     @PutMapping("/games/{gameId}/player2")
     @CrossOrigin
     ResponseEntity<String> addPlayer2(@RequestBody Long userId, @PathVariable Long gameId) {
-
         return gameService.addPlayer2(userId, gameId);
     }
 
+    //  ser player color
+    @PutMapping("/games/{gameId}/{playerId}/color")
+    @CrossOrigin
+    ResponseEntity<String> setColor(@PathVariable(name = "gameId") Long gameId, @PathVariable(name = "playerId") Long playerId, @RequestBody Color color) {
+//        System.out.printf("setColor: %d %s",gameId,color);
+        return gameService.setColor(gameId, playerId, color);
+    }
 
+    //  remove player
+    @DeleteMapping("/games/{gameId}/player2")
+    ResponseEntity<String> removePlayer2(@PathVariable Long gameId) {
+        return gameService.removePlayer(gameId);
+    }
 
-//    @PutMapping("/games/{id}/players/player2")
-//    ResponseEntity<Void> addPlayer(@RequestBody Long player2) {
-//        //  TO DO: add player2 to the game
-//    }
-
+    //  delete a game
+    @DeleteMapping("/games/{gameId}")
+    ResponseEntity<String> deleteGame(@PathVariable Long gameId) {
+        return gameService.deleteGame(gameId);
+    }
 }

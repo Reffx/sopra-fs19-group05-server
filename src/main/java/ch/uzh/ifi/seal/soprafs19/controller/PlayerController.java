@@ -26,20 +26,10 @@ public class PlayerController {
         return playerService.createPlayer(player);
     }
 
-    @GetMapping("/players/{id}")
-    ResponseEntity getPlayer(@PathVariable Long id, @RequestParam("fields") String fields) {
-
-        // TODO: get player by id
-
-        return ResponseEntity.status(HttpStatus.OK).build();
+    @GetMapping("/players")
+    Iterable<Player> all() {
+        return playerService.allPlayers();
     }
 
-    @PutMapping("/players/{id}")
-    ResponseEntity updatePlayer(@PathVariable Long id) {
-
-        // TODO: update player by id
-
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-    }
 }
 
