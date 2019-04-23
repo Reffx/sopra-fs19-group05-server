@@ -13,14 +13,6 @@ public class Player implements Serializable {
     @Id
     private Long id;
 
-<<<<<<< HEAD
-    @Column(nullable = false, unique = true)
-    private Long userId;
-
-    private Long gameId;
-
-    @Column(nullable = false)
-=======
     @Column
     private Long gameId;
 
@@ -32,7 +24,6 @@ public class Player implements Serializable {
 
     @Column
     private String username;
->>>>>>> feature_Game_backend
 
     public Long getId() {
         return id;
