@@ -14,40 +14,22 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class PlayerController {
 
-    private final PlayerService service;
+    private final PlayerService playerService;
 
-    PlayerController(PlayerService service) {
-        this.service = service;
+    PlayerController(PlayerService playerService) {
+        this.playerService = playerService;
     }
 
-    /*
-    @GetMapping("/players")
-    Iterable<Player> all() {
-        return service.getPlayer();
-    }
-    */
 
     @PostMapping("/players")
-    @ResponseStatus(HttpStatus.CREATED)
-    @ResponseBody
-    Player createPlayer(@RequestBody Player newPlayer) {
-        return this.service.createPlayer(newPlayer);
+    ResponseEntity<Player> createPlayer(@RequestBody Player player){
+        return playerService.createPlayer(player);
     }
 
-    @GetMapping("/players/{id}")
-    ResponseEntity getPlayer(@PathVariable Long id, @RequestParam("fields") String fields) {
-
-        // TODO: get player by id
-
-        return ResponseEntity.status(HttpStatus.OK).build();
+    @GetMapping("/players")
+    Iterable<Player> all() {
+        return playerService.allPlayers();
     }
 
-    @PutMapping("/players/{id}")
-    ResponseEntity updatePlayer(@PathVariable Long id) {
-
-        // TODO: update player by id
-
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-    }
 }
 
