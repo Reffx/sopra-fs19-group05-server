@@ -8,7 +8,7 @@ public abstract class Worker {
 
     @Id
     @GeneratedValue
-    private static long id;  // make all the worker share one id
+    private  long id;  // make all the worker share one id
 
     @Column
     private long playerId;
