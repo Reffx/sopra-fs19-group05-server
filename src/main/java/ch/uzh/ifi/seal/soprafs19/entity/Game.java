@@ -1,12 +1,11 @@
 package ch.uzh.ifi.seal.soprafs19.entity;
 
-<<<<<<< HEAD
-=======
 import ch.uzh.ifi.seal.soprafs19.constant.GameMode;
 import org.hibernate.annotations.Cascade;
 
->>>>>>> feature_Game_backend
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.*;
 
 @Entity
@@ -18,18 +17,6 @@ public class Game implements Serializable {
     @GeneratedValue
     private Long id;
 
-<<<<<<< HEAD
-    @Column(nullable = false, unique = true)
-    private Long gameId;
-
-    @Column(nullable = false, unique = true)
-    private Long playerId;
-
-    @Column(nullable = false)
-
-    public Long getId() {
-        return id;
-=======
     //  unique by onetoone
     @OneToOne(cascade = CascadeType.ALL)        //  to map the player database to the player database
     private Player player1;                    // playerId = userId
@@ -64,28 +51,31 @@ public class Game implements Serializable {
     }
     public Player getPlayer2() {
         return this.player2;
->>>>>>> feature_Game_backend
     }
 
     public void setId(Long id) {
         this.id = id;
     }
-
-    public Long getPlayerId() {
-        return playerId;
+    public Long getId() {
+        return id;
     }
 
-    public void setPlayerId(Long userId) {
-        this.playerId = playerId;
+    public void setCreationTime(String creationTime) {
+        this.creationTime = creationTime;
+    }
+    public String getCreationTime() {
+        return creationTime;
     }
 
-    public Long getGameId() {
-        return gameId;
+    public void setIsPlaying(boolean isPlaying) {
+        this.isPlaying = isPlaying;
+    }
+    public boolean getIsPlaying() {
+        return isPlaying;
     }
 
-    public void setGameId(Long gameId) {
-        this.gameId = gameId;
-    }
+    public void setGameMode(GameMode gameMode) {this.gameMode = gameMode;}
+    public GameMode getGameMode() {return this.gameMode;}
 
     public void setSize(int size) {
         this.size = size;
@@ -101,8 +91,8 @@ public class Game implements Serializable {
         if (!(o instanceof Game)) {
             return false;
         }
-        Game Game = (Game) o;
-        return this.getId().equals(Game.getId());
+        Game game = (Game) o;
+        return this.getId().equals(game.getId());
     }
 
 }
