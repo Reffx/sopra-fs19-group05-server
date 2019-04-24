@@ -4,18 +4,24 @@ import java.io.Serializable;
 import javax.persistence.*;
 
 
-@Entity
-public class Field implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+
+@Entity
+@IdClass(Coordinates.class) // setting up two primary keys (x & y coordinate = coordinates) //
+public class Field implements Serializable {
     @Id
     private Long xCoordinate;
+    @Id
     private Long yCoordinate;
+
+    private static final long serialVersionUID = 1L;
+
 
     @Column
     private int height;
 
-    @Column
+
+    @Column // as a type worker, if no worker then null, else whole worker object //
     private boolean occupation;
 
     @Column
@@ -40,7 +46,7 @@ public class Field implements Serializable {
 
 
 
-    @Override
+    @Override //redo with coordinates //
     public boolean equals(Object o) {
         if (o == this) return true;
         if (!(o instanceof Field)) {

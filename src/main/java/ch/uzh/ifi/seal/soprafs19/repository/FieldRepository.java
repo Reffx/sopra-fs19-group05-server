@@ -1,5 +1,6 @@
 package ch.uzh.ifi.seal.soprafs19.repository;
 
+import ch.uzh.ifi.seal.soprafs19.entity.Coordinates;
 import ch.uzh.ifi.seal.soprafs19.entity.Field;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
@@ -8,6 +9,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository("fieldRepository")
 public interface FieldRepository extends CrudRepository<Field, Long> {
-  public Field findByXCoordinate(long xCoordinate);
-  public Field findByYCoordinate(long yCoordinate);
+    Field findByXCoordinate(long xCoordinate);
+    Field findByYCoordinate(long yCoordinate);
 }
