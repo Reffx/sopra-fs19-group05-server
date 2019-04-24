@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Random;
+
 @Service
 @Transactional
 public class GameService {
@@ -131,6 +133,23 @@ public class GameService {
 
         playerService.savePlayer(player);
         return new ResponseEntity<String>(HttpStatus.OK);
+    }
+
+    //  set beginner
+    public ResponseEntity<Long> setBeginner(Long gameId, Long playerId) {
+        //  get playerId
+        Long player1Id = gameRepository.getById(gameId).getPlayer1().getId();
+        Long player2Id = gameRepository.getById(gameId).getPlayer2().getId();
+
+        //  randomly select a player
+        Random random = new Random();
+
+        int id_rand = random.nextInt(2);
+        if (id_rand == 0) {
+            return new ResponseEntity<Long>(player1Id, HttpStatus.OK);
+        }
+        return new ResponseEntity<Long>(player2Id, HttpStatus.OK);
+
     }
 
     //  delete a game. when player1 exit
