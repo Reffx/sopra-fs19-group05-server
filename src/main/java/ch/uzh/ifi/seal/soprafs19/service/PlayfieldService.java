@@ -24,6 +24,7 @@ public class PlayfieldService {
 
         this.playfieldRepository = playfieldRepository;
         this.fieldRepository = fieldRepository;
+
     }
 
     public Playfield initPlayfield(long playfieldId){
@@ -53,4 +54,5 @@ public class PlayfieldService {
     public ResponseEntity<Playfield> getPlayfield(long playfieldId) {
         return new ResponseEntity<Playfield>(playfieldRepository.findByPlayFieldId(playfieldId), HttpStatus.FOUND);
     }
+
 }
