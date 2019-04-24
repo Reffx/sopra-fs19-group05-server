@@ -68,7 +68,6 @@ public class GameController {
         return gameService.setStatus(gameId, playerId);
     }
 
-
     //  set beginner
     @GetMapping("/games/{gameId}/beginner")
     ResponseEntity<Long> setBeginner(@PathVariable Long gameId) {

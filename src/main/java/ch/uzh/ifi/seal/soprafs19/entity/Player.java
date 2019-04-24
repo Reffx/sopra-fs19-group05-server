@@ -10,6 +10,7 @@ public class Player implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+
     @Id
     private Long id;
 
@@ -24,6 +25,25 @@ public class Player implements Serializable {
 
     @Column
     private String username;
+
+//    //  add worker1 and worker2 for player
+//    @OneToMany
+//    private Worker worker1;
+//
+//    @OneToMany
+//    private Worker worker2;
+//
+//    //  constructor1
+//    public Player(Worker worker) {
+//        this.worker1 = worker;
+//        this.worker2 = worker;
+//    }
+//
+//    //  constructor2 : set default as normal mode
+//    public Player() {
+//        this.worker1 = new Worker0();
+//        this.worker2 = new Worker0();
+//    }
 
     public Long getId() {
         return id;
@@ -59,6 +79,20 @@ public class Player implements Serializable {
     public String getUsername() {
         return this.username;
     }
+
+//    public void setWorker1(Worker worker) {
+//        this.worker1 = worker;
+//    }
+//    public void setWorker2(Worker worker) {
+//        this.worker2 = worker;
+//    }
+//
+//    public Worker getWorker1() {
+//        return worker1;
+//    }
+//    public Worker getWorker2() {
+//        return worker2;
+//    }
 
     @Override
     public boolean equals(Object o) {

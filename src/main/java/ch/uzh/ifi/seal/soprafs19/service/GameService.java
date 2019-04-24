@@ -134,7 +134,7 @@ public class GameService {
         playerService.savePlayer(player);
         return new ResponseEntity<String>(HttpStatus.OK);
     }
-
+    
     //  set beginner
     public ResponseEntity<Long> setBeginner(Long gameId) {
         //  get playerId
@@ -149,8 +149,8 @@ public class GameService {
             return new ResponseEntity<Long>(player1Id, HttpStatus.OK);
         }
         return new ResponseEntity<Long>(player2Id, HttpStatus.OK);
-
     }
+
 
     //  delete a game. when player1 exit
     public ResponseEntity<String> deleteGame(Long gameId) {
