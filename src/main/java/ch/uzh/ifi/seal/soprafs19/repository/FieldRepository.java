@@ -8,5 +8,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository("fieldRepository")
 public interface FieldRepository extends CrudRepository<Field, Long> {
- /*  public Field findByCoordinates(long x_coordinate, long y_coordinate); */
+    public Field findByXCoordinate(long xCoordinate);
+    public Field findByYCoordinate(long yCoordinate);
 }

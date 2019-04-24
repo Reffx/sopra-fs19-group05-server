@@ -18,10 +18,10 @@ public class FieldService {
     }
 
 
-    public Field createField(Long x_coordinate, Long y_coordinate){
+    public Field createField(Long xCoordinate, Long yCoordinate){
         Field field = new Field();
-        field.setX_coordinate(x_coordinate);
-        field.setY_coordinate(y_coordinate);
+        field.setX_coordinate(xCoordinate);
+        field.setY_coordinate(yCoordinate);
         fieldRepository.save(field);
         return field;
     }

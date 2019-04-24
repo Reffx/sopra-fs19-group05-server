@@ -9,13 +9,14 @@ public class Field implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
-    private Long x_coordinate;
-    private Long y_coordinate;
+    private Long xCoordinate;  //check how to assign two primary keys //
+    private Long yCoordinate;
 
     @Column
     private int height;
 
-    @Column
+
+    @Column // as a type worker, if no worker then null, else whole worker object //
     private boolean occupation;
 
     @Column
@@ -32,11 +33,11 @@ public class Field implements Serializable {
     public boolean getReachedMaxHeight() {return this.reachedMaxHeight;}
     public void setReachedMaxHeight(boolean reachedMaxHeight) {this.reachedMaxHeight = reachedMaxHeight;}
 
-    public Long getX_coordinate() {return this.x_coordinate;}
-    public void setX_coordinate(Long x_coordinate) {this.x_coordinate = x_coordinate;}
+    public Long getX_coordinate() {return this.xCoordinate;}
+    public void setX_coordinate(Long x_coordinate) {this.xCoordinate = x_coordinate;}
 
-    public Long getY_coordinate() {return this.y_coordinate;}
-    public void setY_coordinate(Long y_coordinate) {this.y_coordinate = y_coordinate;}
+    public Long getY_coordinate() {return this.yCoordinate;}
+    public void setY_coordinate(Long y_coordinate) {this.yCoordinate = y_coordinate;}
 
 
 
