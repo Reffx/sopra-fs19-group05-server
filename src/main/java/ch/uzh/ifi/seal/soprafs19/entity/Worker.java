@@ -16,15 +16,30 @@ public abstract class Worker implements Serializable {
     @Column
     private long playerId;
 
+    //JuWe: added 2 columns for the WorkerRepo to save the x and y coordinate
+    @Column
+    private long xCoordinate;
+
+    @Column
+    private long yCoordinate;
+
     //  abstract method to be implemented
-    public abstract void move(long fieldId);
-    public abstract void build(long fieldId, int level);
+    //JuWe: changed params --> prior was fieldId, now its xCoordinate, yCoordinate
+    public abstract void move(long xCoordinate, long yCoordinate);
+    public abstract void build(long xCoordinate, long yCoordinate, int level);
 
     public Long getId() { return this.id; }
     public void setId(long id) {this.id = id;}
 
     public long getPlayerId() {return this.playerId;}
     public void setPlayerId(long playerId) {this.playerId = playerId; }
+
+    //JuWe: added setter and getter functions for both coordinates
+    public void setXCoordinate(long xCoordinate){this.xCoordinate=xCoordinate;}
+    public long getXCoordinate(){return this.xCoordinate;}
+
+    public void setYCoordinate(long yCoordinate){this.yCoordinate=yCoordinate;}
+    public long getYCoordinate(){return this.yCoordinate;}
 
 
     @Override

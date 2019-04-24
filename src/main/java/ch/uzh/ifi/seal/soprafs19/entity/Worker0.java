@@ -5,11 +5,11 @@ import javax.persistence.Entity;
 @Entity
 public class Worker0 extends Worker{
 
-    public void move(long fieldId) {
+    public void move(long xCoordinate, long yCoordinate) {
 
     }
 
-    public void build(long fieldId, int level) {
+    public void build(long xCoordinate, long yCoordinate, int level) {
 
     }
 }
