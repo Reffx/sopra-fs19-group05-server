@@ -18,7 +18,7 @@ public class PlayfieldController {
     }
 
     @PostMapping("/games/{gameId}")
-    Playfield newPlayfield(@PathVariable long gameId){
+    Playfield newPlayfield(@RequestBody long gameId){
         return playfieldService.initPlayfield(gameId);
     }
 
