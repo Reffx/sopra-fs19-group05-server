@@ -24,7 +24,6 @@ public class PlayfieldService {
 
         this.playfieldRepository = playfieldRepository;
         this.fieldRepository = fieldRepository;
-
     }
 
     public Playfield initPlayfield(long playfieldId){

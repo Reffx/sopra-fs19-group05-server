@@ -41,13 +41,12 @@ public class WorkerService {
         this.fieldService = fieldService;
     }
 
-    public ResponseEntity<Worker> createWorker(Worker newWorker, long playerId){
-        Worker worker = new Worker0();
-        worker.setPlayerId(playerId);
+    public Worker createWorker(Worker newWorker){
         //initial position of a worker
-        worker.setXCoordinate(-1);
-        worker.setYCoordinate(-1);
-        return new ResponseEntity<Worker>(worker, HttpStatus.CREATED);
+        newWorker.setXCoordinate(-1);
+        newWorker.setYCoordinate(-1);
+        workerRepository.save(newWorker);
+        return newWorker;
     }
 
 
