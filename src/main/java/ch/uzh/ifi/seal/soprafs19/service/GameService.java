@@ -127,8 +127,9 @@ public class GameService {
     public ResponseEntity<String> setStatus(Long gameId, Long playerId) {
         Player player = playerService.getPlayer(playerId);
         boolean status = player.getStatus();
-        player.setStatus(!status);
+        player.setStatus(!status);  //  negation of the original status
 
+        playerService.savePlayer(player);
         return new ResponseEntity<String>(HttpStatus.OK);
     }
 

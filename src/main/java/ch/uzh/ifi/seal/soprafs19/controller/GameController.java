@@ -61,6 +61,13 @@ public class GameController {
         return gameService.setColor(gameId, playerId, color);
     }
 
+    //  set player status
+    @PutMapping("/games/{gameId}/{playerId}/status")
+    @CrossOrigin
+    ResponseEntity<String> setStatus(@PathVariable(name = "gameId") Long gameId, @PathVariable(name = "playerId") Long playerId) {
+        return gameService.setStatus(gameId, playerId);
+    }
+
     //  remove player
     @DeleteMapping("/games/{gameId}/player2")
     ResponseEntity<String> removePlayer2(@PathVariable Long gameId) {
