@@ -122,7 +122,17 @@ public class GameService {
         }
     }
 
-    //delete a game. when player1 exit
+
+    //  set player2 status
+    public ResponseEntity<String> setStatus(Long gameId, Long playerId) {
+        Player player = playerService.getPlayer(playerId);
+        boolean status = player.getStatus();
+        player.setStatus(!status);
+
+        return new ResponseEntity<String>(HttpStatus.OK);
+    }
+
+    //  delete a game. when player1 exit
     public ResponseEntity<String> deleteGame(Long gameId) {
         gameRepository.deleteById(gameId);
         return new ResponseEntity<String>(HttpStatus.NO_CONTENT); // response code: 204

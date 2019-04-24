@@ -11,7 +11,7 @@ public abstract class Worker implements Serializable {
 
     @Id
     @GeneratedValue
-    private  Long id;  // make all the worker share one id
+    private Long id;  // make all the worker share one id
 
     @Column
     private long playerId;
