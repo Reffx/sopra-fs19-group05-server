@@ -1,6 +1,7 @@
 package ch.uzh.ifi.seal.soprafs19.entity;
 
 
+import ch.uzh.ifi.seal.soprafs19.repository.GameRepository;
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.*;
@@ -13,24 +14,12 @@ public class Playfield implements Serializable {
 
     @Id
     private long playFieldId; //equal to gameId //
-/*
-    @Column
-    private List<Field> allFields;
 
-    @Column
-    private Tuple worker1;
-
-    @Column
-    private Tuple worker2;
-
-    @Column
-    private Tuple worker3;
-
-    @Column
-    private Tuple worker4;
+    @OneToMany
+    public List<Field> allFields;
 
 
     public long getPlayfieldId() {return playFieldId;}
-    public void setPlayfieldId(long playFieldId) {this.playFieldId = playFieldId;} */
+    public void setPlayfieldId(long playFieldId) {this.playFieldId = playFieldId;}
 
 }
