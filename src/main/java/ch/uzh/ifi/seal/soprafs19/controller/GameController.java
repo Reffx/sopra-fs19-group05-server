@@ -68,6 +68,12 @@ public class GameController {
         return gameService.setStatus(gameId, playerId);
     }
 
+    //  set beginner
+    @GetMapping("/games/{gameId}/beginner")
+    ResponseEntity<Long> setBeginner(@PathVariable Long gameId) {
+        return gameService.setBeginner(gameId);
+    }
+
     //  remove player
     @DeleteMapping("/games/{gameId}/player2")
     ResponseEntity<String> removePlayer2(@PathVariable Long gameId) {

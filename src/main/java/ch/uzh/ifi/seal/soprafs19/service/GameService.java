@@ -136,7 +136,7 @@ public class GameService {
     }
 
     //  set beginner
-    public ResponseEntity<Long> setBeginner(Long gameId, Long playerId) {
+    public ResponseEntity<Long> setBeginner(Long gameId) {
         //  get playerId
         Long player1Id = gameRepository.getById(gameId).getPlayer1().getId();
         Long player2Id = gameRepository.getById(gameId).getPlayer2().getId();
