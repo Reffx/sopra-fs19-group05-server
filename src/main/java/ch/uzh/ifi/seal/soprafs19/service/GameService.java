@@ -65,20 +65,22 @@ public class GameService {
         return new ResponseEntity<Game>(game, HttpStatus.CREATED); //   response code:201, frontend fetch the gameId in the body
     }
 
-    //  update a game, add player
-    public ResponseEntity<String> addPlayer2(Long userId, Long gameId) {
+    //  update a game, add player1 or player2
+    public ResponseEntity<String> addPlayer(Long userId, Long gameId) {
         Game game = gameRepository.getById(gameId);
 
         //  create new player
-        Player player2 = new Player();
-        player2.setId(userId);
-        player2.setGameId(gameId);
+        Player player = new Player();
+        player.setId(userId);
+        player.setGameId(gameId);
         //  save the player1 to the playerRepository
 
-//        playerService.createPlayer(player2);
-//        playerService.savePlayer(player2);
+        if (game.getPlayer2() == null) {
+            game.setPlayer2(player);
+        }else{
+            game.setPlayer1(player);
 
-        game.setPlayer2(player2);
+        }
         game.setSize(2);
         gameRepository.save(game);
         return new ResponseEntity<String>(HttpStatus.OK);   // response code 200

@@ -46,11 +46,11 @@ public class GameController {
         return gameService.getGame(gameId);
     }
 
-    //  add player2
-    @PutMapping("/games/{gameId}/player2")
+    //  add player2 or player1
+    @PutMapping("/games/{gameId}/player")
     @CrossOrigin
-    ResponseEntity<String> addPlayer2(@RequestBody Long userId, @PathVariable Long gameId) {
-        return gameService.addPlayer2(userId, gameId);
+    ResponseEntity<String> addPlayer(@RequestBody Long userId, @PathVariable Long gameId) {
+        return gameService.addPlayer(userId, gameId);
     }
 
     //  ser player color
