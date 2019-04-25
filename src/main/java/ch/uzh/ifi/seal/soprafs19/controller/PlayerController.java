@@ -27,5 +27,9 @@ public class PlayerController {
         return playerService.allPlayers();
     }
 
+    @DeleteMapping("/players/{id}")
+    ResponseEntity<String> delete(@PathVariable Long id) {
+        return playerService.deletebyId(id);
+    }
 }
 
