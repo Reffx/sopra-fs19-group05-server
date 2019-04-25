@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository("workerRepository")
 public interface WorkerRepository extends CrudRepository<Worker, Long> {
-    public Worker findById(long id);
-    public Worker findByPlayerId(Long playerId);
+//    public Worker findById(long id);
+//    public Worker findByPlayerId(Long playerId);
 }
