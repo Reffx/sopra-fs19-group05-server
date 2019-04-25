@@ -188,16 +188,16 @@ public class Playfield implements Serializable {
         this.field14 = field14;
     }
     public Field getField14() {
-        return this.field11;
+        return this.field14;
     }
     public void setField15(Field field15) {
-        this.field11 = field15;
+        this.field15 = field15;
     }
     public Field getField15() {
-        return this.field11;
+        return this.field15;
     }
     public void setField16(Field field16) {
-        this.field11 = field16;
+        this.field16 = field16;
     }
     public Field getField16() {
         return this.field16;
