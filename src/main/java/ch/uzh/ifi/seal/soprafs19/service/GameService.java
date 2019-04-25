@@ -84,13 +84,24 @@ public class GameService {
         return new ResponseEntity<String>(HttpStatus.OK);   // response code 200
     }
 
-    //  update a game, remove player2.
-    public ResponseEntity<String> removePlayer(Long gameId) {
+    //  update a game, remove player1 or player2. if both are null afterwards, delete game
+    public ResponseEntity<String> removePlayer(Long gameId, Long playerId) {
         Game game = gameRepository.getById(gameId);
 
         //  to find the player in the database and remove it, cascade deletion of player2 in the Game instance
-        game.setPlayer2(null);
+        Player player = playerService.getPlayer(playerId);
+        if (game.getPlayer2() == player) {
+            game.setPlayer2(null);
+        }else if (game.getPlayer1() == player) {
+            game.setPlayer1(null);
+        }else{
+            return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
+        }
         gameRepository.save(game);
+
+        if (game.getPlayer2() == null && game.getPlayer1() == null){
+            deleteGame(gameId);
+        }
         return new ResponseEntity<String>(HttpStatus.OK);   // response code 200
     }
 
@@ -155,6 +166,6 @@ public class GameService {
     //  delete a game. when player1 exit
     public ResponseEntity<String> deleteGame(Long gameId) {
         gameRepository.deleteById(gameId);
-        return new ResponseEntity<String>(HttpStatus.NO_CONTENT); // response code: 204
+        return new ResponseEntity<String>(HttpStatus.OK); // response code: 204
     }
 }
