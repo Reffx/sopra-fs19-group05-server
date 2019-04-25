@@ -2,7 +2,9 @@ package ch.uzh.ifi.seal.soprafs19.service;
 
 
 import ch.uzh.ifi.seal.soprafs19.entity.Field;
+import ch.uzh.ifi.seal.soprafs19.entity.Playfield;
 import ch.uzh.ifi.seal.soprafs19.repository.FieldRepository;
+import ch.uzh.ifi.seal.soprafs19.repository.PlayfieldRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,10 +17,11 @@ public class FieldService {
     @Autowired
     public FieldService(FieldRepository fieldRepository) {
         this.fieldRepository = fieldRepository;
+
     }
 
 
-    public Field createField(Long xCoordinate, Long yCoordinate){
+    public Field createField(int xCoordinate, int yCoordinate){
         Field field = new Field();
         field.setX_coordinate(xCoordinate);
         field.setY_coordinate(yCoordinate);

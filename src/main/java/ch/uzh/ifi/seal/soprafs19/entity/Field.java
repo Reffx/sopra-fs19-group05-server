@@ -6,15 +6,19 @@ import javax.persistence.*;
 
 
 
-@Entity
-@IdClass(Coordinates.class) // setting up two primary keys (x & y coordinate = coordinates) //
+@Entity// setting up two primary keys (x & y coordinate = coordinates) //
 public class Field implements Serializable {
-    @Id
-    private Long xCoordinate;
-    @Id
-    private Long yCoordinate;
 
     private static final long serialVersionUID = 1L;
+
+    @Id
+    @GeneratedValue
+    private Long fieldId;
+
+    @Column
+    private int xCoordinate;
+    @Column
+    private int yCoordinate;
 
 
     @Column
@@ -38,22 +42,23 @@ public class Field implements Serializable {
     public boolean getReachedMaxHeight() {return this.reachedMaxHeight;}
     public void setReachedMaxHeight(boolean reachedMaxHeight) {this.reachedMaxHeight = reachedMaxHeight;}
 
-    public Long getX_coordinate() {return this.xCoordinate;}
-    public void setX_coordinate(Long x_coordinate) {this.xCoordinate = x_coordinate;}
+    public int getX_coordinate() {return this.xCoordinate;}
+    public void setX_coordinate(int x_coordinate) {this.xCoordinate = x_coordinate;}
 
-    public Long getY_coordinate() {return this.yCoordinate;}
-    public void setY_coordinate(Long y_coordinate) {this.yCoordinate = y_coordinate;}
+    public int getY_coordinate() {return this.yCoordinate;}
+    public void setY_coordinate(int y_coordinate) {this.yCoordinate = y_coordinate;}
 
+    public long getId() {return this.fieldId;}
+    public void setId(long fieldId) {this.fieldId = fieldId;}
 
-
-    @Override //redo with coordinates //
+   /*@Override //redo with coordinates //
     public boolean equals(Object o) {
         if (o == this) return true;
         if (!(o instanceof Field)) {
             return false;
         }
         Field field = (Field) o;
-        return this.getX_coordinate().equals(field.getX_coordinate()) && this.getY_coordinate().equals(field.getY_coordinate());
-    }
+        return this.getId().equals(field.getId());
+    } */
 
 }
