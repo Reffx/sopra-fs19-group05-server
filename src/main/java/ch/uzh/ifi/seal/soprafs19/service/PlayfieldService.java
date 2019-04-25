@@ -66,7 +66,7 @@ public class PlayfieldService {
             return (playfieldRepository.findById(gameId));
         }
         else{
-            return (initPlayfield(gameId);
+            return initPlayfield(gameId);
         }
     }
 
