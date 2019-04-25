@@ -13,16 +13,16 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class WorkerController {
-    private final WorkerService workerService;
-
-    WorkerController(WorkerService workerService) {
-        this.workerService = workerService;
-    }
-
-    @PostMapping("/games/{gameId}/playfield/worker")
-    @ResponseStatus(HttpStatus.CREATED)
-    @ResponseBody
-    Worker createWorker(@RequestBody Worker newWorker){
-        return this.workerService.createWorker(newWorker);
-    }
+//    private final WorkerService workerService;
+//
+//    WorkerController(WorkerService workerService) {
+//        this.workerService = workerService;
+//    }
+//
+//    @PostMapping("/games/{gameId}/playfield/worker")
+//    @ResponseStatus(HttpStatus.CREATED)
+//    @ResponseBody
+//    Worker createWorker(@RequestBody Worker newWorker){
+//        return this.workerService.createWorker(newWorker);
+//    }
 }

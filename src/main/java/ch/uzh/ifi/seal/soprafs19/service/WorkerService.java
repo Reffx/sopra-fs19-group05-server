@@ -22,7 +22,7 @@ import java.util.Random;
 @Service
 @Transactional
 public class WorkerService {
-    private final PlayfieldRepository playfieldRepository;
+    /*private final PlayfieldRepository playfieldRepository;
     private final FieldRepository fieldRepository;
     //JuWe: added worker and game repo to handle movements of workers for each player
     private final WorkerRepository workerRepository;
@@ -64,4 +64,5 @@ public class WorkerService {
         }
         return new ResponseEntity<Worker>(worker, HttpStatus.OK);
     }
+    */
 }

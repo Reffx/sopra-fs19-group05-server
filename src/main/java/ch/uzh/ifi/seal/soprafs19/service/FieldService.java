@@ -20,13 +20,16 @@ public class FieldService {
 
     }
 
-
     public Field createField(int xCoordinate, int yCoordinate){
         Field field = new Field();
         field.setX_coordinate(xCoordinate);
         field.setY_coordinate(yCoordinate);
         fieldRepository.save(field);
         return field;
+    }
+
+    public void saveField(Field field) {
+        fieldRepository.save(field);
     }
 
 }
