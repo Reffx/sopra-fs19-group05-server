@@ -31,6 +31,7 @@ public class PlayfieldService {
     public Playfield initPlayfield(long gameId){
 
        Playfield newPlayfield = new Playfield();
+       newPlayfield.setPlayfieldId(gameId);
        Field field1 = fieldService.createField(0,0);
        Field field2 = fieldService.createField(0,1);
        Field field3 = fieldService.createField(0,2);
