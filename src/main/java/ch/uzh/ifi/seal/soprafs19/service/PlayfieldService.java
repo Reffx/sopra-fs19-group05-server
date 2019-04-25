@@ -70,4 +70,10 @@ public class PlayfieldService {
         }
     }
 
+    public Field getField(int fieldNum, long id){
+        //this function returns the field object on the fieldNum-th position in the allFields list
+        // e.g. fieldNum is 4, then it will return the 4th entry of the allFields list which is the 4th field
+        return playfieldRepository.findById(id).getAllFields().get(fieldNum);
+    }
+
 }
