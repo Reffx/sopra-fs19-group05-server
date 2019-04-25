@@ -69,10 +69,14 @@ public class Game implements Serializable {
 
     public void setIsPlaying(boolean isPlaying) {
         this.isPlaying = isPlaying;
+
     }
     public boolean getIsPlaying() {
         return isPlaying;
     }
+
+    public void setGameMode(GameMode gameMode) {this.gameMode = gameMode;}
+    public GameMode getGameMode() {return this.gameMode;}
 
     public void setGameMode(GameMode gameMode) {this.gameMode = gameMode;}
     public GameMode getGameMode() {return this.gameMode;}

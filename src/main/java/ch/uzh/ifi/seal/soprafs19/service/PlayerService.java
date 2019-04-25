@@ -57,4 +57,10 @@ public class PlayerService {
         playerRepository.save(player);
     }
 
+    // delete a player by id
+    public ResponseEntity<String> deletebyId(Long playerId) {
+        playerRepository.deleteById(playerId);
+        return new ResponseEntity<String> (HttpStatus.OK);
+    }
+
 }

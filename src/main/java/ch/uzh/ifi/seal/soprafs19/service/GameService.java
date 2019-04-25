@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Random;
+
 @Service
 @Transactional
 public class GameService {
@@ -45,6 +47,7 @@ public class GameService {
         //  save the player1 to the playerRepository
         player1.setColor(Color.BLUE);
 
+
         //  save first to get gameId
         game.setPlayer1(player1);
         gameRepository.save(game);
@@ -60,32 +63,45 @@ public class GameService {
         return new ResponseEntity<Game>(game, HttpStatus.CREATED); //   response code:201, frontend fetch the gameId in the body
     }
 
-    //  update a game, add player
-    public ResponseEntity<String> addPlayer2(Long userId, Long gameId) {
+    //  update a game, add player1 or player2
+    public ResponseEntity<String> addPlayer(Long userId, Long gameId) {
         Game game = gameRepository.getById(gameId);
 
         //  create new player
-        Player player2 = new Player();
-        player2.setId(userId);
-        player2.setGameId(gameId);
+        Player player = new Player();
+        player.setId(userId);
+        player.setGameId(gameId);
         //  save the player1 to the playerRepository
 
-//        playerService.createPlayer(player2);
-//        playerService.savePlayer(player2);
+        if (game.getPlayer2() == null) {
+            game.setPlayer2(player);
+        }else{
+            game.setPlayer1(player);
 
-        game.setPlayer2(player2);
+        }
         game.setSize(2);
         gameRepository.save(game);
         return new ResponseEntity<String>(HttpStatus.OK);   // response code 200
     }
 
-    //  update a game, remove player2.
-    public ResponseEntity<String> removePlayer(Long gameId) {
+    //  update a game, remove player1 or player2. if both are null afterwards, delete game
+    public ResponseEntity<String> removePlayer(Long gameId, Long playerId) {
         Game game = gameRepository.getById(gameId);
 
         //  to find the player in the database and remove it, cascade deletion of player2 in the Game instance
-        game.setPlayer2(null);
+        Player player = playerService.getPlayer(playerId);
+        if (game.getPlayer2() == player) {
+            game.setPlayer2(null);
+        }else if (game.getPlayer1() == player) {
+            game.setPlayer1(null);
+        }else{
+            return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
+        }
         gameRepository.save(game);
+
+        if (game.getPlayer2() == null && game.getPlayer1() == null){
+            deleteGame(gameId);
+        }
         return new ResponseEntity<String>(HttpStatus.OK);   // response code 200
     }
 
@@ -119,9 +135,37 @@ public class GameService {
         }
     }
 
-    //delete a game. when player1 exit
+
+    //  set player2 status
+    public ResponseEntity<String> setStatus(Long gameId, Long playerId) {
+        Player player = playerService.getPlayer(playerId);
+        boolean status = player.getStatus();
+        player.setStatus(!status);  //  negation of the original status
+
+        playerService.savePlayer(player);
+        return new ResponseEntity<String>(HttpStatus.OK);
+    }
+    
+    //  set beginner
+    public ResponseEntity<Long> setBeginner(Long gameId) {
+        //  get playerId
+        Long player1Id = gameRepository.getById(gameId).getPlayer1().getId();
+        Long player2Id = gameRepository.getById(gameId).getPlayer2().getId();
+
+        //  randomly select a player
+        Random random = new Random();
+
+        int id_rand = random.nextInt(2);
+        if (id_rand == 0) {
+            return new ResponseEntity<Long>(player1Id, HttpStatus.OK);
+        }
+        return new ResponseEntity<Long>(player2Id, HttpStatus.OK);
+    }
+
+
+    //  delete a game. when player1 exit
     public ResponseEntity<String> deleteGame(Long gameId) {
         gameRepository.deleteById(gameId);
-        return new ResponseEntity<String>(HttpStatus.NO_CONTENT); // response code: 204
+        return new ResponseEntity<String>(HttpStatus.OK); // response code: 204
     }
 }
