@@ -10,4 +10,5 @@ import org.springframework.stereotype.Repository;
 public interface FieldRepository extends CrudRepository<Field, Long> {
    public Field findByXCoordinate(long xCoordinate);
     public Field findByYCoordinate(long yCoordinate);
+    public Field findByFieldId(long fieldId);
 }
