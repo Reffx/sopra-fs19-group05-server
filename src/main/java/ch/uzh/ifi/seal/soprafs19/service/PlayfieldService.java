@@ -60,8 +60,14 @@ public class PlayfieldService {
         return newPlayfield;
     }
 
-    public ResponseEntity<Playfield> getPlayfield(long playfieldId) {
-        return new ResponseEntity<Playfield>(playfieldRepository.findById(playfieldId), HttpStatus.FOUND);
+    //JuWe: updated the getPlayfield function in order to have the functionailty to create a playfield or retrieve one from the repo
+    public Playfield getPlayfield(long gameId) {
+        if (playfieldRepository.findById(gameId) != null) {
+            return (playfieldRepository.findById(gameId));
+        }
+        else{
+            return (initPlayfield(gameId);
+        }
     }
 
 }

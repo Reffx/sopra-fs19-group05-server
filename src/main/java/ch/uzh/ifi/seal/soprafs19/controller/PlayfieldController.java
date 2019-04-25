@@ -20,7 +20,7 @@ public class PlayfieldController {
 
     @GetMapping("/games/{gameId}/playfield/create")
     Playfield newPlayfield(@PathVariable long gameId){
-        return playfieldService.initPlayfield(gameId);
+        return playfieldService.getPlayfield(gameId);
     }
 
     @CrossOrigin
