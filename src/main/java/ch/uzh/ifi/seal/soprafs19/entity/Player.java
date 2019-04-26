@@ -4,6 +4,7 @@ import ch.uzh.ifi.seal.soprafs19.constant.Color;
 import org.hibernate.sql.Insert;
 
 import java.io.Serializable;
+import java.util.List;
 import javax.persistence.*;
 
 @Entity
@@ -29,11 +30,21 @@ public class Player implements Serializable {
 
     //  add worker1 and worker2 for player
     @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "id", column = @Column(name = "workerId_1")),
+            @AttributeOverride(name = "playerId", column = @Column(name = "playerId_1")),
+            @AttributeOverride(name = "fieldNum", column = @Column(name = "fieldNum_1"))
+    })
     private Worker worker1;
 
     @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "id", column = @Column(name = "workerId_2")),
+            @AttributeOverride(name = "playerId", column = @Column(name = "playerId_2")),
+            @AttributeOverride(name = "fieldNum", column = @Column(name = "fieldNum_2"))
+    })
     private Worker worker2;
-//
+
 //    //  constructor1
 //    public Player(Worker worker) {
 //        this.worker1 = worker;

@@ -22,7 +22,7 @@ public abstract class Worker {
     public void setPlayerId(long playerId) {this.playerId = playerId; }
 
     public void setFieldNum(int num){this.fieldNum = num;}
-    public int getXCoordinate(){return this.fieldNum;}
+    public int getFieldNum(){return this.fieldNum;}
 
 
     @Override

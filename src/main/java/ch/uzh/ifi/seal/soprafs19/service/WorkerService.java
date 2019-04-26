@@ -6,7 +6,7 @@ import ch.uzh.ifi.seal.soprafs19.entity.*;
 import ch.uzh.ifi.seal.soprafs19.repository.FieldRepository;
 import ch.uzh.ifi.seal.soprafs19.repository.GameRepository;
 import ch.uzh.ifi.seal.soprafs19.repository.PlayfieldRepository;
-import ch.uzh.ifi.seal.soprafs19.repository.WorkerRepository;
+//import ch.uzh.ifi.seal.soprafs19.repository.WorkerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
