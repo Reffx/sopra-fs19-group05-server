@@ -33,7 +33,7 @@ public class Player implements Serializable {
     @AttributeOverrides({
             @AttributeOverride(name = "id", column = @Column(name = "workerId_1")),
             @AttributeOverride(name = "playerId", column = @Column(name = "playerId_1")),
-            @AttributeOverride(name = "fieldNum", column = @Column(name = "fieldNum_1"))
+            @AttributeOverride(name = "position", column = @Column(name = "position_1"))
     })
     private Worker worker1;
 
@@ -41,7 +41,7 @@ public class Player implements Serializable {
     @AttributeOverrides({
             @AttributeOverride(name = "id", column = @Column(name = "workerId_2")),
             @AttributeOverride(name = "playerId", column = @Column(name = "playerId_2")),
-            @AttributeOverride(name = "fieldNum", column = @Column(name = "fieldNum_2"))
+            @AttributeOverride(name = "position", column = @Column(name = "position_2"))
     })
     private Worker worker2;
 //    //  constructor1
