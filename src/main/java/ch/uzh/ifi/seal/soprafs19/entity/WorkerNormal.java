@@ -4,7 +4,7 @@ import javax.persistence.Embeddable;
 import javax.persistence.Entity;
 
 @Embeddable
-public class Worker0 extends Worker{
+public class WorkerNormal extends Worker{
 
     public void move(long xCoordinate, long yCoordinate) {
 
