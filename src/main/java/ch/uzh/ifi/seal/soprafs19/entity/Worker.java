@@ -4,7 +4,8 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @Embeddable
-public abstract class Worker implements Serializable {
+@MappedSuperclass
+public class Worker implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -14,8 +15,8 @@ public abstract class Worker implements Serializable {
 
     //  abstract method to be implemented
     //JuWe: changed params --> prior was fieldId, now its xCoordinate, yCoordinate
-    public abstract void move(long xCoordinate, long yCoordinate);
-    public abstract void build(long xCoordinate, long yCoordinate, int level);
+//    public abstract void move(long xCoordinate, long yCoordinate);
+//    public abstract void build(long xCoordinate, long yCoordinate, int level);
 
     public int getId() { return this.id; }
     public void setId(int id) {this.id = id;}

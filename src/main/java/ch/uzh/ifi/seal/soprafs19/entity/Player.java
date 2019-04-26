@@ -50,11 +50,11 @@ public class Player implements Serializable {
 //        this.worker2 = worker;
 //    }
 //
-    //  constructor2 : set default as normal mode
-//    public Player() {
-//        this.worker1 = new Worker0();
-//        this.worker2 = new Worker0();
-//    }
+      //constructor2 : set default as normal mode
+    public Player() {
+        this.worker1 = new WorkerNormal();
+        this.worker2 = new WorkerNormal();
+    }
 
 
     public Long getId() {

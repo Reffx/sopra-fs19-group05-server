@@ -4,6 +4,8 @@ import ch.uzh.ifi.seal.soprafs19.constant.Color;
 import ch.uzh.ifi.seal.soprafs19.constant.GameMode;
 import ch.uzh.ifi.seal.soprafs19.entity.Game;
 import ch.uzh.ifi.seal.soprafs19.entity.Player;
+import ch.uzh.ifi.seal.soprafs19.entity.Worker;
+import ch.uzh.ifi.seal.soprafs19.entity.WorkerNormal;
 import ch.uzh.ifi.seal.soprafs19.repository.GameRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -47,6 +49,10 @@ public class GameService {
         //  save the player1 to the playerRepository
         player1.setColor(Color.BLUE);
 
+//        //  instantiate default worker as normal
+//        Worker worker = new WorkerNormal();
+//        player1.setWorker1(worker);
+//        player1.setWorker2(worker);
 
         //  save first to get gameId
         game.setPlayer1(player1);
