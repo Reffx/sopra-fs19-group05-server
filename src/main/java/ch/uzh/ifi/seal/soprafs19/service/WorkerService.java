@@ -1,40 +1,25 @@
-package ch.uzh.ifi.seal.soprafs19.service;
-
-import ch.uzh.ifi.seal.soprafs19.constant.Color;
-import ch.uzh.ifi.seal.soprafs19.constant.GameMode;
-import ch.uzh.ifi.seal.soprafs19.entity.*;
-import ch.uzh.ifi.seal.soprafs19.repository.FieldRepository;
-import ch.uzh.ifi.seal.soprafs19.repository.GameRepository;
-import ch.uzh.ifi.seal.soprafs19.repository.PlayfieldRepository;
+//package ch.uzh.ifi.seal.soprafs19.service;
+//
+//import ch.uzh.ifi.seal.soprafs19.entity.*;
+//
 //import ch.uzh.ifi.seal.soprafs19.repository.WorkerRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Random;
-
-//@Service
-//@Transactional
-public class WorkerService {
-//    private final PlayfieldRepository playfieldRepository;
-//    private final FieldRepository fieldRepository;
-//    //JuWe: added worker and game repo to handle movements of workers for each player
+//import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.http.HttpStatus;
+//import org.springframework.http.ResponseEntity;
+//import org.springframework.stereotype.Service;
+//import org.springframework.transaction.annotation.Transactional;
+//
+//
+////@Service
+////@Transactional
+//public class WorkerService {
 //    private final WorkerRepository workerRepository;
-//    private final GameRepository gameRepository;
-//    private final GameService gameService;
-//    private final FieldService fieldService;
+//    private final PlayfieldService playfieldService;
 //
 //    @Autowired
-//    public WorkerService(PlayfieldRepository playfieldRepository, FieldRepository fieldRepository, WorkerRepository workerRepository, GameRepository gameRepository, GameService gameService, FieldService fieldService) {
-//        this.playfieldRepository = playfieldRepository;
-//        this.fieldRepository = fieldRepository;
-//        //JuWe: added repos and gameservice to handle worker movements
-//        this.workerRepository = workerRepository;
-//        this.gameRepository = gameRepository;
-//        this.gameService = gameService;
-//        this.fieldService = fieldService;
+//    public WorkerService(WorkerRepository workerRepository, PlayfieldService playfieldService) {
+//       this.workerRepository = workerRepository;
+//       this.playfieldService = playfieldService;
 //    }
 //
 //    public Worker createWorker(Worker newWorker) {
@@ -46,30 +31,23 @@ public class WorkerService {
 //    }
 //
 //
-//    public ResponseEntity<Worker> placeWorker(long fieldId, long id, long gameId) {
+//    public ResponseEntity<Field> placeWorker(int fieldNum, long id, long gameId) {
 //
-//        // if the state of a field is occupied then an conflict error is raised otherwise worker position gets updated and field status is set to occupied
-//        Playfield playfield = playfieldRepository.findById(gameId);
-//        Field placingField = fieldRepository.findByFieldId(fieldId);
-//        Worker worker = workerRepository.findById(id);
-//        if ((!placingField.getOccupation())) {
-//            worker.setXCoordinate(placingField.getX_coordinate());
-//            worker.setYCoordinate(placingField.getY_coordinate());
-//            placingField.setOccupation(true);
-//        } else {
-//            return new ResponseEntity<Worker>(HttpStatus.CONFLICT);
-//        }
-//        return new ResponseEntity<Worker>(worker, HttpStatus.OK);
+//       // TODO: check if state of field is occupied, if so send http.conflict, otherwise update position of worker
+//        Field placingField = playfieldService.getField(fieldNum, gameId);
+//        //just a dumy return value
+//        return new ResponseEntity<Field>(placingField, HttpStatus.OK);
 //    }
 //
 //
 //
 //
-//    public ResponseEntity<Field> highlightField(long fieldId) {
-//        Field currentField = fieldRepository.findByFieldId(fieldId);
+//    public ResponseEntity<Field> highlightField(int fieldNum, long gameId) {
+//        Field currentField = playfieldService.getField(fieldNum, gameId);
+//        //todo: check available moving options and send them back to frontend
 //        long x = currentField.getX_coordinate();
 //        long y = currentField.getY_coordinate();
 //        return new ResponseEntity<Field>(currentField, HttpStatus.OK);
 //
 //    }
-}
+//}

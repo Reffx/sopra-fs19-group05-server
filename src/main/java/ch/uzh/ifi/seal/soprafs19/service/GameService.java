@@ -47,8 +47,6 @@ public class GameService {
         //  save the player1 to the playerRepository
         player1.setColor(Color.BLUE);
 
-//        playerService.createPlayer(player1);
-//        playerService.savePlayer(player1);
 
         //  save first to get gameId
         game.setPlayer1(player1);

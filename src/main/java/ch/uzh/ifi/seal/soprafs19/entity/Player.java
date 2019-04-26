@@ -56,6 +56,7 @@ public class Player implements Serializable {
 //        this.worker2 = new Worker0();
 //    }
 
+
     public Long getId() {
         return id;
     }

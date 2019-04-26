@@ -69,6 +69,7 @@ public class Game implements Serializable {
 
     public void setIsPlaying(boolean isPlaying) {
         this.isPlaying = isPlaying;
+
     }
     public boolean getIsPlaying() {
         return isPlaying;
@@ -94,5 +95,4 @@ public class Game implements Serializable {
         Game game = (Game) o;
         return this.getId().equals(game.getId());
     }
-
 }

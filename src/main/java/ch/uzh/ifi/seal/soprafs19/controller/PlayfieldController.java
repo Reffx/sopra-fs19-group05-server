@@ -18,9 +18,9 @@ public class PlayfieldController {
     }
 
 
-    @PostMapping("/games/{gameId}/playfield/create")
+    @GetMapping("/games/{gameId}/playfield/create")
     Playfield newPlayfield(@PathVariable long gameId){
-        return playfieldService.initPlayfield(gameId);
+        return playfieldService.getPlayfield(gameId);
     }
 
     @CrossOrigin
