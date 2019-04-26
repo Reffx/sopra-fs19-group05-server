@@ -21,6 +21,7 @@ public class GameController {
     //  create a game
     @PostMapping("/games")
     ResponseEntity<Game> createGame(@RequestBody Game game) {
+//        System.out.println("?" + game.getPlayer1().getWorker1());
         return gameService.createGame(game);
     }
 

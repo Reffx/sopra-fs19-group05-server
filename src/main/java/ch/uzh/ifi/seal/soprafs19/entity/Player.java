@@ -44,14 +44,13 @@ public class Player implements Serializable {
             @AttributeOverride(name = "fieldNum", column = @Column(name = "fieldNum_2"))
     })
     private Worker worker2;
-
 //    //  constructor1
 //    public Player(Worker worker) {
 //        this.worker1 = worker;
 //        this.worker2 = worker;
 //    }
 //
-//    //  constructor2 : set default as normal mode
+    //  constructor2 : set default as normal mode
 //    public Player() {
 //        this.worker1 = new Worker0();
 //        this.worker2 = new Worker0();

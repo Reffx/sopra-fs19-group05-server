@@ -4,7 +4,9 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @Embeddable
-public abstract class Worker {
+public abstract class Worker implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private int id;  // worker1 or worker2
     private long playerId;
