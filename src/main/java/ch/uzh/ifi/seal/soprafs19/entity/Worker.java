@@ -9,9 +9,9 @@ public class Worker implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private int id;  // worker1 or worker2
+    private int id ;  // worker1 or worker2
     private long playerId;
-    private int fieldNum;
+    private int position;
 
     //  abstract method to be implemented
     //JuWe: changed params --> prior was fieldId, now its xCoordinate, yCoordinate
@@ -24,8 +24,8 @@ public class Worker implements Serializable {
     public long getPlayerId() {return this.playerId;}
     public void setPlayerId(long playerId) {this.playerId = playerId; }
 
-    public void setFieldNum(int num){this.fieldNum = num;}
-    public int getFieldNum(){return this.fieldNum;}
+    public void setPosition(int num){this.position = num;}
+    public int getPosition(){return this.position;}
 
 
     @Override
