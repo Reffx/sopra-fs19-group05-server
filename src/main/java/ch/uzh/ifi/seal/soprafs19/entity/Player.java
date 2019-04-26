@@ -1,6 +1,7 @@
 package ch.uzh.ifi.seal.soprafs19.entity;
 
 import ch.uzh.ifi.seal.soprafs19.constant.Color;
+import org.hibernate.sql.Insert;
 
 import java.io.Serializable;
 import javax.persistence.*;
@@ -26,12 +27,12 @@ public class Player implements Serializable {
     @Column
     private String username;
 
-//    //  add worker1 and worker2 for player
-//    @OneToMany
-//    private Worker worker1;
-//
-//    @OneToMany
-//    private Worker worker2;
+    //  add worker1 and worker2 for player
+    @Embedded
+    private Worker worker1;
+
+    @Embedded
+    private Worker worker2;
 //
 //    //  constructor1
 //    public Player(Worker worker) {
@@ -80,19 +81,19 @@ public class Player implements Serializable {
         return this.username;
     }
 
-//    public void setWorker1(Worker worker) {
-//        this.worker1 = worker;
-//    }
-//    public void setWorker2(Worker worker) {
-//        this.worker2 = worker;
-//    }
-//
-//    public Worker getWorker1() {
-//        return worker1;
-//    }
-//    public Worker getWorker2() {
-//        return worker2;
-//    }
+    public void setWorker1(Worker worker) {
+        this.worker1 = worker;
+    }
+    public void setWorker2(Worker worker) {
+        this.worker2 = worker;
+    }
+
+    public Worker getWorker1() {
+        return worker1;
+    }
+    public Worker getWorker2() {
+        return worker2;
+    }
 
     @Override
     public boolean equals(Object o) {

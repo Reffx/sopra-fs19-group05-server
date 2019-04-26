@@ -1,8 +1,9 @@
 package ch.uzh.ifi.seal.soprafs19.entity;
 
+import javax.persistence.Embeddable;
 import javax.persistence.Entity;
 
-@Entity
+@Embeddable
 public class Worker0 extends Worker{
 
     public void move(long xCoordinate, long yCoordinate) {

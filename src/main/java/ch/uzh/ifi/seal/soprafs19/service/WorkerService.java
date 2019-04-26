@@ -15,8 +15,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Random;
 
-@Service
-@Transactional
+//@Service
+//@Transactional
 public class WorkerService {
 //    private final PlayfieldRepository playfieldRepository;
 //    private final FieldRepository fieldRepository;
