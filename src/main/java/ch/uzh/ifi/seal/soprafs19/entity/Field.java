@@ -8,22 +8,19 @@ import javax.persistence.*;
 
 
 
-@Entity
+@Embeddable
 public class Field implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @Id
-    @GeneratedValue
-    private Long id;
+    @Column
+    private int fieldNum;
 
     @Column
     private int xCoordinate;
     @Column
     private int yCoordinate;
 
-    @Column
-    private int fieldNum;
     @Column
     private int height;
 
@@ -50,20 +47,11 @@ public class Field implements Serializable {
     public int getY_coordinate() {return this.yCoordinate;}
     public void setY_coordinate(int y_coordinate) {this.yCoordinate = y_coordinate;}
 
-    public Long getId() {return this.id;}
-    public void setId(long id) {this.id = id;}
+
 
     public int getFieldNum() {return this.fieldNum;}
     public void setFieldNum(int num) {this.fieldNum = num;}
 
-   @Override
-    public boolean equals(Object o) {
-        if (o == this) return true;
-        if (!(o instanceof Field)) {
-            return false;
-        }
-        Field field = (Field) o;
-        return this.getId().equals(field.getId());
-    }
+
 
 }

@@ -8,17 +8,19 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 
 @Service
 @Transactional
 public class WorkerService {
-    private final BoardService playfieldService;
     private final PlayerService playerService;
+    private final BoardService boardService;
 
     @Autowired
-    public WorkerService(BoardService playfieldService, PlayerService playerService) {
-       this.playfieldService = playfieldService;
+    public WorkerService(PlayerService playerService, BoardService boardService) {
        this.playerService = playerService;
+       this.boardService = boardService;
     }
 
 
@@ -27,9 +29,14 @@ public class WorkerService {
         return (x * 5 + y);
     }
 
-    // move function
+    // move function: dest is fieldNum
     public ResponseEntity<Worker> moveTo(long gameId, long playerId, int workerId, int dest) {
+
+        //  find the destination field
         Player player = playerService.getPlayer(playerId);
+        Board board = boardService.getBoard(gameId);
+        List<Field>  allFields = board.getAllFields();
+        Field dest_field = allFields.get(dest);
 
         // find the worker to be updated
         Worker worker;
@@ -41,7 +48,13 @@ public class WorkerService {
             return new ResponseEntity<Worker>( HttpStatus.NOT_FOUND);
         }
 
-        // check if the dest is allowed
+        // check if the dest is legal
+        try {
+            worker.moveTo(dest_field);
+        }catch (Exception e) {
+            return new ResponseEntity<Worker>(HttpStatus.CONFLICT); //  illegal move
+        }
+
         return new ResponseEntity<Worker>(worker, HttpStatus.OK);
     }
 
@@ -59,7 +72,7 @@ public class WorkerService {
 //    public ResponseEntity<Field> placeWorker(int fieldNum, long id, long gameId) {
 //
 //       // TODO: check if state of field is occupied, if so send http.conflict, otherwise update position of worker
-//        Field placingField = playfieldService.getField(fieldNum, gameId);
+//        Field placingField = boardService.getField(fieldNum, gameId);
 //        //just a dumy return value
 //        return new ResponseEntity<Field>(placingField, HttpStatus.OK);
 //    }
@@ -68,7 +81,7 @@ public class WorkerService {
 //
 //
 //    public ResponseEntity<Field> highlightField(int fieldNum, long gameId) {
-//        Field currentField = playfieldService.getField(fieldNum, gameId);
+//        Field currentField = boardService.getField(fieldNum, gameId);
 //        //todo: check available moving options and send them back to frontend
 //        long x = currentField.getX_coordinate();
 //        long y = currentField.getY_coordinate();

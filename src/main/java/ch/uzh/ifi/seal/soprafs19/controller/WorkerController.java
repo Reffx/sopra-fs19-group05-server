@@ -14,6 +14,7 @@ public class WorkerController {
         this.workerService = workerService;
     }
 
+    //  moveTo function
     @PutMapping("/games/{gameId}/{playerId}/{workerId}/move")
     ResponseEntity<Worker> moveTo(@PathVariable(name = "gameId") long gameId, @PathVariable(name = "playerId") long playerId, @PathVariable(name = "workerId") int workerId, @RequestBody int dest) {
         return workerService.moveTo(gameId, playerId, workerId, dest);

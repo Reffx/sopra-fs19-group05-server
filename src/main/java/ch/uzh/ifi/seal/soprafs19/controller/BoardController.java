@@ -17,11 +17,11 @@ public class BoardController {
 
 
     @GetMapping("/games/{gameId}/board/create")
-    Board newPlayfield(@PathVariable long gameId){
-        return boardService.getPlayfield(gameId);
+    Board newBoard(@PathVariable long gameId){
+        return boardService.getBoard(gameId);
     }
 
     @CrossOrigin
     @PutMapping("board/{boardId}")
-    Board updatePlayfield(@RequestBody Board newPlayfield){ return this.boardService.updatePlayfield(newPlayfield);}
+    Board updateBoard(@RequestBody Board newBoard){ return this.boardService.updateBoard(newBoard);}
 }

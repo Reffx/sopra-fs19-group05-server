@@ -23,7 +23,7 @@ public class BoardService {
         this.fieldService = fieldService;
     }
 
-    public Board initPlayfield(Long gameId) {
+    public Board initBoard(Long gameId) {
 
         Board board = new Board();
         board.setId(gameId);
@@ -39,7 +39,6 @@ public class BoardService {
                 field.setY_coordinate(j);
                 ++num;
                 allFields.add(field);
-                fieldService.saveField(field);
             }
         }
 
@@ -48,19 +47,19 @@ public class BoardService {
         return board;
     }
 
-    public Board updatePlayfield (Board newPlayfield){
-        Board tempPlayfield = boardRepository.findById(newPlayfield.getId());
-        boardRepository.save(tempPlayfield);
-        return newPlayfield;
+    public Board updateBoard (Board newBoard){
+        Board tempBoard = boardRepository.findById(newBoard.getId());
+        boardRepository.save(tempBoard);
+        return newBoard;
     }
 
-    //JuWe: updated the getPlayfield function in order to have the functionailty to create a board or retrieve one from the repo
-    public Board getPlayfield(long gameId) {
+    //JuWe: updated the getBoard function in order to have the functionailty to create a board or retrieve one from the repo
+    public Board getBoard(long gameId) {
         if (boardRepository.findById(gameId) != null) {
             return (boardRepository.findById(gameId));
         }
         else{
-            return initPlayfield(gameId);
+            return initBoard(gameId);
         }
     }
 

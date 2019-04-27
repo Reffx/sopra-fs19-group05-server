@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository("boardRepository")
 public interface BoardRepository extends CrudRepository<Board, Long> {
-    Board findById(long playFieldId);
+    Board findById(long boardId);
 }

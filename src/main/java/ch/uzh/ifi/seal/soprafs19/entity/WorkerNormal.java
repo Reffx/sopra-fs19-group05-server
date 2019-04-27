@@ -6,7 +6,7 @@ import javax.persistence.Entity;
 @Embeddable
 public class WorkerNormal extends Worker{
 
-    public void move(long gameId, int dest) {
+    public void moveTo(Field dest_field) {
 
     }
 
