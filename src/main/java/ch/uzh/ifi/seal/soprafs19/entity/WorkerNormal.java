@@ -24,4 +24,8 @@ public class WorkerNormal extends Worker{
     public void build(long gameId, int dest) {
 
     }
+
+    public boolean isWinner(){
+        return false;
+    };
 }
