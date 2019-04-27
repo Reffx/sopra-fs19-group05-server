@@ -12,11 +12,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @Transactional
 public class WorkerService {
-    private final PlayfieldService playfieldService;
+    private final BoardService playfieldService;
     private final PlayerService playerService;
 
     @Autowired
-    public WorkerService(PlayfieldService playfieldService, PlayerService playerService) {
+    public WorkerService(BoardService playfieldService, PlayerService playerService) {
        this.playfieldService = playfieldService;
        this.playerService = playerService;
     }

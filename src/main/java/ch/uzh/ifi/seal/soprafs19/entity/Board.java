@@ -2,7 +2,6 @@ package ch.uzh.ifi.seal.soprafs19.entity;
 
 
 import ch.uzh.ifi.seal.soprafs19.repository.GameRepository;
-import jdk.nashorn.api.tree.ArrayLiteralTree;
 
 import java.io.Serializable;
 import java.util.List;
@@ -10,7 +9,7 @@ import javax.persistence.*;
 
 
 @Entity
-public class Playfield implements Serializable {
+public class Board implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
