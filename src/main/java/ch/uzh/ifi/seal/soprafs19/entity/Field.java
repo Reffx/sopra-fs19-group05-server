@@ -1,6 +1,7 @@
 package ch.uzh.ifi.seal.soprafs19.entity;
 
 import net.bytebuddy.dynamic.loading.InjectionClassLoader;
+import org.hibernate.annotations.Target;
 
 import java.io.Serializable;
 import javax.persistence.*;
@@ -24,9 +25,9 @@ public class Field implements Serializable {
     @Column
     private int height;
 
-
-    @Column // as a type worker, if no worker then null, else whole worker object //
-    private boolean occupation;
+//    @Embedded
+//    @Target(WorkerNormal.class)
+    private Worker occupier;
     @Column
     private boolean reachedMaxHeight;
 
@@ -34,8 +35,8 @@ public class Field implements Serializable {
     public int getHeight() {return this.height;}
     public void setHeight(int height) {this.height = height;}
 
-    public boolean getOccupation() {return this.occupation;}
-    public void setOccupation(boolean occupation) {this.occupation = occupation;}
+    public Worker getOccupier() {return this.occupier;}
+    public void setOccupier(boolean occupation) {this.occupier = occupier;}
 
     public boolean getReachedMaxHeight() {return this.reachedMaxHeight;}
     public void setReachedMaxHeight(boolean reachedMaxHeight) {this.reachedMaxHeight = reachedMaxHeight;}
