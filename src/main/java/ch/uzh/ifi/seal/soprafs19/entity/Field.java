@@ -31,7 +31,6 @@ public class Field implements Serializable {
     private boolean reachedMaxHeight;
 
 
-
     public int getHeight() {return this.height;}
     public void setHeight(int height) {this.height = height;}
 

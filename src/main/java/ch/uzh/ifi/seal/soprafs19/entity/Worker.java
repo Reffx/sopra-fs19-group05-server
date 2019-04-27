@@ -13,6 +13,7 @@ public abstract class Worker implements Serializable {
     private int id ;  // worker1 or worker2
     private long playerId;
     private int position;
+    private boolean isNext = false;
 
     //  abstract method to be implemented
     //  here is a inner move function, there are move and build function in workerService, return ResponseEntity
@@ -27,6 +28,9 @@ public abstract class Worker implements Serializable {
 
     public void setPosition(int num){this.position = num;}
     public int getPosition(){return this.position;}
+
+    public void setIsNext(boolean isNext) {this.isNext = isNext;}
+    public boolean getIsNext() {return isNext;}
 
 
     @Override
