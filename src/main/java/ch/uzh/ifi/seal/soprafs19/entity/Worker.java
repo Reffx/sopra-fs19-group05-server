@@ -17,7 +17,7 @@ public abstract class Worker implements Serializable {
 
     //  abstract method to be implemented
     //  here is a inner move function, there are move and build function in workerService, return ResponseEntity
-    public abstract void moveTo(Field dest_field);
+    public abstract boolean moveTo(Field depart, Field dest);
     public abstract void build(long gameId, int dest);
 
     public int getId() { return this.id; }

@@ -37,6 +37,7 @@ public class WorkerService {
         Board board = boardService.getBoard(gameId);
         List<Field>  allFields = board.getAllFields();
         Field dest_field = allFields.get(dest);
+        //  Field depart_field
 
         // find the worker to be updated
         Worker worker;
@@ -48,13 +49,11 @@ public class WorkerService {
             return new ResponseEntity<Worker>( HttpStatus.NOT_FOUND);
         }
 
-        // check if the dest is legal
-        try {
-            worker.moveTo(dest_field);
-        }catch (Exception e) {
-            return new ResponseEntity<Worker>(HttpStatus.CONFLICT); //  illegal move
-        }
-
+//        // check if the dest is legal
+//        if (moveTo(dest_field))
+//            return new ResponseEntity<Worker>(HttpStatus.CONFLICT);
+//        }
+//
         return new ResponseEntity<Worker>(worker, HttpStatus.OK);
     }
 

@@ -28,8 +28,9 @@ public class Field implements Serializable {
 //    @Embedded
 //    @Target(WorkerNormal.class)
     private Worker occupier;
-    @Column
-    private boolean reachedMaxHeight;
+
+//    @Column
+//    private boolean reachedMaxHeight;
 
 
     public int getHeight() {return this.height;}
@@ -38,15 +39,14 @@ public class Field implements Serializable {
     public Worker getOccupier() {return this.occupier;}
     public void setOccupier(boolean occupation) {this.occupier = occupier;}
 
-    public boolean getReachedMaxHeight() {return this.reachedMaxHeight;}
-    public void setReachedMaxHeight(boolean reachedMaxHeight) {this.reachedMaxHeight = reachedMaxHeight;}
+//    public boolean getReachedMaxHeight() {return this.reachedMaxHeight;}
+//    public void setReachedMaxHeight(boolean reachedMaxHeight) {this.reachedMaxHeight = reachedMaxHeight;}
 
     public int getX_coordinate() {return this.xCoordinate;}
     public void setX_coordinate(int x_coordinate) {this.xCoordinate = x_coordinate;}
 
     public int getY_coordinate() {return this.yCoordinate;}
     public void setY_coordinate(int y_coordinate) {this.yCoordinate = y_coordinate;}
-
 
 
     public int getFieldNum() {return this.fieldNum;}
