@@ -1,6 +1,7 @@
 package ch.uzh.ifi.seal.soprafs19.entity;
 
 import ch.uzh.ifi.seal.soprafs19.constant.Color;
+import org.hibernate.annotations.Target;
 import org.hibernate.sql.Insert;
 
 import java.io.Serializable;
@@ -35,6 +36,7 @@ public class Player implements Serializable {
             @AttributeOverride(name = "playerId", column = @Column(name = "playerId_1")),
             @AttributeOverride(name = "position", column = @Column(name = "position_1"))
     })
+    @Target(WorkerNormal.class)
     private Worker worker1;
 
     @Embedded
@@ -43,13 +45,15 @@ public class Player implements Serializable {
             @AttributeOverride(name = "playerId", column = @Column(name = "playerId_2")),
             @AttributeOverride(name = "position", column = @Column(name = "position_2"))
     })
+    @Target(WorkerNormal.class)
     private Worker worker2;
-//    //  constructor1
-//    public Player(Worker worker) {
-//        this.worker1 = worker;
-//        this.worker2 = worker;
-//    }
-//
+
+    //  constructor1
+    public Player(Worker worker) {
+        this.worker1 = worker;
+        this.worker2 = worker;
+    }
+
       //constructor2 : set default as normal mode
     public Player() {
         this.worker1 = new WorkerNormal();

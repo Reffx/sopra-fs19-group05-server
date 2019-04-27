@@ -49,11 +49,6 @@ public class GameService {
         //  save the player1 to the playerRepository
         player1.setColor(Color.BLUE);
 
-//        //  instantiate default worker as normal
-//        Worker worker = new WorkerNormal();
-//        player1.setWorker1(worker);
-//        player1.setWorker2(worker);
-
         //  save first to get gameId
         game.setPlayer1(player1);
         gameRepository.save(game);
