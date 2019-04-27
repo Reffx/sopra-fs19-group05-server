@@ -1,5 +1,7 @@
 package ch.uzh.ifi.seal.soprafs19.entity;
 
+import org.springframework.http.ResponseEntity;
+
 import javax.persistence.*;
 import java.io.Serializable;
 
@@ -13,9 +15,9 @@ public abstract class Worker implements Serializable {
     private int position;
 
     //  abstract method to be implemented
-    //JuWe: changed params --> prior was fieldId, now its xCoordinate, yCoordinate
-    public abstract void move(long xCoordinate, long yCoordinate);
-    public abstract void build(long xCoordinate, long yCoordinate, int level);
+    //  here is a inner move function, there are move and build function in workerService, return ResponseEntity
+    public abstract void move(long gameId, int dest);
+    public abstract void build(long gameId, int dest);
 
     public int getId() { return this.id; }
     public void setId(int id) {this.id = id;}

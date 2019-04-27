@@ -6,11 +6,12 @@ import javax.persistence.Entity;
 @Embeddable
 public class WorkerNormal extends Worker{
 
-    public void move(long xCoordinate, long yCoordinate) {
+    public void move(long gameId, int dest) {
 
     }
 
-    public void build(long xCoordinate, long yCoordinate, int level) {
+    public void build(long gameId, int dest) {
 
     }
+
 }
