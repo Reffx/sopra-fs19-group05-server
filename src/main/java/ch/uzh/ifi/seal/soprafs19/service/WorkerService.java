@@ -1,26 +1,51 @@
-//package ch.uzh.ifi.seal.soprafs19.service;
-//
-//import ch.uzh.ifi.seal.soprafs19.entity.*;
-//
-//import ch.uzh.ifi.seal.soprafs19.repository.WorkerRepository;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.http.HttpStatus;
-//import org.springframework.http.ResponseEntity;
-//import org.springframework.stereotype.Service;
-//import org.springframework.transaction.annotation.Transactional;
-//
-//
-////@Service
-////@Transactional
-//public class WorkerService {
-//    private final WorkerRepository workerRepository;
-//    private final PlayfieldService playfieldService;
-//
-//    @Autowired
-//    public WorkerService(WorkerRepository workerRepository, PlayfieldService playfieldService) {
-//       this.workerRepository = workerRepository;
-//       this.playfieldService = playfieldService;
-//    }
+package ch.uzh.ifi.seal.soprafs19.service;
+
+import ch.uzh.ifi.seal.soprafs19.entity.*;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+
+@Service
+@Transactional
+public class WorkerService {
+    private final PlayfieldService playfieldService;
+    private final PlayerService playerService;
+
+    @Autowired
+    public WorkerService(PlayfieldService playfieldService, PlayerService playerService) {
+       this.playfieldService = playfieldService;
+       this.playerService = playerService;
+    }
+
+
+    //  convert coordinates to fieldNum
+    private int coordsToId(int x, int y) {
+        return (x * 5 + y);
+    }
+
+    // move function
+    public ResponseEntity<Worker> moveTo(long gameId, long playerId, int workerId, int dest) {
+        Player player = playerService.getPlayer(playerId);
+
+        // find the worker to be updated
+        Worker worker;
+        if (workerId == 1) {
+             worker = player.getWorker1();
+        }else if (workerId == 2){
+           worker = player.getWorker2();
+        }else{
+            return new ResponseEntity<Worker>( HttpStatus.NOT_FOUND);
+        }
+
+        // check if the dest is allowed
+        return new ResponseEntity<Worker>(worker, HttpStatus.OK);
+    }
+
+
 //
 //    public Worker createWorker(Worker newWorker) {
 //        //initial position of a worker
@@ -50,4 +75,4 @@
 //        return new ResponseEntity<Field>(currentField, HttpStatus.OK);
 //
 //    }
-//}
+}

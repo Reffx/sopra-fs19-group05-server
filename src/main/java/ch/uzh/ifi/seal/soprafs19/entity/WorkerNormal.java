@@ -14,4 +14,9 @@ public class WorkerNormal extends Worker{
 
     }
 
+    //  convert coordinates to fieldNum
+    public int coordsToId(int x, int y) {
+        return (x * 5 + y);
+    }
+
 }
