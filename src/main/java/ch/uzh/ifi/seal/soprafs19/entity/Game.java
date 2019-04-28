@@ -78,8 +78,6 @@ public class Game implements Serializable {
     public void setGameMode(GameMode gameMode) {this.gameMode = gameMode;}
     public GameMode getGameMode() {return this.gameMode;}
 
-    public void setGameMode(GameMode gameMode) {this.gameMode = gameMode;}
-    public GameMode getGameMode() {return this.gameMode;}
 
     public void setSize(int size) {
         this.size = size;
