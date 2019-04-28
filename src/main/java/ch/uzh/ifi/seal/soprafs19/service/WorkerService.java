@@ -16,11 +16,13 @@ import java.util.List;
 public class WorkerService {
     private final PlayerService playerService;
     private final BoardService boardService;
+    private final GameService gameService;
 
     @Autowired
-    public WorkerService(PlayerService playerService, BoardService boardService) {
+    public WorkerService(PlayerService playerService, BoardService boardService, GameService gameService) {
        this.playerService = playerService;
        this.boardService = boardService;
+       this.gameService = gameService;
     }
 
 
@@ -68,13 +70,33 @@ public class WorkerService {
 //    }
 //
 //
-//    public ResponseEntity<Field> placeWorker(int fieldNum, long id, long gameId) {
-//
-//       // TODO: check if state of field is occupied, if so send http.conflict, otherwise update position of worker
-//        Field placingField = boardService.getField(fieldNum, gameId);
-//        //just a dumy return value
-//        return new ResponseEntity<Field>(placingField, HttpStatus.OK);
-//    }
+    public ResponseEntity<Worker> placeWorker(long gameId, long playerId, int workerId, int dest) {
+
+        //TODO: Return doesnt work, don't know why
+        Player player = playerService.getPlayer(playerId);
+        Board board = boardService.getBoard(gameId);
+        List<Field>  allFields = board.getAllFields();
+        Field dest_field = allFields.get(dest);
+
+        //JUWE: check if dest field has an occupier worker
+        if(dest_field.getOccupier()!=null){
+            return new ResponseEntity<Worker>(dest_field.getOccupier(), HttpStatus.CONFLICT);
+        }
+        else{
+            //JUWE: allocate which worker has to be updated
+            if (workerId == 1) {
+                Worker worker1 = player.getWorker1();
+                worker1.setPosition(dest);
+                return new ResponseEntity<Worker>(worker1, HttpStatus.OK);
+            }else if (workerId == 2){
+                Worker worker2 = player.getWorker2();
+                worker2.setPosition(dest);
+                return new ResponseEntity<Worker>(worker2, HttpStatus.OK);
+            }else {
+                return new ResponseEntity<Worker>(HttpStatus.NOT_FOUND);
+            }
+        }
+    }
 //
 //
 //

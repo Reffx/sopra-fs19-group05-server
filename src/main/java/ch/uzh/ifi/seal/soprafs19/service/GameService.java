@@ -151,8 +151,8 @@ public class GameService {
         return new ResponseEntity<String>(HttpStatus.OK);
     }
     
-    //  set beginner
-    public ResponseEntity<Long> setBeginner(Long gameId) {
+    //  set beginner JUWE: removed responseEntity because I had problems to call setBeginner in the WorkerService
+    public Long setBeginner(Long gameId) {
         //  get playerId
         Long player1Id = gameRepository.getById(gameId).getPlayer1().getId();
         Long player2Id = gameRepository.getById(gameId).getPlayer2().getId();
@@ -162,9 +162,9 @@ public class GameService {
 
         int id_rand = random.nextInt(2);
         if (id_rand == 0) {
-            return new ResponseEntity<Long>(player1Id, HttpStatus.OK);
+            return player1Id;
         }
-        return new ResponseEntity<Long>(player2Id, HttpStatus.OK);
+        return player2Id;
     }
 
 

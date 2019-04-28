@@ -48,7 +48,7 @@ public class PlayerService {
     }
 
     //  get player by id
-    Player getPlayer(Long playerId) {
+    public Player getPlayer(Long playerId) {
         return playerRepository.getById(playerId);
     }
 

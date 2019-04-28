@@ -57,7 +57,11 @@ public class Player implements Serializable {
       //constructor2 : set default as normal mode
     public Player() {
         this.worker1 = new WorkerNormal();
+        //JUWE: set initial id value for worker 1 to 1
+        this.worker1.setId(1);
         this.worker2 = new WorkerNormal();
+        //JUWE: set initial id value for worker 2 to 2
+        this.worker2.setId(2);
     }
 
 
