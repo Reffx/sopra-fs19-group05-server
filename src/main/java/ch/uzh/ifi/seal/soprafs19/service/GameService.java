@@ -7,6 +7,7 @@ import ch.uzh.ifi.seal.soprafs19.entity.Player;
 import ch.uzh.ifi.seal.soprafs19.entity.Worker;
 import ch.uzh.ifi.seal.soprafs19.entity.WorkerNormal;
 import ch.uzh.ifi.seal.soprafs19.repository.GameRepository;
+import ch.uzh.ifi.seal.soprafs19.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -71,7 +72,10 @@ public class GameService {
         //  create new player
         Player player = new Player();
         player.setId(userId);
+        //JUWE: player 2 had no username, easier to have it here than in frontend
+        player.setUsername(playerService.getUsername(userId));
         player.setGameId(gameId);
+        player.setColor(Color.RED);
         //  save the player1 to the playerRepository
 
         if (game.getPlayer2() == null) {

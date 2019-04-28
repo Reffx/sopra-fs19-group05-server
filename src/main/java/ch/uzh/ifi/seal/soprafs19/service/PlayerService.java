@@ -63,4 +63,7 @@ public class PlayerService {
         return new ResponseEntity<String> (HttpStatus.OK);
     }
 
+    //get username
+    public String getUsername(Long playerId) {return userService.getUser(playerId).getUsername();}
+
 }
