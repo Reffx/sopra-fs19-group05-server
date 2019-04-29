@@ -1,4 +1,4 @@
-package ch.uzh.ifi.seal.soprafs19.controller;
+/*package ch.uzh.ifi.seal.soprafs19.controller;
 
 import ch.uzh.ifi.seal.soprafs19.Application;
 import ch.uzh.ifi.seal.soprafs19.entity.User;
@@ -104,3 +104,4 @@ public class UserControllerTest {
 
     }
 }
+*/
