@@ -51,8 +51,8 @@ public class GameController {
     //  add player2 or player1
     @PutMapping("/games/{gameId}/player")
     @CrossOrigin
-    ResponseEntity<String> addPlayer(@RequestBody Long userId, @PathVariable Long gameId) {
-        return gameService.addPlayer(userId, gameId);
+    ResponseEntity<String> joinLobby(@RequestBody Long userId, @PathVariable Long gameId) {
+        return gameService.joinLobby(userId, gameId);
     }
 
     //  ser player color
@@ -78,8 +78,8 @@ public class GameController {
 
     //  remove player
     @DeleteMapping("/games/{gameId}/{playerId}")
-    ResponseEntity<String> removePlayer2(@PathVariable(name = "gameId") Long gameId, @PathVariable(name = "playerId") Long playerId) {
-        return gameService.removePlayer(gameId, playerId);
+    ResponseEntity<String> leaveLobby(@PathVariable(name = "gameId") Long gameId, @PathVariable(name = "playerId") Long playerId) {
+        return gameService.leaveLobby(gameId, playerId);
     }
 
     //  delete a game

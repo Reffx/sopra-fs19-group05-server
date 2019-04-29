@@ -66,7 +66,7 @@ public class GameService {
     }
 
     //  update a game, add player1 or player2
-    public ResponseEntity<String> addPlayer(Long userId, Long gameId) {
+    public ResponseEntity<String> joinLobby(Long userId, Long gameId) {
         Game game = gameRepository.getById(gameId);
 
         //  create new player
@@ -90,7 +90,7 @@ public class GameService {
     }
 
     //  update a game, remove player1 or player2. if both are null afterwards, delete game
-    public ResponseEntity<String> removePlayer(Long gameId, Long playerId) {
+    public ResponseEntity<String> leaveLobby(Long gameId, Long playerId) {
         Game game = gameRepository.getById(gameId);
 
         //  to find the player in the database and remove it, cascade deletion of player2 in the Game instance
