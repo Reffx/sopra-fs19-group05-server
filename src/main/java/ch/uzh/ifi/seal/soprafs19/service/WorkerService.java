@@ -87,10 +87,12 @@ public class WorkerService {
             if (workerId == 1) {
                 Worker worker1 = player.getWorker1();
                 worker1.setPosition(dest);
+                dest_field.setOccupier(worker1);
                 return new ResponseEntity<Worker>(worker1, HttpStatus.OK);
             }else if (workerId == 2){
                 Worker worker2 = player.getWorker2();
                 worker2.setPosition(dest);
+                dest_field.setOccupier(worker2);
                 return new ResponseEntity<Worker>(worker2, HttpStatus.OK);
             }else {
                 return new ResponseEntity<Worker>(HttpStatus.NOT_FOUND);

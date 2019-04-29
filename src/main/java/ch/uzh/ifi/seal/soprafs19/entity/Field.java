@@ -37,7 +37,8 @@ public class Field implements Serializable {
     public void setHeight(int height) {this.height = height;}
 
     public Worker getOccupier() {return this.occupier;}
-    public void setOccupier(boolean occupation) {this.occupier = occupier;}
+    //JUWE: updated setOccupier to Worker parameter, prior boolean, better set
+    public void setOccupier(Worker occupier) {this.occupier = occupier;}
 
 //    public boolean getReachedMaxHeight() {return this.reachedMaxHeight;}
 //    public void setReachedMaxHeight(boolean reachedMaxHeight) {this.reachedMaxHeight = reachedMaxHeight;}
