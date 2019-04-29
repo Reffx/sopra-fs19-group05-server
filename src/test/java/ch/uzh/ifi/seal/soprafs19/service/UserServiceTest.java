@@ -19,7 +19,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
  *
  * @see UserService
  */
-@WebAppConfiguration
+/*@WebAppConfiguration
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes= Application.class)
 public class UserServiceTest {
@@ -73,4 +73,4 @@ public class UserServiceTest {
     }
 
 
-}
+}*/
