@@ -103,6 +103,7 @@ public class GameService {
             return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
         }
         gameRepository.save(game);
+        playerService.deletebyId(playerId);
 
         if (game.getPlayer2() == null && game.getPlayer1() == null){
             deleteGame(gameId);
