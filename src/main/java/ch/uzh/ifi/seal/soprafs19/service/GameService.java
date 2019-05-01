@@ -105,7 +105,6 @@ public class GameService {
             game.setPlayer1(null);
             playerService.deletebyId(playerId);
             game.setPlayer1(game.getPlayer2());
-            game.getPlayer2().setColor(Color.BLUE);
             game.setPlayer2(null);
             game.setSize(1);
             gameRepository.save(game);
