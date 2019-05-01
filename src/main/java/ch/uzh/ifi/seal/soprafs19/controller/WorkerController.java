@@ -25,7 +25,7 @@ public class WorkerController {
         return workerService.moveTo(gameId, playerId, workerId, dest);
     }
 
-    @GetMapping("games/{gameId}/fieldNum/highlight")
+    @GetMapping("games/{gameId}/{fieldNum}/highlight")
     ResponseEntity<List<Integer>> highlightField(@PathVariable(name = "gameId") long gameId, @PathVariable(name = "fieldNum") int fieldNum){
         return workerService.highlightField(fieldNum, gameId);
     }
