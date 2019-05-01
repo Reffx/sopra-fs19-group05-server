@@ -77,7 +77,8 @@ public class GameController {
     }
 
     //  remove player
-    @DeleteMapping("/games/{gameId}/{playerId}")
+    @PutMapping("/games/{gameId}/{playerId}")
+    @CrossOrigin
     ResponseEntity<String> leaveLobby(@PathVariable(name = "gameId") Long gameId, @PathVariable(name = "playerId") Long playerId) {
         return gameService.leaveLobby(gameId, playerId);
     }

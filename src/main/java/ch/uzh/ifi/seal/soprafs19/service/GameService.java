@@ -98,17 +98,26 @@ public class GameService {
         Player player = playerService.getPlayer(playerId);
         if (game.getPlayer2() == player) {
             game.setPlayer2(null);
-        }else if (game.getPlayer1() == player) {
+            game.setSize(1);
+            playerService.deletebyId(playerId);
+            gameRepository.save(game);
+        }else if (game.getPlayer1() == player && game.getSize() == 2) {
             game.setPlayer1(null);
-        }else{
-            return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
+            playerService.deletebyId(playerId);
+            game.setPlayer1(game.getPlayer2());
+            game.getPlayer2().setColor(Color.BLUE);
+            game.setPlayer2(null);
+            game.setSize(1);
+            gameRepository.save(game);
         }
-        gameRepository.save(game);
-        playerService.deletebyId(playerId);
-
-        if (game.getPlayer2() == null && game.getPlayer1() == null){
+        else if (game.getPlayer1() != null && game.getPlayer2() == null){
+            playerService.deletebyId(game.getPlayer1().getId());
             deleteGame(gameId);
         }
+        else{
+            return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
+        }
+
         return new ResponseEntity<String>(HttpStatus.OK);   // response code 200
     }
 
