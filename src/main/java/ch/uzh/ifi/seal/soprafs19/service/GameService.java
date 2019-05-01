@@ -48,8 +48,6 @@ public class GameService {
 
         Player player1 = game.getPlayer1();   //  set the player1 as the creator
         //  save the player1 to the playerRepository
-        player1.setColor(Color.BLUE);
-
         //  save first to get gameId
         game.setPlayer1(player1);
         gameRepository.save(game);
@@ -82,9 +80,6 @@ public class GameService {
 
         if (game.getPlayer2() == null) {
             game.setPlayer2(player);
-        }else{
-            game.setPlayer1(player);
-
         }
         game.setSize(2);
         gameRepository.save(game);
