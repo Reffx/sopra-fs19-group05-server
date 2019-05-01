@@ -48,8 +48,6 @@ public class GameService {
 
         Player player1 = game.getPlayer1();   //  set the player1 as the creator
         //  save the player1 to the playerRepository
-        player1.setColor(Color.BLUE);
-
         //  save first to get gameId
         game.setPlayer1(player1);
         gameRepository.save(game);
@@ -77,9 +75,16 @@ public class GameService {
         //JUWE: player 2 had no username, easier to have it here than in frontend
         player.setUsername(playerService.getUsername(userId));
         player.setGameId(gameId);
-        player.setColor(Color.RED);
         //  save the player1 to the playerRepository
         game.setPlayer2(player);
+
+        if (game.getPlayer2() == null) {
+            game.setPlayer2(player);
+        }
+        else{
+            game.setPlayer1(player);
+
+        }
 
         game.setSize(2);
         gameRepository.save(game);
@@ -166,7 +171,7 @@ public class GameService {
         playerService.savePlayer(player);
         return new ResponseEntity<String>(HttpStatus.OK);
     }
-    
+
     //  set beginner JUWE: removed responseEntity because I had problems to call setBeginner in the WorkerService
     public Long setBeginner(Long gameId) {
         //  get playerId
