@@ -75,8 +75,6 @@ public class GameService {
         //JUWE: player 2 had no username, easier to have it here than in frontend
         player.setUsername(playerService.getUsername(userId));
         player.setGameId(gameId);
-        //  save the player1 to the playerRepository
-        game.setPlayer2(player);
 
         if (game.getPlayer2() == null) {
             game.setPlayer2(player);
