@@ -68,7 +68,9 @@ public class GameService {
     //  update a game, add player1 or player2
     public ResponseEntity<Game> joinLobby(Long userId, Long gameId) {
         Game game = gameRepository.getById(gameId);
-
+        if(game.getSize()==2){
+            return new ResponseEntity<Game>(game, HttpStatus.CONFLICT);
+        }
         //  create new player
         Player player = new Player();
         player.setId(userId);
