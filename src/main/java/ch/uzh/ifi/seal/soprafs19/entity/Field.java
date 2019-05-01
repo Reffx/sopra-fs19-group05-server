@@ -5,6 +5,8 @@ import org.hibernate.annotations.Target;
 
 import java.io.Serializable;
 import javax.persistence.*;
+import java.util.List;
+
 
 
 
@@ -24,6 +26,7 @@ public class Field implements Serializable {
 
     @Column
     private int height;
+
 
 //    @Embedded
 //    @Target(WorkerNormal.class)

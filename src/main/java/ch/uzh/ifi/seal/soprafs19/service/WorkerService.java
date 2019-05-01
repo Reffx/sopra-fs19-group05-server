@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -99,16 +100,58 @@ public class WorkerService {
             }
         }
     }
-//
-//
-//
-//
-//    public ResponseEntity<Field> highlightField(int fieldNum, long gameId) {
-//        Field currentField = boardService.getField(fieldNum, gameId);
-//        //todo: check available moving options and send them back to frontend
-//        long x = currentField.getX_coordinate();
-//        long y = currentField.getY_coordinate();
-//        return new ResponseEntity<Field>(currentField, HttpStatus.OK);
-//
-//    }
+
+
+
+
+    public ResponseEntity<List<Integer>> highlightField(int fieldNum, long gameId) {
+        Field currentField = boardService.getField(fieldNum, gameId);
+        Board board = boardService.getBoard(gameId);
+        List<Field>  allFields = board.getAllFields();
+        //todo: check available moving options and send them back to frontend
+        int x = currentField.getX_coordinate();
+        int y = currentField.getY_coordinate();
+
+        List<Integer> highlightedFields = new ArrayList<Integer>();
+
+       Field highlight1 = boardService.getField(coordsToId(x - 1, y - 1), gameId);
+       Field highlight2 = boardService.getField(coordsToId(x - 1, y), gameId);
+       Field highlight3 = boardService.getField(coordsToId(x - 1, y + 1), gameId);
+       Field highlight4 = boardService.getField(coordsToId(x , y - 1), gameId);
+       Field highlight5 = boardService.getField(coordsToId(x , y), gameId);
+       Field highlight6 = boardService.getField(coordsToId(x , y + 1), gameId);
+       Field highlight7 = boardService.getField(coordsToId(x + 1 , y - 1), gameId);
+       Field highlight8 = boardService.getField(coordsToId(x + 1 , y), gameId);
+       Field highlight9 = boardService.getField(coordsToId(x + 1 , y + 1), gameId);
+
+        if(highlight1.getHeight() != 4 && highlight1.getOccupier() == null && highlight1 != null){
+           highlightedFields.add(highlight1.getFieldNum());
+       }
+        if(highlight2.getHeight() != 4 && highlight2.getOccupier() == null && highlight2 != null){
+            highlightedFields.add(highlight2.getFieldNum());
+        }
+        if(highlight3.getHeight() != 4 && highlight3.getOccupier() == null && highlight3 != null){
+            highlightedFields.add(highlight3.getFieldNum());
+        }
+        if(highlight4.getHeight() != 4 && highlight4.getOccupier() == null && highlight4 != null){
+            highlightedFields.add(highlight4.getFieldNum());
+        }
+        if(highlight5.getHeight() != 4 && highlight5.getOccupier() == null && highlight5 != null){
+            highlightedFields.add(highlight5.getFieldNum());
+        }
+        if(highlight6.getHeight() != 4 && highlight6.getOccupier() == null && highlight6 != null){
+            highlightedFields.add(highlight6.getFieldNum());
+        }
+        if(highlight7.getHeight() != 4 && highlight7.getOccupier() == null && highlight7 != null){
+            highlightedFields.add(highlight7.getFieldNum());
+        }
+        if(highlight8.getHeight() != 4 && highlight8.getOccupier() == null && highlight8 != null){
+            highlightedFields.add(highlight8.getFieldNum());
+        }
+        if(highlight9.getHeight() != 4 && highlight9.getOccupier() == null && highlight9 != null){
+            highlightedFields.add(highlight9.getFieldNum());
+        }
+
+        return new ResponseEntity<List<Integer>>(highlightedFields, HttpStatus.OK);
+   }
 }
