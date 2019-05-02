@@ -30,6 +30,7 @@ public class GameService {
         this.workerNormalRepository = workerNormalRepository;
     }
 
+    //public ResponseEntity<>
     //  find all the games
     public Iterable<Game> getGames() {
         return this.gameRepository.findAll();
@@ -90,6 +91,14 @@ public class GameService {
         //  create new player
         Player player = new Player();
         player.setId(userId);
+
+        WorkerNormal worker1 = new WorkerNormal();
+        workerNormalRepository.save(worker1);
+        WorkerNormal worker2 = new WorkerNormal();
+        workerNormalRepository.save(worker2);
+        player.setWorker1(worker1);
+        player.setWorker2(worker2);
+
         //JUWE: player 2 had no username, easier to have it here than in frontend
         player.setUsername(playerService.getUsername(userId));
         player.setGameId(gameId);

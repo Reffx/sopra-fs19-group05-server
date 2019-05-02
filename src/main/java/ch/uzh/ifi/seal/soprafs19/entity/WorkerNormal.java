@@ -9,40 +9,22 @@ import javax.persistence.Id;
 public class WorkerNormal{
     @Id
     @GeneratedValue
-    private int id ;  // worker1 or worker2
+    private int workerId ;  // worker1 or worker2 --> DA: better to just have workers 1 - 4, we can check which belongs to who with the attribute playerId //
     private long playerId;
     private int position;
     private boolean isNext = false;
 
-    public boolean moveTo(Field depart, Field dest) {
-        //  to implement, check coordnate and isOccupied
-        int dest_x = dest.getX_coordinate();
-        int dest_y = dest.getY_coordinate();
-
-        int depart_x = depart.getX_coordinate();
-        int depart_y = depart.getY_coordinate();
-
-        if (dest.getOccupier() != null) {
-            return false;
-        }
-        return true;
-
-    }
-
-    public void build(long gameId, int dest) {
-
-    }
 
     public boolean isWinner(){
         return false;
     };
 
     public int getId() {
-        return id;
+        return workerId;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setId(int workerId) {
+        this.workerId = workerId;
     }
 
     public long getPlayerId() {

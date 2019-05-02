@@ -20,9 +20,9 @@ public class WorkerController {
     }
 
     //  moveTo function
-    @PutMapping("/games/{gameId}/{playerId}/{workerId}/move")
-    ResponseEntity<WorkerNormal> moveTo(@PathVariable(name = "gameId") long gameId, @PathVariable(name = "playerId") long playerId, @PathVariable(name = "workerId") int workerId, @RequestBody int dest) {
-        return workerService.moveTo(gameId, playerId, workerId, dest);
+    @PutMapping("/games/{gameId}/{fieldNum}/{workerId}/move")
+    ResponseEntity<Integer> moveTo(@PathVariable(name = "gameId") long gameId, @PathVariable(name = "fieldNum") int fieldNum, @PathVariable(name = "workerId") int workerId) {
+        return workerService.moveTo(gameId, workerId, fieldNum);
     }
 
     @GetMapping("games/{gameId}/{fieldNum}/highlight")
@@ -31,9 +31,9 @@ public class WorkerController {
     }
 
     //JUWE: Put mapping to place worker on field in initial round, afterwards move to method must be use
-    @PutMapping("/games/{gameId}/{playerId}/{workerId}/place")
-    ResponseEntity<WorkerNormal> placeWorker(@PathVariable(name = "gameId") long gameId, @PathVariable(name = "playerId") long playerId, @PathVariable(name = "workerId") int workerId, @RequestBody int dest) {
-        return workerService.placeWorker(gameId, playerId, workerId, dest);
+    @PutMapping("/games/{gameId}/{fieldNum}/{workerId}/place")
+    ResponseEntity<Integer> placeWorker(@PathVariable(name = "gameId") long gameId, @PathVariable(name = "fieldNum") int fieldNum, @PathVariable(name = "workerId") int workerId) {
+        return workerService.placeWorker(gameId, workerId, fieldNum);
     }
 
 }
