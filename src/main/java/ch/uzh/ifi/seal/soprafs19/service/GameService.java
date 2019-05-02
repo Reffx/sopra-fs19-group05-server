@@ -63,6 +63,8 @@ public class GameService {
         System.out.println(worker1.getWorkerId());
         player1.setWorker1(worker1);
         player1.setWorker2(worker2);
+        worker1.setPlayerId(player1.getId());
+        worker2.setPlayerId(player1.getId());
 
         /*WorkerNormal worker2 = new WorkerNormal();
         worker2.setId(2);
@@ -98,6 +100,8 @@ public class GameService {
         workerNormalRepository.save(worker2);
         player.setWorker1(worker1);
         player.setWorker2(worker2);
+        worker1.setPlayerId(player.getId());
+        worker2.setPlayerId(player.getId());
 
         //JUWE: player 2 had no username, easier to have it here than in frontend
         player.setUsername(playerService.getUsername(userId));
