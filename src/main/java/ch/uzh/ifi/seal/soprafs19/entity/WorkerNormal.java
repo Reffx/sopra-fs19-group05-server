@@ -19,11 +19,11 @@ public class WorkerNormal{
         return false;
     };
 
-    public int getId() {
+    public int getWorkerId() {
         return workerId;
     }
 
-    public void setId(int workerId) {
+    public void setWorkerId(int workerId) {
         this.workerId = workerId;
     }
 

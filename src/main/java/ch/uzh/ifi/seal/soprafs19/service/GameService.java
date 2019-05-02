@@ -54,13 +54,13 @@ public class GameService {
         //  save first to get gameId
         //game.setPlayer1(player1);
         WorkerNormal worker1 = new WorkerNormal();
-        System.out.println(worker1.getId());
+        System.out.println(worker1.getWorkerId());
         workerNormalRepository.save(worker1);
         WorkerNormal worker2 = new WorkerNormal();
         workerNormalRepository.save(worker2);
-        System.out.println(worker2.getId());
+        System.out.println(worker2.getWorkerId());
        // worker1 = workerNormalRepository.findById(0).get();
-        System.out.println(worker1.getId());
+        System.out.println(worker1.getWorkerId());
         player1.setWorker1(worker1);
         player1.setWorker2(worker2);
 
