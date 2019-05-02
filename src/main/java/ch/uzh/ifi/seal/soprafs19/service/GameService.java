@@ -4,10 +4,10 @@ import ch.uzh.ifi.seal.soprafs19.constant.Color;
 import ch.uzh.ifi.seal.soprafs19.constant.GameMode;
 import ch.uzh.ifi.seal.soprafs19.entity.Game;
 import ch.uzh.ifi.seal.soprafs19.entity.Player;
-import ch.uzh.ifi.seal.soprafs19.entity.Worker;
 import ch.uzh.ifi.seal.soprafs19.entity.WorkerNormal;
 import ch.uzh.ifi.seal.soprafs19.repository.GameRepository;
 import ch.uzh.ifi.seal.soprafs19.repository.UserRepository;
+import ch.uzh.ifi.seal.soprafs19.repository.WorkerNormalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,11 +21,13 @@ import java.util.Random;
 public class GameService {
     private final GameRepository gameRepository;
     private final PlayerService playerService;
+    private final WorkerNormalRepository workerNormalRepository;
 
     @Autowired
-    public GameService(GameRepository gameRepository, PlayerService playerService) {
+    public GameService(GameRepository gameRepository, PlayerService playerService, WorkerNormalRepository workerNormalRepository) {
         this.gameRepository = gameRepository;
         this.playerService = playerService;
+        this.workerNormalRepository = workerNormalRepository;
     }
 
     //  find all the games
@@ -49,13 +51,29 @@ public class GameService {
         Player player1 = game.getPlayer1();   //  set the player1 as the creator
         //  save the player1 to the playerRepository
         //  save first to get gameId
-        game.setPlayer1(player1);
+        //game.setPlayer1(player1);
+        WorkerNormal worker1 = new WorkerNormal();
+        System.out.println(worker1.getId());
+        workerNormalRepository.save(worker1);
+        WorkerNormal worker2 = new WorkerNormal();
+        workerNormalRepository.save(worker2);
+        System.out.println(worker2.getId());
+       // worker1 = workerNormalRepository.findById(0).get();
+        System.out.println(worker1.getId());
+        player1.setWorker1(worker1);
+        player1.setWorker2(worker2);
+
+        /*WorkerNormal worker2 = new WorkerNormal();
+        worker2.setId(2);
+        player1.setWorker2(worker2); */
+        playerService.savePlayer(player1);
         gameRepository.save(game);
 
         //  set player gameId
         long gameId = game.getId();
-        System.out.println(gameId);
+        System.out.println("GameId:"+ gameId);
         player1.setGameId(gameId);
+        playerService.savePlayer(player1);
 
         //  save again to save the gameId in Player
         gameRepository.save(game);

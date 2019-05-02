@@ -30,38 +30,42 @@ public class Player implements Serializable {
     private String username;
 
     //  add worker1 and worker2 for player
-    @Embedded
+   /* @Embedded
     @AttributeOverrides({
             @AttributeOverride(name = "id", column = @Column(name = "workerId_1")),
             @AttributeOverride(name = "playerId", column = @Column(name = "playerId_1")),
             @AttributeOverride(name = "position", column = @Column(name = "position_1"))
-    })
-    @Target(WorkerNormal.class)
-    private Worker worker1;
+    }) */
+    //TODO: change @ value to one to one and
+    @OneToOne(targetEntity = WorkerNormal.class, cascade = CascadeType.ALL)
+    private WorkerNormal worker1;
 
-    @Embedded
+   /* @Embedded
     @AttributeOverrides({
             @AttributeOverride(name = "id", column = @Column(name = "workerId_2")),
             @AttributeOverride(name = "playerId", column = @Column(name = "playerId_2")),
             @AttributeOverride(name = "position", column = @Column(name = "position_2"))
-    })
-    @Target(WorkerNormal.class)
-    private Worker worker2;
+    }) */
+    @OneToOne(targetEntity = WorkerNormal.class, cascade = CascadeType.MERGE)
+    private WorkerNormal worker2;
 
-    //  constructor1
+    /*//  constructor1
     public Player(Worker worker) {
         this.worker1 = worker;
         this.worker2 = worker;
-    }
+    } */
 
       //constructor2 : set default as normal mode
     public Player() {
+        /*
         this.worker1 = new WorkerNormal();
         //JUWE: set initial id value for worker 1 to 1
         this.worker1.setId(1);
+        System.out.println(worker1.getId());
         this.worker2 = new WorkerNormal();
         //JUWE: set initial id value for worker 2 to 2
         this.worker2.setId(2);
+        System.out.println(worker2.getId());*/
     }
 
 
@@ -100,17 +104,17 @@ public class Player implements Serializable {
         return this.username;
     }
 
-    public void setWorker1(Worker worker) {
+    public void setWorker1(WorkerNormal worker) {
         this.worker1 = worker;
     }
-    public void setWorker2(Worker worker) {
+    public void setWorker2(WorkerNormal worker) {
         this.worker2 = worker;
     }
 
-    public Worker getWorker1() {
+    public WorkerNormal getWorker1() {
         return worker1;
     }
-    public Worker getWorker2() {
+    public WorkerNormal getWorker2() {
         return worker2;
     }
 

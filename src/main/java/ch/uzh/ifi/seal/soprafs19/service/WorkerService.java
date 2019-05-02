@@ -33,7 +33,7 @@ public class WorkerService {
     }
 
     // move function: dest is fieldNum
-    public ResponseEntity<Worker> moveTo(long gameId, long playerId, int workerId, int dest) {
+    public ResponseEntity<WorkerNormal> moveTo(long gameId, long playerId, int workerId, int dest) {
 
         //  find the destination field
         Player player = playerService.getPlayer(playerId);
@@ -43,13 +43,13 @@ public class WorkerService {
         //  Field depart_field
 
         // find the worker to be updated
-        Worker worker;
+        WorkerNormal worker;
         if (workerId == 1) {
              worker = player.getWorker1();
         }else if (workerId == 2){
            worker = player.getWorker2();
         }else{
-            return new ResponseEntity<Worker>( HttpStatus.NOT_FOUND);
+            return new ResponseEntity<WorkerNormal>( HttpStatus.NOT_FOUND);
         }
 
 //        // check if the dest is legal
@@ -57,7 +57,7 @@ public class WorkerService {
 //            return new ResponseEntity<Worker>(HttpStatus.CONFLICT);
 //        }
 //
-        return new ResponseEntity<Worker>(worker, HttpStatus.OK);
+        return new ResponseEntity<WorkerNormal>(worker, HttpStatus.OK);
     }
 
 
@@ -71,7 +71,7 @@ public class WorkerService {
 //    }
 //
 //
-    public ResponseEntity<Worker> placeWorker(long gameId, long playerId, int workerId, int dest) {
+    public ResponseEntity<WorkerNormal> placeWorker(long gameId, long playerId, int workerId, int dest) {
 
         //TODO: Return doesnt work, don't know why
         Player player = playerService.getPlayer(playerId);
@@ -81,22 +81,22 @@ public class WorkerService {
 
         //JUWE: check if dest field has an occupier worker
         if(dest_field.getOccupier()!=null){
-            return new ResponseEntity<Worker>(dest_field.getOccupier(), HttpStatus.CONFLICT);
+            return new ResponseEntity<WorkerNormal>(dest_field.getOccupier(), HttpStatus.CONFLICT);
         }
         else{
             //JUWE: allocate which worker has to be updated
             if (workerId == 1) {
-                Worker worker1 = player.getWorker1();
+                WorkerNormal worker1 = player.getWorker1();
                 worker1.setPosition(dest);
                 dest_field.setOccupier(worker1);
-                return new ResponseEntity<Worker>(worker1, HttpStatus.OK);
+                return new ResponseEntity<WorkerNormal>(worker1, HttpStatus.OK);
             }else if (workerId == 2){
-                Worker worker2 = player.getWorker2();
+                WorkerNormal worker2 = player.getWorker2();
                 worker2.setPosition(dest);
                 dest_field.setOccupier(worker2);
-                return new ResponseEntity<Worker>(worker2, HttpStatus.OK);
+                return new ResponseEntity<WorkerNormal>(worker2, HttpStatus.OK);
             }else {
-                return new ResponseEntity<Worker>(HttpStatus.NOT_FOUND);
+                return new ResponseEntity<WorkerNormal>(HttpStatus.NOT_FOUND);
             }
         }
     }
