@@ -6,6 +6,7 @@ import ch.uzh.ifi.seal.soprafs19.entity.Game;
 import ch.uzh.ifi.seal.soprafs19.entity.Player;
 import ch.uzh.ifi.seal.soprafs19.entity.WorkerNormal;
 import ch.uzh.ifi.seal.soprafs19.repository.GameRepository;
+import ch.uzh.ifi.seal.soprafs19.repository.PlayerRepository;
 import ch.uzh.ifi.seal.soprafs19.repository.UserRepository;
 import ch.uzh.ifi.seal.soprafs19.repository.WorkerNormalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,12 +23,14 @@ public class GameService {
     private final GameRepository gameRepository;
     private final PlayerService playerService;
     private final WorkerNormalRepository workerNormalRepository;
+    private final PlayerRepository playerRepository;
 
     @Autowired
-    public GameService(GameRepository gameRepository, PlayerService playerService, WorkerNormalRepository workerNormalRepository) {
+    public GameService(GameRepository gameRepository, PlayerService playerService, WorkerNormalRepository workerNormalRepository, PlayerRepository playerRepository) {
         this.gameRepository = gameRepository;
         this.playerService = playerService;
         this.workerNormalRepository = workerNormalRepository;
+        this.playerRepository = playerRepository;
     }
 
     //public ResponseEntity<>
@@ -95,17 +98,17 @@ public class GameService {
         player.setId(userId);
 
         WorkerNormal worker1 = new WorkerNormal();
-        workerNormalRepository.save(worker1);
         WorkerNormal worker2 = new WorkerNormal();
-        workerNormalRepository.save(worker2);
         player.setWorker1(worker1);
         player.setWorker2(worker2);
         worker1.setPlayerId(player.getId());
         worker2.setPlayerId(player.getId());
-
+        workerNormalRepository.save(worker1);
+        workerNormalRepository.save(worker2);
         //JUWE: player 2 had no username, easier to have it here than in frontend
         player.setUsername(playerService.getUsername(userId));
         player.setGameId(gameId);
+        playerRepository.save(player);
 
         if (game.getPlayer2() == null) {
             game.setPlayer2(player);

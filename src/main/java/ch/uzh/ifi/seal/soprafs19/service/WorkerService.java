@@ -36,75 +36,6 @@ public class WorkerService {
         return (x * 5 + y);
     }
 
-    // move function: dest is fieldNum
- /*   public ResponseEntity<WorkerNormal> moveTo(long gameId, long playerId, int workerId, int dest) {
-
-        //  find the destination field
-        Player player = playerService.getPlayer(playerId);
-        Board board = boardService.getBoard(gameId);
-        List<Field>  allFields = board.getAllFields();
-        Field dest_field = allFields.get(dest);
-        //  Field depart_field
-
-        // find the worker to be updated
-        Worker worker;
-        if (workerId == 1) {
-            worker = player.getWorker1();
-        }else if (workerId == 2){
-            worker = player.getWorker2();
-        }else{
-            return new ResponseEntity<Worker>( HttpStatus.NOT_FOUND);
-        }
-
-//        // check if the dest is legal
-//        if (moveTo(dest_field))
-//            return new ResponseEntity<Worker>(HttpStatus.CONFLICT);
-//        }
-//
-        return new ResponseEntity<Worker>(worker, HttpStatus.OK);
-    }
-
-
-    //
-//    public Worker createWorker(Worker newWorker) {
-//        //initial position of a worker
-//        newWorker.setXCoordinate(-1);
-//        newWorker.setYCoordinate(-1);
-//        workerRepository.save(newWorker);
-//        return newWorker;
-//    }
-//
-//
-    public ResponseEntity<Worker> placeWorker(long gameId, long playerId, int workerId, int dest) {
-
-        //TODO: Return doesnt work, don't know why
-        Player player = playerService.getPlayer(playerId);
-        Board board = boardService.getBoard(gameId);
-        List<Field>  allFields = board.getAllFields();
-        Field dest_field = allFields.get(dest);
-
-        //JUWE: check if dest field has an occupier worker
-        if(dest_field.getOccupier()!=null){
-            return new ResponseEntity<Worker>(dest_field.getOccupier(), HttpStatus.CONFLICT);
-        }
-        else{
-            //JUWE: allocate which worker has to be updated
-            if (workerId == 1) {
-                Worker worker1 = player.getWorker1();
-                worker1.setPosition(dest);
-                dest_field.setOccupier(worker1);
-                return new ResponseEntity<Worker>(worker1, HttpStatus.OK);
-            }else if (workerId == 2){
-                Worker worker2 = player.getWorker2();
-                worker2.setPosition(dest);
-                dest_field.setOccupier(worker2);
-                return new ResponseEntity<Worker>(worker2, HttpStatus.OK);
-            }else {
-                return new ResponseEntity<Worker>(HttpStatus.NOT_FOUND);
-            }
-        }
-    }*/
-
     public ResponseEntity<Integer> placeWorker(long gameId, int workerId, int dest){
         Board board = boardService.getBoard(gameId);
         WorkerNormal placingWorker = workerNormalRepository.findById(workerId);
@@ -112,6 +43,9 @@ public class WorkerService {
 
         fieldToPlace.setOccupier(placingWorker);
         placingWorker.setPosition(dest);
+
+        workerNormalRepository.save(placingWorker);
+
 
         boardService.updateBoard(board);
 
@@ -128,7 +62,6 @@ public class WorkerService {
 
         List<Integer> highlightedFields = new ArrayList<Integer>();
 
-        // DA: check how to handle border fields //
         int x1 = x - 1; int y1 = y - 1;
         int x2 = x - 1; int y2 = y;
         int x3 = x - 1; int y3 = y + 1;
@@ -140,49 +73,49 @@ public class WorkerService {
 
         if(x1 <= 4 && y1 <= 4 && x1 >= 0 && y1 >0) {
             Field highlight1 = boardService.getField(coordsToId(x1,y1), gameId);
-            if(highlight1.getHeight() != 4 && highlight1.getOccupier() == null && highlight1 != null){
+            if(highlight1.getHeight() != 4 && highlight1.getOccupier() == null){
                 highlightedFields.add(highlight1.getFieldNum());
             }
         }
         if(x2 <= 4 && y2 <= 4 && x2 >= 0 && y2 >0) {
             Field highlight2 = boardService.getField(coordsToId(x2, y2), gameId);
-            if (highlight2.getHeight() != 4 && highlight2.getOccupier() == null && highlight2 != null) {
+            if (highlight2.getHeight() != 4 && highlight2.getOccupier() == null) {
                 highlightedFields.add(highlight2.getFieldNum());
             }
         }
         if(x3 <= 4 && y3 <= 4 && x3 >= 0 && y3 >0) {
             Field highlight3 = boardService.getField(coordsToId(x3, y3), gameId);
-            if (highlight3.getHeight() != 4 && highlight3.getOccupier() == null && highlight3 != null) {
+            if (highlight3.getHeight() != 4 && highlight3.getOccupier() == null) {
                 highlightedFields.add(highlight3.getFieldNum());
             }
         }
         if(x4 <= 4 && y4 <= 4 && x4 >= 0 && y4 >0) {
             Field highlight4 = boardService.getField(coordsToId(x4, y4), gameId);
-            if (highlight4.getHeight() != 4 && highlight4.getOccupier() == null && highlight4 != null) {
+            if (highlight4.getHeight() != 4 && highlight4.getOccupier() == null) {
                 highlightedFields.add(highlight4.getFieldNum());
             }
         }
         if(x5 <= 4 && y5 <= 4 && x5 >= 0 && y5 >0) {
             Field highlight5 = boardService.getField(coordsToId(x5, y5), gameId);
-            if (highlight5.getHeight() != 4 && highlight5.getOccupier() == null && highlight5 != null) {
+            if (highlight5.getHeight() != 4 && highlight5.getOccupier() == null) {
                 highlightedFields.add(highlight5.getFieldNum());
             }
         }
         if(x6 <= 4 && y6 <= 4 && x6 >= 0 && y6 >0) {
             Field highlight6 = boardService.getField(coordsToId(x6, y6), gameId);
-            if (highlight6.getHeight() != 4 && highlight6.getOccupier() == null && highlight6 != null) {
+            if (highlight6.getHeight() != 4 && highlight6.getOccupier() == null) {
                 highlightedFields.add(highlight6.getFieldNum());
             }
         }
         if(x7 <= 4 && y7 <= 4 && x7 >= 0 && y7 >0) {
             Field highlight7 = boardService.getField(coordsToId(x7, y7), gameId);
-            if (highlight7.getHeight() != 4 && highlight7.getOccupier() == null && highlight7 != null) {
+            if (highlight7.getHeight() != 4 && highlight7.getOccupier() == null) {
                 highlightedFields.add(highlight7.getFieldNum());
             }
         }
         if(x8 <= 4 && y8 <= 4 && x8 >= 0 && y8 >0) {
             Field highlight8 = boardService.getField(coordsToId(x8, y8), gameId);
-            if (highlight8.getHeight() != 4 && highlight8.getOccupier() == null && highlight8 != null) {
+            if (highlight8.getHeight() != 4 && highlight8.getOccupier() == null) {
                 highlightedFields.add(highlight8.getFieldNum());
             }
         }
@@ -197,9 +130,25 @@ public class WorkerService {
         destination.setOccupier(movingWorker);
         movingWorker.setPosition(destination.getFieldNum());
         currentField.setOccupier(null);
+        workerNormalRepository.save(movingWorker);
+
+        // DA: if currentField.getHeight()=2 && destination.getHeight() = 3
+        //         WinningCondition(workerId)
 
         boardService.updateBoard(board);
 
         return new ResponseEntity<Integer>(destination.getFieldNum(), HttpStatus.OK);
+    }
+
+    public ResponseEntity<Board> build(long gameId, int fieldNum){
+        Board board = boardService.getBoard(gameId);
+        Field currentField = boardService.getField(fieldNum, gameId);
+
+        int h = currentField.getHeight();
+        currentField.setHeight(h + 1);
+
+        boardService.updateBoard(board);
+
+        return new ResponseEntity<Board>(board, HttpStatus.OK);
     }
 }
