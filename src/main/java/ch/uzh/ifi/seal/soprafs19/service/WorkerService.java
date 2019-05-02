@@ -101,9 +101,6 @@ public class WorkerService {
         }
     }
 
-
-
-
     public ResponseEntity<List<Integer>> highlightField(int fieldNum, long gameId) {
         Field currentField = boardService.getField(fieldNum, gameId);
         Board board = boardService.getBoard(gameId);
@@ -114,44 +111,64 @@ public class WorkerService {
 
         List<Integer> highlightedFields = new ArrayList<Integer>();
 
-       Field highlight1 = boardService.getField(coordsToId(x - 1, y - 1), gameId);
-       Field highlight2 = boardService.getField(coordsToId(x - 1, y), gameId);
-       Field highlight3 = boardService.getField(coordsToId(x - 1, y + 1), gameId);
-       Field highlight4 = boardService.getField(coordsToId(x , y - 1), gameId);
-       Field highlight5 = boardService.getField(coordsToId(x , y), gameId);
-       Field highlight6 = boardService.getField(coordsToId(x , y + 1), gameId);
-       Field highlight7 = boardService.getField(coordsToId(x + 1 , y - 1), gameId);
-       Field highlight8 = boardService.getField(coordsToId(x + 1 , y), gameId);
-       Field highlight9 = boardService.getField(coordsToId(x + 1 , y + 1), gameId);
+        // DA: check how to handle border fields //
+       int x1 = x - 1; int y1 = y - 1;
+       int x2 = x - 1; int y2 = y;
+       int x3 = x - 1; int y3 = y + 1;
+       int x4 = x; int y4 = y - 1;
+       int x5 = x; int y5 = y + 1;
+       int x6 = x + 1; int y6 = y - 1;
+       int x7 = x + 1; int y7 = y;
+       int x8 = x + 1; int y8 = y + 1;
 
-        if(highlight1.getHeight() != 4 && highlight1.getOccupier() == null && highlight1 != null){
-           highlightedFields.add(highlight1.getFieldNum());
+       if(x1 <= 4 && y1 <= 4 && x1 >= 0 && y1 >0) {
+           Field highlight1 = boardService.getField(coordsToId(x1,y1), gameId);
+           if(highlight1.getHeight() != 4 && highlight1.getOccupier() == null && highlight1 != null){
+               highlightedFields.add(highlight1.getFieldNum());
+           }
        }
-        if(highlight2.getHeight() != 4 && highlight2.getOccupier() == null && highlight2 != null){
-            highlightedFields.add(highlight2.getFieldNum());
-        }
-        if(highlight3.getHeight() != 4 && highlight3.getOccupier() == null && highlight3 != null){
-            highlightedFields.add(highlight3.getFieldNum());
-        }
-        if(highlight4.getHeight() != 4 && highlight4.getOccupier() == null && highlight4 != null){
-            highlightedFields.add(highlight4.getFieldNum());
-        }
-        if(highlight5.getHeight() != 4 && highlight5.getOccupier() == null && highlight5 != null){
-            highlightedFields.add(highlight5.getFieldNum());
-        }
-        if(highlight6.getHeight() != 4 && highlight6.getOccupier() == null && highlight6 != null){
-            highlightedFields.add(highlight6.getFieldNum());
-        }
-        if(highlight7.getHeight() != 4 && highlight7.getOccupier() == null && highlight7 != null){
-            highlightedFields.add(highlight7.getFieldNum());
-        }
-        if(highlight8.getHeight() != 4 && highlight8.getOccupier() == null && highlight8 != null){
-            highlightedFields.add(highlight8.getFieldNum());
-        }
-        if(highlight9.getHeight() != 4 && highlight9.getOccupier() == null && highlight9 != null){
-            highlightedFields.add(highlight9.getFieldNum());
-        }
-
-        return new ResponseEntity<List<Integer>>(highlightedFields, HttpStatus.OK);
+       if(x2 <= 4 && y2 <= 4 && x2 >= 0 && y2 >0) {
+           Field highlight2 = boardService.getField(coordsToId(x2, y2), gameId);
+           if (highlight2.getHeight() != 4 && highlight2.getOccupier() == null && highlight2 != null) {
+               highlightedFields.add(highlight2.getFieldNum());
+           }
+       }
+       if(x3 <= 4 && y3 <= 4 && x3 >= 0 && y3 >0) {
+           Field highlight3 = boardService.getField(coordsToId(x3, y3), gameId);
+           if (highlight3.getHeight() != 4 && highlight3.getOccupier() == null && highlight3 != null) {
+               highlightedFields.add(highlight3.getFieldNum());
+           }
+       }
+       if(x4 <= 4 && y4 <= 4 && x4 >= 0 && y4 >0) {
+           Field highlight4 = boardService.getField(coordsToId(x4, y4), gameId);
+           if (highlight4.getHeight() != 4 && highlight4.getOccupier() == null && highlight4 != null) {
+               highlightedFields.add(highlight4.getFieldNum());
+           }
+       }
+       if(x5 <= 4 && y5 <= 4 && x5 >= 0 && y5 >0) {
+           Field highlight5 = boardService.getField(coordsToId(x5, y5), gameId);
+           if (highlight5.getHeight() != 4 && highlight5.getOccupier() == null && highlight5 != null) {
+               highlightedFields.add(highlight5.getFieldNum());
+           }
+       }
+       if(x6 <= 4 && y6 <= 4 && x6 >= 0 && y6 >0) {
+           Field highlight6 = boardService.getField(coordsToId(x6, y6), gameId);
+           if (highlight6.getHeight() != 4 && highlight6.getOccupier() == null && highlight6 != null) {
+               highlightedFields.add(highlight6.getFieldNum());
+           }
+       }
+       if(x7 <= 4 && y7 <= 4 && x7 >= 0 && y7 >0) {
+           Field highlight7 = boardService.getField(coordsToId(x7, y7), gameId);
+           if (highlight7.getHeight() != 4 && highlight7.getOccupier() == null && highlight7 != null) {
+               highlightedFields.add(highlight7.getFieldNum());
+           }
+       }
+       if(x8 <= 4 && y8 <= 4 && x8 >= 0 && y8 >0) {
+           Field highlight8 = boardService.getField(coordsToId(x8, y8), gameId);
+           if (highlight8.getHeight() != 4 && highlight8.getOccupier() == null && highlight8 != null) {
+               highlightedFields.add(highlight8.getFieldNum());
+           }
+       }
+       return new ResponseEntity<List<Integer>>(highlightedFields, HttpStatus.OK);
    }
 }
