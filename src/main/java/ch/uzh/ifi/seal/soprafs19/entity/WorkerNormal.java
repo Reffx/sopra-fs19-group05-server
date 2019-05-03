@@ -16,7 +16,7 @@ public class WorkerNormal{
 
 
     public boolean isWinner(){
-        return false;
+        return true;
     };
 
     public int getWorkerId() {
