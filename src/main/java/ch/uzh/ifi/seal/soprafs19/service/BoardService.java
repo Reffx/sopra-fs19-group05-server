@@ -29,7 +29,7 @@ public class BoardService {
         board.setId(gameId);
         List<Field> allFields = new ArrayList<Field>();
         //  initialize the coordinates
-        int num = 1;
+        int num = 0;
         for( int i = 0; i <= 4; ++i) {
             for (int j = 0; j <= 4; ++j) {
                 Field field = new Field();
