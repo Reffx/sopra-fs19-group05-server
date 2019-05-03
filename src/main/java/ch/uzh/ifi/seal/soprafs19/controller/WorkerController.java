@@ -36,4 +36,13 @@ public class WorkerController {
         return workerService.placeWorker(gameId, workerId, fieldNum);
     }
 
+    @PutMapping("/games/{gameId}/{fieldNum}/build")
+    ResponseEntity<String> build(@PathVariable (name = "gameId") long gameId, @PathVariable(name = "fieldNum") int fieldNum){
+        return workerService.build(gameId, fieldNum);
+    }
+
+
+
+
+
 }

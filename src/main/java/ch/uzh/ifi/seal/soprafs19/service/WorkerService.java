@@ -140,7 +140,7 @@ public class WorkerService {
         return new ResponseEntity<Integer>(destination.getFieldNum(), HttpStatus.OK);
     }
 
-    public ResponseEntity<Board> build(long gameId, int fieldNum){
+    public ResponseEntity<String> build(long gameId, int fieldNum){
         Board board = boardService.getBoard(gameId);
         Field currentField = boardService.getField(fieldNum, gameId);
 
@@ -149,6 +149,6 @@ public class WorkerService {
 
         boardService.updateBoard(board);
 
-        return new ResponseEntity<Board>(board, HttpStatus.OK);
+        return new ResponseEntity<String>(HttpStatus.OK);
     }
 }
