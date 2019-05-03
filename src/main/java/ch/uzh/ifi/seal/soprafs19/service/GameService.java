@@ -60,7 +60,7 @@ public class GameService {
         worker2.setPlayerId(id);
 
         player1.setWorker1(worker1);
-        player1.setWorker1(worker2);
+        player1.setWorker2(worker2);
 
         //  save first to get gameId
         game.setPlayer1(player1);
