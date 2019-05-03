@@ -6,11 +6,12 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 
+@MappedSuperclass
 public abstract class Worker implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    private int id ;  // worker1 or worker2
+    private long id ;  // worker1 or worker2
     private long playerId;
     private int position;
     private boolean isNext = false;
@@ -21,8 +22,8 @@ public abstract class Worker implements Serializable {
     public abstract void build(long gameId, int dest);
     public abstract boolean isWinner();
 
-    public int getId() { return this.id; }
-    public void setId(int id) {this.id = id;}
+    public long getId() { return this.id; }
+    public void setId(long id) {this.id = id;}
 
     public long getPlayerId() {return this.playerId;}
     public void setPlayerId(long playerId) {this.playerId = playerId; }

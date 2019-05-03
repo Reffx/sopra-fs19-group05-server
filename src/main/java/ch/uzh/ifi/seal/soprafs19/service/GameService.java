@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Random;
 
 @Service
@@ -50,6 +51,17 @@ public class GameService {
         //  save the player1 to the playerRepository
         player1.setColor(Color.BLUE);
 
+        //  set worker Id
+        long id = player1.getId();
+        Worker worker1 = player1.getWorker1();
+        Worker worker2 = player1.getWorker2();
+
+        worker1.setPlayerId(id);
+        worker2.setPlayerId(id);
+
+        player1.setWorker1(worker1);
+        player1.setWorker1(worker2);
+
         //  save first to get gameId
         game.setPlayer1(player1);
         gameRepository.save(game);
@@ -73,7 +85,8 @@ public class GameService {
         Player player = new Player();
         player.setId(userId);
         //JUWE: player 2 had no username, easier to have it here than in frontend
-        player.setUsername(playerService.getUsername(userId));
+        //  comment out for post testing reason
+//        player.setUsername(playerService.getUsername(userId));
         player.setGameId(gameId);
         player.setColor(Color.RED);
         //  save the player1 to the playerRepository

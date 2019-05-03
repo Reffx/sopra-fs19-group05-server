@@ -5,6 +5,7 @@ import org.hibernate.annotations.Target;
 import org.hibernate.sql.Insert;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
 
@@ -30,40 +31,45 @@ public class Player implements Serializable {
     private String username;
 
     //  add worker1 and worker2 for player
-    @Embedded
-    @AttributeOverrides({
-            @AttributeOverride(name = "id", column = @Column(name = "workerId_1")),
-            @AttributeOverride(name = "playerId", column = @Column(name = "playerId_1")),
-            @AttributeOverride(name = "position", column = @Column(name = "position_1"))
-    })
-    @Target(WorkerNormal.class)
-    private Worker worker1;
+//    @Embedded
+//    @AttributeOverrides({
+//            @AttributeOverride(name = "id", column = @Column(name = "workerId_1")),
+//            @AttributeOverride(name = "playerId", column = @Column(name = "playerId_1")),
+//            @AttributeOverride(name = "position", column = @Column(name = "position_1"))
+//    })
+//    @Target(WorkerNormal.class)
+//    private Worker worker1;
+//
+//    @Embedded
+//    @AttributeOverrides({
+//            @AttributeOverride(name = "id", column = @Column(name = "workerId_2")),
+//            @AttributeOverride(name = "playerId", column = @Column(name = "playerId_2")),
+//            @AttributeOverride(name = "position", column = @Column(name = "position_2"))
+//    })
+//    @Target(WorkerNormal.class)
+//    private Worker worker2;
 
-    @Embedded
-    @AttributeOverrides({
-            @AttributeOverride(name = "id", column = @Column(name = "workerId_2")),
-            @AttributeOverride(name = "playerId", column = @Column(name = "playerId_2")),
-            @AttributeOverride(name = "position", column = @Column(name = "position_2"))
-    })
-    @Target(WorkerNormal.class)
-    private Worker worker2;
+    @ElementCollection
+    private List<Worker> workers;
 
-    //  constructor1
-    public Player(Worker worker) {
-        this.worker1 = worker;
-        this.worker2 = worker;
-    }
+//    //  constructor1
+//    public Player(Worker worker) {
+//        this.worker1 = worker;
+//        this.worker2 = worker;
+//    }
 
       //constructor2 : set default as normal mode
     public Player() {
-        this.worker1 = new WorkerNormal();
-        //JUWE: set initial id value for worker 1 to 1
-        this.worker1.setId(1);
-        this.worker2 = new WorkerNormal();
-        //JUWE: set initial id value for worker 2 to 2
-        this.worker2.setId(2);
-    }
+        Worker worker1 = new WorkerNormal();
+        worker1.setId(1);
+        Worker worker2 = new WorkerNormal();
+        worker2.setId(2);
 
+        List<Worker> workers = new ArrayList<>();
+        workers.add(worker1);
+        workers.add(worker2);
+        this.workers = workers;
+    }
 
     public Long getId() {
         return id;
@@ -101,17 +107,21 @@ public class Player implements Serializable {
     }
 
     public void setWorker1(Worker worker) {
-        this.worker1 = worker;
+        this.workers.set(0, worker);
     }
     public void setWorker2(Worker worker) {
-        this.worker2 = worker;
+        this.workers.set(1, worker);
     }
 
     public Worker getWorker1() {
-        return worker1;
+        return this.workers.get(0);
     }
     public Worker getWorker2() {
-        return worker2;
+        return this.workers.get(1);
+    }
+
+    public List<Worker> gerWorkers() {
+        return this.workers;
     }
 
     @Override
