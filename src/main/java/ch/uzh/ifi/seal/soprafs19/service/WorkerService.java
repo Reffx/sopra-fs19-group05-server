@@ -132,8 +132,7 @@ public class WorkerService {
         currentField.setOccupier(null);
         workerNormalRepository.save(movingWorker);
 
-        // DA: if currentField.getHeight()=2 && destination.getHeight() = 3
-        //         WinningCondition(workerId)
+        WinningCondition(gameId, currentField.getFieldNum(), dest, workerId);
 
         boardService.updateBoard(board);
 
@@ -150,5 +149,16 @@ public class WorkerService {
         boardService.updateBoard(board);
 
         return new ResponseEntity<String>(HttpStatus.OK);
+    }
+    public ResponseEntity<Boolean> WinningCondition(long gameId, int currentFieldNum, int destFieldNum, int workerId){
+        int h1 = boardService.getField(currentFieldNum, gameId).getHeight();
+        int h2 = boardService.getField(destFieldNum, gameId).getHeight();
+
+        WorkerNormal winningWorker = workerNormalRepository.findById(workerId);
+
+        if(h1 == 2 && h2 == 3){
+           return new ResponseEntity<Boolean>(winningWorker.isWinner(), HttpStatus.OK);
+        }
+       return new ResponseEntity<Boolean>(false, HttpStatus.OK);
     }
 }
