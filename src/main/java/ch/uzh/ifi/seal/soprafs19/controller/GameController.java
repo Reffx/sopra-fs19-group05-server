@@ -48,7 +48,7 @@ public class GameController {
         return gameService.getGame(gameId);
     }
 
-    //  add player2 or player1
+    //  add player2
     @PutMapping("/games/{gameId}/player")
     @CrossOrigin
     ResponseEntity<Game> joinLobby(@RequestBody Long userId, @PathVariable Long gameId) {

@@ -1,7 +1,10 @@
 package ch.uzh.ifi.seal.soprafs19.service;
 
+import ch.uzh.ifi.seal.soprafs19.controller.NonExistentGameException;
 import ch.uzh.ifi.seal.soprafs19.repository.BoardRepository;
+import ch.uzh.ifi.seal.soprafs19.repository.GameRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ch.uzh.ifi.seal.soprafs19.entity.Field;
@@ -15,12 +18,14 @@ import java.util.List;
 public class BoardService {
     private final BoardRepository boardRepository;
     private final FieldService fieldService;
+    private final GameRepository gameRepository;
 
     @Autowired
-    public BoardService(BoardRepository boardRepository, FieldService fieldService) {
+    public BoardService(BoardRepository boardRepository, FieldService fieldService, GameRepository gameRepository) {
 
         this.boardRepository = boardRepository;
         this.fieldService = fieldService;
+        this.gameRepository = gameRepository;
     }
 
     public Board initBoard(Long gameId) {
@@ -49,6 +54,9 @@ public class BoardService {
 
     public Board updateBoard (Board newBoard){
         Board tempBoard = boardRepository.findById(newBoard.getId());
+        if(tempBoard ==null){
+            throw new NonExistentGameException("Could not update board because it doesn't exist");
+        }
         boardRepository.save(tempBoard);
         return newBoard;
     }
@@ -57,6 +65,9 @@ public class BoardService {
     public Board getBoard(long gameId) {
         if (boardRepository.findById(gameId) != null) {
             return (boardRepository.findById(gameId));
+        }
+        else if(gameRepository.getById(gameId) == null){
+            throw new NonExistentGameException("Game was not found, Could not retrieve board!");
         }
         else{
             return initBoard(gameId);

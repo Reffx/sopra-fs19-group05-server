@@ -2,6 +2,7 @@ package ch.uzh.ifi.seal.soprafs19.service;
 
 import ch.uzh.ifi.seal.soprafs19.constant.Color;
 import ch.uzh.ifi.seal.soprafs19.constant.GameMode;
+import ch.uzh.ifi.seal.soprafs19.controller.NonExistentGameException;
 import ch.uzh.ifi.seal.soprafs19.entity.Game;
 import ch.uzh.ifi.seal.soprafs19.entity.Player;
 import ch.uzh.ifi.seal.soprafs19.entity.WorkerNormal;
@@ -9,6 +10,7 @@ import ch.uzh.ifi.seal.soprafs19.repository.GameRepository;
 import ch.uzh.ifi.seal.soprafs19.repository.PlayerRepository;
 import ch.uzh.ifi.seal.soprafs19.repository.UserRepository;
 import ch.uzh.ifi.seal.soprafs19.repository.WorkerNormalRepository;
+import org.apache.catalina.util.ResourceSet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,12 +43,22 @@ public class GameService {
 
     //  find all the NORMAL/GOD mode game
     public ResponseEntity<Iterable<Game>> getModeGames(GameMode gameMode) {
-        return new ResponseEntity<Iterable<Game>>(gameRepository.findByGameMode(gameMode), HttpStatus.FOUND);
+        if(gameRepository.findByGameMode(gameMode) != null) {
+            return new ResponseEntity<Iterable<Game>>(gameRepository.findByGameMode(gameMode), HttpStatus.FOUND);
+        }
+        else{
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
     }
 
     //  find a game by id
     public ResponseEntity<Game> getGame(long gameId) {
-        return new ResponseEntity<Game>(gameRepository.getById(gameId), HttpStatus.FOUND);
+        if(gameRepository.getById(gameId) != null) {
+            return new ResponseEntity<Game>(gameRepository.getById(gameId), HttpStatus.FOUND);
+        }
+        else{
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     //  create a game
@@ -198,6 +210,9 @@ public class GameService {
 
     //  set player2 status
     public ResponseEntity<String> setStatus(Long gameId, Long playerId) {
+        if(playerRepository.getById(playerId) == null){
+            return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
+        }
         Player player = playerService.getPlayer(playerId);
         boolean status = player.getStatus();
         player.setStatus(!status);  //  negation of the original status
@@ -211,7 +226,9 @@ public class GameService {
         //  get playerId
         Long player1Id = gameRepository.getById(gameId).getPlayer1().getId();
         Long player2Id = gameRepository.getById(gameId).getPlayer2().getId();
-
+        if(gameRepository.getById(gameId) == null){
+            throw new NonExistentGameException("Game was not found!");
+        }
         //  randomly select a player
         Random random = new Random();
 
@@ -225,6 +242,9 @@ public class GameService {
 
     //  delete a game. when player1 exit
     public ResponseEntity<String> deleteGame(Long gameId) {
+        if(gameRepository.getById(gameId)== null){
+            throw new NonExistentGameException("The game you want to delete can't be found in the repository!");
+        }
         gameRepository.deleteById(gameId);
         return new ResponseEntity<String>(HttpStatus.OK); // response code: 204
     }
