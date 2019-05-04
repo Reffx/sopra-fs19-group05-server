@@ -51,7 +51,10 @@ public class GameService {
 
     //  create a game
     public ResponseEntity<Game> createGame(Game game) {
-
+        //added if statement to check if the same user wants to create multiple games
+        if(playerRepository.findByUsername(game.getPlayer1().getUsername())!= null){
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        }
         Player player1 = game.getPlayer1();   //  set the player1 as the creator
         //  save the player1 to the playerRepository
         //  save first to get gameId
