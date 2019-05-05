@@ -221,4 +221,39 @@ public class UserServiceTest {
          Assert.assertNotEquals(updatedUser.getUsername(), "testUsername");
          userRepository.deleteAll();
      }
+
+    @Test(expected = DuplicateException.class)
+    public void updateUserErr() {
+        userRepository.deleteAll();
+        Assert.assertNull(userRepository.findByUsername("testUsername"));
+        User testUser = new User();
+        testUser.setUsername("testUsername");
+        testUser.setPassword("test");
+        testUser.setBirthday("16.03.1994");
+
+        User createdUser = userService.createUser(testUser);
+        Assert.assertNotNull(createdUser.getToken());
+        Assert.assertEquals(createdUser.getStatus(), UserStatus.OFFLINE);
+        Assert.assertEquals(createdUser, userRepository.findByToken(createdUser.getToken()));
+
+        User testUser2 = new User();
+        testUser2.setUsername("testUsername2");
+        testUser2.setPassword("test2");
+        testUser2.setBirthday("16.03.1995");
+        User createdUser2 = userService.createUser(testUser2);
+        Assert.assertNotNull(createdUser2.getToken());
+        Assert.assertEquals(createdUser2.getStatus(), UserStatus.OFFLINE);
+        Assert.assertEquals(createdUser2, userRepository.findByToken(createdUser2.getToken()));
+        //seeting username to testUsername2 which is already used by testUser2 --> updating user will lead to error
+        createdUser.setUsername("testUsername2");
+        createdUser.setBirthday("24.12.1998");
+
+        User updatedUser = userService.updateUser(createdUser);
+
+        Assert.assertNotNull(updatedUser.getToken());
+        Assert.assertEquals(updatedUser.getStatus(), UserStatus.OFFLINE);
+        Assert.assertEquals(updatedUser, userRepository.findByToken(updatedUser.getToken()));
+        //check if new username equals the "newUsername" and not the old one "testUsername"
+        userRepository.deleteAll();
+    }
 }
