@@ -2,6 +2,7 @@ package ch.uzh.ifi.seal.soprafs19.service;
 
 import ch.uzh.ifi.seal.soprafs19.constant.Color;
 import ch.uzh.ifi.seal.soprafs19.constant.GameMode;
+import ch.uzh.ifi.seal.soprafs19.controller.DuplicateException;
 import ch.uzh.ifi.seal.soprafs19.controller.NonExistentGameException;
 import ch.uzh.ifi.seal.soprafs19.entity.Game;
 import ch.uzh.ifi.seal.soprafs19.entity.Player;
@@ -17,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.management.InstanceAlreadyExistsException;
 import java.util.Random;
 
 @Service
@@ -57,28 +59,28 @@ public class GameService {
             return new ResponseEntity<Game>(gameRepository.getById(gameId), HttpStatus.FOUND);
         }
         else{
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            throw new NonExistentGameException("Game was not found!");
         }
     }
 
     //  create a game
-    public ResponseEntity<Game> createGame(Game game) {
+    public Game createGame(Game game) {
         //added if statement to check if the same user wants to create multiple games
         if(playerRepository.findByUsername(game.getPlayer1().getUsername())!= null){
-            return new ResponseEntity<>(HttpStatus.CONFLICT);
+            throw new DuplicateException("You have already created a game!");
         }
         Player player1 = game.getPlayer1();   //  set the player1 as the creator
         //  save the player1 to the playerRepository
         //  save first to get gameId
         //game.setPlayer1(player1);
         WorkerNormal worker1 = new WorkerNormal();
-        System.out.println(worker1.getWorkerId());
+        //System.out.println(worker1.getWorkerId());
         workerNormalRepository.save(worker1);
         WorkerNormal worker2 = new WorkerNormal();
         workerNormalRepository.save(worker2);
-        System.out.println(worker2.getWorkerId());
+        //System.out.println(worker2.getWorkerId());
        // worker1 = workerNormalRepository.findById(0).get();
-        System.out.println(worker1.getWorkerId());
+        //System.out.println(worker1.getWorkerId());
         player1.setWorker1(worker1);
         player1.setWorker2(worker2);
         worker1.setPlayerId(player1.getId());
@@ -99,7 +101,7 @@ public class GameService {
         //  save again to save the gameId in Player
         gameRepository.save(game);
 
-        return new ResponseEntity<Game>(game, HttpStatus.CREATED); //   response code:201, frontend fetch the gameId in the body
+        return game; //   response code:201, frontend fetch the gameId in the body
     }
 
     //  update a game, add player1 or player2
@@ -135,7 +137,7 @@ public class GameService {
 
         game.setSize(2);
         gameRepository.save(game);
-        //JuWe: 01.05.19 changed resonse type to game, since its easier to understand if a player2 is in the game object
+        //JuWe: 01.05.19 changed response type to game, since its easier to understand if a player2 is in the game object
         return new ResponseEntity<Game>(game, HttpStatus.OK);   // response code 200
     }
 
@@ -186,7 +188,7 @@ public class GameService {
         }
         else if (player1 == playerX && player2 != null){
             if(player2.getColor() == color){
-                return new ResponseEntity<String>(HttpStatus.CONFLICT);
+                throw new DuplicateException("Color already in use by opponent!");
             }
             else{
                 player1.setColor(color);
@@ -196,7 +198,7 @@ public class GameService {
         }
         else if (player2 == playerX && player1 != null){
             if(player1.getColor() == color){
-                return new ResponseEntity<String>(HttpStatus.CONFLICT);
+                throw new DuplicateException("Color already in use by opponent!");
             }
             else {
                 player2.setColor(color);
@@ -223,12 +225,13 @@ public class GameService {
 
     //  set beginner JUWE: removed responseEntity because I had problems to call setBeginner in the WorkerService
     public Long setBeginner(Long gameId) {
-        //  get playerId
-        Long player1Id = gameRepository.getById(gameId).getPlayer1().getId();
-        Long player2Id = gameRepository.getById(gameId).getPlayer2().getId();
         if(gameRepository.getById(gameId) == null){
             throw new NonExistentGameException("Game was not found!");
         }
+        //  get playerId
+        Long player1Id = gameRepository.getById(gameId).getPlayer1().getId();
+        Long player2Id = gameRepository.getById(gameId).getPlayer2().getId();
+
         //  randomly select a player
         Random random = new Random();
 

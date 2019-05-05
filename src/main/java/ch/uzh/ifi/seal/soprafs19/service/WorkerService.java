@@ -2,6 +2,7 @@ package ch.uzh.ifi.seal.soprafs19.service;
 
 import ch.uzh.ifi.seal.soprafs19.entity.*;
 
+import ch.uzh.ifi.seal.soprafs19.repository.GameRepository;
 import ch.uzh.ifi.seal.soprafs19.repository.WorkerNormalRepository;
 import ch.uzh.ifi.seal.soprafs19.service.BoardService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,9 +47,7 @@ public class WorkerService {
 
         workerNormalRepository.save(placingWorker);
 
-
         boardService.updateBoard(board);
-
         return new ResponseEntity<Integer>(dest, HttpStatus.OK);
     }
 

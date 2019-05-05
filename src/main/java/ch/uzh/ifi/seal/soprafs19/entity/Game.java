@@ -1,6 +1,7 @@
 package ch.uzh.ifi.seal.soprafs19.entity;
 
 import ch.uzh.ifi.seal.soprafs19.constant.GameMode;
+import ch.uzh.ifi.seal.soprafs19.constant.GameStatus;
 import org.hibernate.annotations.Cascade;
 
 import java.io.Serializable;
@@ -32,7 +33,7 @@ public class Game implements Serializable {
     private int size = 1;
 
     @Column
-    private String creationTime;
+    private GameStatus gameStatus= GameStatus.Start;
 
     @Column(nullable = false)
     private boolean isPlaying = false;
@@ -60,11 +61,11 @@ public class Game implements Serializable {
         return id;
     }
 
-    public void setCreationTime(String creationTime) {
-        this.creationTime = creationTime;
+    public void setGameStatus(GameStatus gameStatus) {
+        this.gameStatus = gameStatus;
     }
-    public String getCreationTime() {
-        return creationTime;
+    public GameStatus getGameStatus() {
+        return gameStatus;
     }
 
     public void setIsPlaying(boolean isPlaying) {

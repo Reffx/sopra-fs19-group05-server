@@ -6,6 +6,7 @@ import ch.uzh.ifi.seal.soprafs19.entity.Game;
 import ch.uzh.ifi.seal.soprafs19.entity.Player;
 import ch.uzh.ifi.seal.soprafs19.entity.User;
 import ch.uzh.ifi.seal.soprafs19.service.GameService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,7 +22,9 @@ public class GameController {
 
     //  create a game
     @PostMapping("/games")
-    ResponseEntity<Game> createGame(@RequestBody Game game) {
+    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseBody
+    Game createGame(@RequestBody Game game) {
 //        System.out.println("?" + game.getPlayer1().getWorker1());
         return gameService.createGame(game);
     }

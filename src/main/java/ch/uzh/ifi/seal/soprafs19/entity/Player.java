@@ -29,6 +29,8 @@ public class Player implements Serializable {
     @Column
     private String username;
 
+    //TODO: create attribute myTurn: true or false for Frontend, otherwise they dont know which player's turn it is
+
     //  add worker1 and worker2 for player
    /* @Embedded
     @AttributeOverrides({
@@ -67,6 +69,7 @@ public class Player implements Serializable {
         this.worker2.setId(2);
         System.out.println(worker2.getId());*/
     }
+
 
 
     public Long getId() {

@@ -77,7 +77,7 @@ public class UserService {
             return tempUser;
         }
         else {
-            throw new NonExistentUserException("");
+            throw new NonExistentUserException("User couldn't be found");
         }
     }
 
