@@ -49,6 +49,7 @@ public class GameService {
 
         Player player1 = game.getPlayer1();   //  set the player1 as the creator
         //  save the player1 to the playerRepository
+
         player1.setColor(Color.BLUE);
 
         //  set worker Id
@@ -78,9 +79,11 @@ public class GameService {
     }
 
     //  update a game, add player1 or player2
-    public ResponseEntity<String> joinLobby(Long userId, Long gameId) {
+    public ResponseEntity<Game> joinLobby(Long userId, Long gameId) {
         Game game = gameRepository.getById(gameId);
-
+        if(game.getSize()==2){
+            return new ResponseEntity<Game>(game, HttpStatus.CONFLICT);
+        }
         //  create new player
         Player player = new Player();
         player.setId(userId);
@@ -88,18 +91,19 @@ public class GameService {
         //  comment out for post testing reason
 //        player.setUsername(playerService.getUsername(userId));
         player.setGameId(gameId);
-        player.setColor(Color.RED);
-        //  save the player1 to the playerRepository
 
         if (game.getPlayer2() == null) {
             game.setPlayer2(player);
-        }else{
+        }
+        else{
             game.setPlayer1(player);
 
         }
+
         game.setSize(2);
         gameRepository.save(game);
-        return new ResponseEntity<String>(HttpStatus.OK);   // response code 200
+        //JuWe: 01.05.19 changed resonse type to game, since its easier to understand if a player2 is in the game object
+        return new ResponseEntity<Game>(game, HttpStatus.OK);   // response code 200
     }
 
     //  update a game, remove player1 or player2. if both are null afterwards, delete game
@@ -110,17 +114,25 @@ public class GameService {
         Player player = playerService.getPlayer(playerId);
         if (game.getPlayer2() == player) {
             game.setPlayer2(null);
-        }else if (game.getPlayer1() == player) {
+            game.setSize(1);
+            playerService.deletebyId(playerId);
+            gameRepository.save(game);
+        }else if (game.getPlayer1() == player && game.getSize() == 2) {
             game.setPlayer1(null);
-        }else{
-            return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
+            playerService.deletebyId(playerId);
+            game.setPlayer1(game.getPlayer2());
+            game.setPlayer2(null);
+            game.setSize(1);
+            gameRepository.save(game);
         }
-        gameRepository.save(game);
-        playerService.deletebyId(playerId);
-
-        if (game.getPlayer2() == null && game.getPlayer1() == null){
+        else if (game.getPlayer1() != null && game.getPlayer2() == null){
+            playerService.deletebyId(game.getPlayer1().getId());
             deleteGame(gameId);
         }
+        else{
+            return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
+        }
+
         return new ResponseEntity<String>(HttpStatus.OK);   // response code 200
     }
 
@@ -133,25 +145,33 @@ public class GameService {
         Player player1 = game.getPlayer1();
         Player player2 = game.getPlayer2();
 
-        if (player1 == playerX) {
-            if (player2.getColor() == color) {
+        //JUWE 01.05.19 the first check (if only player1 is in lobby) was missing, thats why color selection worked only after somebody joined the lobby
+        if(player1 == playerX && player2 == null){
+            player1.setColor(color);
+            playerService.savePlayer(player1);
+            return new ResponseEntity<String>(color.toString(),HttpStatus.OK);
+        }
+        else if (player1 == playerX && player2 != null){
+            if(player2.getColor() == color){
                 return new ResponseEntity<String>(HttpStatus.CONFLICT);
-            } else {
+            }
+            else{
                 player1.setColor(color);
                 playerService.savePlayer(player1);
                 return new ResponseEntity<String>(color.toString(), HttpStatus.OK);
             }
-        } else if (player2 == playerX) {
-            if (player1.getColor() == color) {
+        }
+        else if (player2 == playerX && player1 != null){
+            if(player1.getColor() == color){
                 return new ResponseEntity<String>(HttpStatus.CONFLICT);
-            } else {
+            }
+            else {
                 player2.setColor(color);
-                playerService.savePlayer(player1);
+                playerService.savePlayer(player2);
                 return new ResponseEntity<String>(color.toString(), HttpStatus.OK);
             }
-        } else {
-            return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
         }
+        return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
     }
 
 
@@ -164,7 +184,7 @@ public class GameService {
         playerService.savePlayer(player);
         return new ResponseEntity<String>(HttpStatus.OK);
     }
-    
+
     //  set beginner JUWE: removed responseEntity because I had problems to call setBeginner in the WorkerService
     public Long setBeginner(Long gameId) {
         //  get playerId

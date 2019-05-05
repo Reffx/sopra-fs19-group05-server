@@ -51,7 +51,7 @@ public class GameController {
     //  add player2 or player1
     @PutMapping("/games/{gameId}/player")
     @CrossOrigin
-    ResponseEntity<String> joinLobby(@RequestBody Long userId, @PathVariable Long gameId) {
+    ResponseEntity<Game> joinLobby(@RequestBody Long userId, @PathVariable Long gameId) {
         return gameService.joinLobby(userId, gameId);
     }
 
@@ -77,7 +77,8 @@ public class GameController {
     }
 
     //  remove player
-    @DeleteMapping("/games/{gameId}/{playerId}")
+    @PutMapping("/games/{gameId}/{playerId}")
+    @CrossOrigin
     ResponseEntity<String> leaveLobby(@PathVariable(name = "gameId") Long gameId, @PathVariable(name = "playerId") Long playerId) {
         return gameService.leaveLobby(gameId, playerId);
     }
