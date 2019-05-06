@@ -17,15 +17,15 @@ public class Record implements Serializable {
     private Long id; //equal to gameId
 
     @OneToMany
-    private List<Board> records;
+    private List<Board> states;
 
 
     //  setters and getters
     public long getId() {return id;}
     public void setId(long id) {this.id = id;}
 
-    public List<Board> getRecords() {return records;}
-    public void setRecords(List<Board> records) {
-        this.records = records;
+    public List<Board> getStates() {return states;}
+    public void setStates(List<Board> states) {
+        this.states = states;
     }
 }
