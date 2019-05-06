@@ -8,6 +8,7 @@ import ch.uzh.ifi.seal.soprafs19.controller.NonExistentGameException;
 import ch.uzh.ifi.seal.soprafs19.entity.Game;
 import ch.uzh.ifi.seal.soprafs19.entity.Player;
 import ch.uzh.ifi.seal.soprafs19.entity.User;
+import ch.uzh.ifi.seal.soprafs19.service.UserService;
 import ch.uzh.ifi.seal.soprafs19.repository.GameRepository;
 import ch.uzh.ifi.seal.soprafs19.repository.UserRepository;
 import ch.uzh.ifi.seal.soprafs19.repository.PlayerRepository;
@@ -39,13 +40,19 @@ public class GameServiceTest {
     @Qualifier("gameRepository")
     @Autowired
     private GameRepository gameRepository;
+    @Qualifier("playerRepository")
+    @Autowired
     private PlayerRepository playerRepository;
+    @Qualifier("userRepository")
+    @Autowired
     private UserRepository userRepository;
 
     @Autowired
     private GameService gameService;
-    private UserService userService;
+    @Autowired
     private PlayerService playerService;
+    @Autowired
+    private UserService userService;
 
     @Test
     public void createGame(){
@@ -66,6 +73,7 @@ public class GameServiceTest {
         Assert.assertNotNull(createdGame.getPlayer1().getWorker2());
 
         gameRepository.deleteAll();
+        playerRepository.deleteAll();
     }
 
     @Test(expected = DuplicateException.class)
@@ -180,7 +188,7 @@ public class GameServiceTest {
         gameRepository.deleteAll();
         gameService.getGame(0);
     }
-    /*
+
     //TODO: check why NullPointerException is raised
     @Test
     public void joinLobby(){
@@ -199,11 +207,15 @@ public class GameServiceTest {
         long createdGameId = createdGame.getId();
 
         //create user for player2
-        User testUser = new User();
-        testUser.setUsername("testUsername22");
-        testUser.setPassword("test");
-        testUser.setBirthday("16.03.1994");
-        User createdUser = userService.createUser(testUser); //this line is erroneous
+        User testUser1 = new User();
+        long testUserId = 54;
+        testUser1.setUsername("testUsername22");
+        testUser1.setPassword("test");
+        testUser1.setBirthday("16.03.1994");
+        System.out.println("Checkpoint!");
+        User createdUser = userService.createUser(testUser1);
+
+        System.out.println(createdUser.getId());
 
         Assert.assertNotNull(gameRepository.findByGameMode(GameMode.NORMAL));
         Assert.assertNotNull(createdGame.getPlayer1());
@@ -223,7 +235,7 @@ public class GameServiceTest {
         gameRepository.deleteAll();
 
     }
-    */
+
 
     @Test
     public void leaveLobby(){
