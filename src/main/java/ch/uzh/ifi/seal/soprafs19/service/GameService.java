@@ -4,6 +4,7 @@ import ch.uzh.ifi.seal.soprafs19.constant.Color;
 import ch.uzh.ifi.seal.soprafs19.constant.GameMode;
 import ch.uzh.ifi.seal.soprafs19.constant.GameStatus;
 import ch.uzh.ifi.seal.soprafs19.controller.DuplicateException;
+import ch.uzh.ifi.seal.soprafs19.controller.FullLobbyException;
 import ch.uzh.ifi.seal.soprafs19.controller.NonExistentGameException;
 import ch.uzh.ifi.seal.soprafs19.constant.GodCards;
 import ch.uzh.ifi.seal.soprafs19.entity.Game;
@@ -110,7 +111,7 @@ public class GameService {
     public ResponseEntity<Game> joinLobby(Long userId, Long gameId) {
         Game game = gameRepository.getById(gameId);
         if(game.getSize()==2){
-            return new ResponseEntity<Game>(game, HttpStatus.CONFLICT);
+            throw new FullLobbyException("Not allowed to join full lobby!");
         }
         //  create new player
         Player player = new Player();
@@ -256,7 +257,7 @@ public class GameService {
         return new ResponseEntity<String>(HttpStatus.OK); // response code: 204
     }
 
-    public ResponseEntity<String> assingGodCard(String godCard, long playerId){
+    public ResponseEntity<String> assignGodCard(String godCard, long playerId){
         WorkerNormal worker1 = playerService.getPlayer(playerId).getWorker1();
         WorkerNormal worker2 = playerService.getPlayer(playerId).getWorker2();
 

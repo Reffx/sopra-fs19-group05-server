@@ -94,6 +94,6 @@ public class GameController {
 
     @PutMapping("/games/{gameId}/{playerId}/GodCard")
     ResponseEntity<String> assignGodCard(@RequestBody String godCard, @PathVariable(name = "playerId") long playerId){
-        return gameService.assingGodCard(godCard, playerId);
+        return gameService.assignGodCard(godCard, playerId);
     }
 }

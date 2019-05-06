@@ -3,11 +3,14 @@ package ch.uzh.ifi.seal.soprafs19.service;
 import ch.uzh.ifi.seal.soprafs19.Application;
 import ch.uzh.ifi.seal.soprafs19.constant.Color;
 import ch.uzh.ifi.seal.soprafs19.constant.GameStatus;
+import ch.uzh.ifi.seal.soprafs19.constant.GodCards;
 import ch.uzh.ifi.seal.soprafs19.constant.GameMode;
+import ch.uzh.ifi.seal.soprafs19.controller.FullLobbyException;
 import ch.uzh.ifi.seal.soprafs19.controller.NonExistentGameException;
 import ch.uzh.ifi.seal.soprafs19.entity.Game;
 import ch.uzh.ifi.seal.soprafs19.entity.Player;
 import ch.uzh.ifi.seal.soprafs19.entity.User;
+import ch.uzh.ifi.seal.soprafs19.repository.WorkerNormalRepository;
 import ch.uzh.ifi.seal.soprafs19.service.UserService;
 import ch.uzh.ifi.seal.soprafs19.repository.GameRepository;
 import ch.uzh.ifi.seal.soprafs19.repository.UserRepository;
@@ -46,6 +49,9 @@ public class GameServiceTest {
     @Qualifier("userRepository")
     @Autowired
     private UserRepository userRepository;
+    @Qualifier("workerNormalRepository")
+    @Autowired
+    private WorkerNormalRepository workerNormalRepository;
 
     @Autowired
     private GameService gameService;
@@ -53,6 +59,8 @@ public class GameServiceTest {
     private PlayerService playerService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private WorkerService workerService;
 
     @Test
     public void createGame(){
@@ -74,6 +82,7 @@ public class GameServiceTest {
 
         gameRepository.deleteAll();
         playerRepository.deleteAll();
+        workerNormalRepository.deleteAll();
     }
 
     @Test(expected = DuplicateException.class)
@@ -100,6 +109,7 @@ public class GameServiceTest {
         gameService.createGame(testGame2);
         playerRepository.deleteAll();
         gameRepository.deleteAll();
+        workerNormalRepository.deleteAll();
     }
 
     @Test
@@ -137,7 +147,57 @@ public class GameServiceTest {
         Assert.assertNotNull(createdGame2.getPlayer1().getWorker2());
 
         gameRepository.deleteAll();
+        playerRepository.deleteAll();
+        workerNormalRepository.deleteAll();
     }
+
+    @Test
+    public void getModeGames(){
+        Assert.assertNull(gameRepository.getById(1));
+        Game testGame = new Game();
+        Player player1 = new Player();
+        testGame.setPlayer1(player1);
+        testGame.setGameMode(GameMode.NORMAL);
+        testGame.setIsPlaying(false);
+        long player1ID = 72;
+        player1.setId(player1ID);
+        player1.setUsername("testPlayer72");
+        Game createdGame = gameService.createGame(testGame);
+        Assert.assertNotNull(gameRepository.findByGameMode(GameMode.NORMAL));
+        Assert.assertEquals(createdGame.getPlayer1(), player1);
+
+        Iterable NormalModeGame = gameService.getModeGames(GameMode.NORMAL).getBody();
+        Assert.assertNotNull(NormalModeGame);
+
+        gameRepository.deleteAll();
+        playerRepository.deleteAll();
+        workerNormalRepository.deleteAll();
+        userRepository.deleteAll();
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void getModeGamesErr(){
+        gameRepository.deleteAll();
+        Assert.assertNull(gameRepository.getById(1));
+        Game testGame = new Game();
+        Player testplayer1 = new Player();
+        testGame.setPlayer1(testplayer1);
+        testGame.setGameMode(GameMode.NORMAL);
+        testGame.setIsPlaying(false);
+        Game createdGame = gameService.createGame(testGame);
+        Assert.assertNotNull(gameRepository.findByGameMode(GameMode.NORMAL));
+        Iterable NormalModeGames = gameService.getModeGames(GameMode.NORMAL).getBody();
+        Assert.assertNotNull(NormalModeGames);
+        gameRepository.deleteById(createdGame.getId());
+        gameRepository.deleteById(createdGame.getId());
+
+        gameRepository.deleteAll();
+        playerRepository.deleteAll();
+        workerNormalRepository.deleteAll();
+        userRepository.deleteAll();
+
+    }
+
 
     @Test
     public void getGame(){
@@ -164,6 +224,8 @@ public class GameServiceTest {
         Assert.assertEquals(createdGame, foundGame);
 
         gameRepository.deleteAll();
+        playerRepository.deleteAll();
+        workerNormalRepository.deleteAll();
     }
 
     @Test(expected = NonExistentGameException.class)
@@ -186,10 +248,12 @@ public class GameServiceTest {
         Assert.assertNotNull(createdGame.getPlayer1().getWorker2());
 
         gameRepository.deleteAll();
+        playerRepository.deleteAll();
+        workerNormalRepository.deleteAll();
         gameService.getGame(0);
     }
 
-    //TODO: check why NullPointerException is raised
+
     @Test
     public void joinLobby(){
         Assert.assertNull(gameRepository.getById(1));
@@ -204,15 +268,12 @@ public class GameServiceTest {
         testGame.setIsPlaying(false);
 
         Game createdGame = gameService.createGame(testGame);
-        long createdGameId = createdGame.getId();
 
         //create user for player2
         User testUser1 = new User();
-        long testUserId = 54;
         testUser1.setUsername("testUsername22");
         testUser1.setPassword("test");
         testUser1.setBirthday("16.03.1994");
-        System.out.println("Checkpoint!");
         User createdUser = userService.createUser(testUser1);
 
         System.out.println(createdUser.getId());
@@ -222,20 +283,59 @@ public class GameServiceTest {
         Assert.assertNotNull(createdGame.getPlayer1().getWorker1());
         Assert.assertNotNull(createdGame.getPlayer1().getWorker2());
 
-        gameService.joinLobby(createdUser.getId(), createdGameId);
-
+        Game joinedGame = gameService.joinLobby(userService.getUser(createdUser.getId()).getId(), createdGame.getId()).getBody();
         Assert.assertNotNull(gameRepository.findByGameMode(GameMode.NORMAL));
-        Assert.assertNotNull(createdGame.getPlayer1());
-        Assert.assertNotNull(createdGame.getPlayer1().getWorker1());
-        Assert.assertNotNull(createdGame.getPlayer1().getWorker2());
-        Assert.assertNotNull(createdGame.getPlayer2().getWorker1());
-        Assert.assertNotNull(createdGame.getPlayer2().getWorker2());
-        Assert.assertEquals(createdGame.getSize(), 2);
+        Assert.assertNotNull(joinedGame.getPlayer1());
+        Assert.assertNotNull(joinedGame.getPlayer1().getWorker1());
+        Assert.assertNotNull(joinedGame.getPlayer1().getWorker2());
+        Assert.assertNotNull(joinedGame.getPlayer2().getWorker1());
+        Assert.assertNotNull(joinedGame.getPlayer2().getWorker2());
+        Assert.assertEquals(joinedGame.getSize(), 2);
 
         gameRepository.deleteAll();
+        playerRepository.deleteAll();
+        workerNormalRepository.deleteAll();
+        userRepository.deleteAll();
 
     }
 
+    @Test(expected = FullLobbyException.class)
+    public void joinLobbyErr(){
+        Assert.assertNull(gameRepository.getById(1));
+        Game testGame = new Game();
+        Player player1 = new Player();
+        long player1ID = 29;
+        player1.setId(player1ID);
+        player1.setUsername("TestPlayer29");
+
+        testGame.setPlayer1(player1);
+        testGame.setGameMode(GameMode.NORMAL);
+        testGame.setIsPlaying(false);
+
+        Game createdGame = gameService.createGame(testGame);
+
+        //create user for player2
+        User testUser1 = new User();
+        testUser1.setUsername("testUsername22");
+        testUser1.setPassword("test");
+        testUser1.setBirthday("16.03.1994");
+        User createdUser = userService.createUser(testUser1);
+
+        User testUser2 = new User();
+        testUser2.setUsername("testUsername23");
+        testUser2.setPassword("test");
+        testUser2.setBirthday("16.03.1997");
+        User createdUser2 = userService.createUser(testUser2);
+
+        gameService.joinLobby(userService.getUser(createdUser.getId()).getId(), createdGame.getId());
+        //try to join the full lobby
+        gameService.joinLobby(userService.getUser(createdUser2.getId()).getId(), createdGame.getId());
+
+        gameRepository.deleteAll();
+        playerRepository.deleteAll();
+        workerNormalRepository.deleteAll();
+        userRepository.deleteAll();
+    }
 
     @Test
     public void leaveLobby(){
@@ -263,6 +363,8 @@ public class GameServiceTest {
         Assert.assertNotNull(createdGame.getPlayer1().getWorker1());
         Assert.assertNotNull(createdGame.getPlayer1().getWorker2());
         gameRepository.deleteAll();
+        playerRepository.deleteAll();
+        workerNormalRepository.deleteAll();
     }
 
     @Test(expected = NullPointerException.class)
@@ -282,6 +384,8 @@ public class GameServiceTest {
         //check if its possible to leave game with another id than the created one
         gameService.leaveLobby(createdGame.getId()+100, player1.getId());
         gameRepository.deleteAll();
+        playerRepository.deleteAll();
+        workerNormalRepository.deleteAll();
     }
 
     @Test
@@ -313,6 +417,8 @@ public class GameServiceTest {
         Assert.assertEquals(player2.getColor(),Color.YELLOW);
 
         gameRepository.deleteAll();
+        playerRepository.deleteAll();
+        workerNormalRepository.deleteAll();
     }
 
     @Test(expected = DuplicateException.class)
@@ -338,7 +444,10 @@ public class GameServiceTest {
         //duplicate error since both players pick same color
         gameService.setColor(createdGame.getId(),player1.getId(), Color.YELLOW);
         gameService.setColor(createdGame.getId(),player2.getId(),Color.YELLOW);
+
         gameRepository.deleteAll();
+        playerRepository.deleteAll();
+        workerNormalRepository.deleteAll();
     }
 
     @Test
@@ -368,6 +477,8 @@ public class GameServiceTest {
         Assert.assertNotNull(player2);
         Assert.assertNotNull(createdGame);
         gameRepository.deleteAll();
+        playerRepository.deleteAll();
+        workerNormalRepository.deleteAll();
     }
     //NonExistingGameException because fake gameID is given and the check for player1 ID in setBeginner function will throw error
     @Test(expected = NonExistentGameException.class)
@@ -393,6 +504,8 @@ public class GameServiceTest {
         gameRepository.save(createdGame);
         long testGameId = 10;
         gameService.setBeginner(testGameId);
+        playerRepository.deleteAll();
+        workerNormalRepository.deleteAll();
     }
 
     @Test
@@ -421,7 +534,10 @@ public class GameServiceTest {
         gameService.deleteGame(createdGame.getId());
 
         Assert.assertNull(gameRepository.getById(createdGame.getId()));
+
         gameRepository.deleteAll();
+        playerRepository.deleteAll();
+        workerNormalRepository.deleteAll();
     }
 
     @Test(expected = NonExistentGameException.class)
@@ -452,5 +568,34 @@ public class GameServiceTest {
         gameService.deleteGame(createdGame.getId());
 
         gameRepository.deleteAll();
+        playerRepository.deleteAll();
+        workerNormalRepository.deleteAll();
     }
+
+    @Test
+    public void assignGodCard(){
+        Assert.assertNull(gameRepository.getById(1));
+        Game testGame = new Game();
+        Player player1 = new Player();
+        long player1ID = 45;
+        player1.setId(player1ID);
+        player1.setUsername("TestPlayer45");
+        testGame.setPlayer1(player1);
+        testGame.setGameMode(GameMode.NORMAL);
+        testGame.setIsPlaying(false);
+
+        Game createdGame = gameService.createGame(testGame);
+
+        gameService.assignGodCard("Pan", player1.getId());
+        Assert.assertEquals(workerNormalRepository.findById(player1.getWorker1().getWorkerId()).getGodCard(), GodCards.Pan);
+        Assert.assertEquals(player1.getWorker1().getPosition(), -1);
+        Assert.assertEquals(player1.getWorker2().getPosition(), -1);
+
+        gameRepository.deleteAll();
+        playerRepository.deleteAll();
+        workerNormalRepository.deleteAll();
+        userRepository.deleteAll();
+    }
+
+
 }
