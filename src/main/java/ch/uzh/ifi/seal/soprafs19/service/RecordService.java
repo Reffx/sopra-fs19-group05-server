@@ -28,7 +28,7 @@ public class RecordService {
 
     //  find records by gameMode
     public Iterable<Record> findByGameMode(GameMode gameMode) {
-        return recordRepository.findByGameMode();
+        return recordRepository.findByGameMode(gameMode);
     }
 
     // add a state(Board) to the list in Record
