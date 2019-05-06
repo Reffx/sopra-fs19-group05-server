@@ -1,5 +1,7 @@
 package ch.uzh.ifi.seal.soprafs19.entity;
 
+import ch.uzh.ifi.seal.soprafs19.constant.GodCards;
+
 import javax.persistence.Embeddable;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,8 +13,9 @@ public class WorkerNormal{
     @GeneratedValue
     private int workerId ;  // worker1 or worker2 --> DA: better to just have workers 1 - 4, we can check which belongs to who with the attribute playerId //
     private long playerId;
-    private int position;
+    private int position = -1;
     private boolean isNext = false;
+    private GodCards godCard;
 
 
     public boolean isWinner(){
@@ -41,6 +44,13 @@ public class WorkerNormal{
 
     public void setPosition(int position) {
         this.position = position;
+    }
+
+    public GodCards getGodCard() { return godCard;
+    }
+
+    public void setGodCard(GodCards godCard) {
+        this.godCard = godCard;
     }
 
     public boolean isNext() {

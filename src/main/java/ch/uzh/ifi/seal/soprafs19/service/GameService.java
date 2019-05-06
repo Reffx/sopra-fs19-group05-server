@@ -5,6 +5,7 @@ import ch.uzh.ifi.seal.soprafs19.constant.GameMode;
 import ch.uzh.ifi.seal.soprafs19.constant.GameStatus;
 import ch.uzh.ifi.seal.soprafs19.controller.DuplicateException;
 import ch.uzh.ifi.seal.soprafs19.controller.NonExistentGameException;
+import ch.uzh.ifi.seal.soprafs19.constant.GodCards;
 import ch.uzh.ifi.seal.soprafs19.entity.Game;
 import ch.uzh.ifi.seal.soprafs19.entity.Player;
 import ch.uzh.ifi.seal.soprafs19.entity.WorkerNormal;
@@ -253,5 +254,18 @@ public class GameService {
         }
         gameRepository.deleteById(gameId);
         return new ResponseEntity<String>(HttpStatus.OK); // response code: 204
+    }
+
+    public ResponseEntity<String> assingGodCard(String godCard, long playerId){
+        WorkerNormal worker1 = playerService.getPlayer(playerId).getWorker1();
+        WorkerNormal worker2 = playerService.getPlayer(playerId).getWorker2();
+
+        if(godCard == "Pan"){
+            worker1.setGodCard(GodCards.Pan);
+            worker2.setGodCard(GodCards.Pan);
+            workerNormalRepository.save(worker1);
+            workerNormalRepository.save(worker2);
+        }
+        return new ResponseEntity<String>(HttpStatus.OK);
     }
 }
