@@ -25,9 +25,13 @@ public class WorkerController {
         return workerService.moveTo(gameId, workerId, fieldNum);
     }
 
-    @GetMapping("games/{gameId}/{fieldNum}/highlight")
-    ResponseEntity<List<Integer>> highlightField(@PathVariable(name = "gameId") long gameId, @PathVariable(name = "fieldNum") int fieldNum){
-        return workerService.highlightField(fieldNum, gameId);
+    @GetMapping("games/{gameId}/{fieldNum}/highlight/move")
+    ResponseEntity<List<Integer>> highlightFieldMove(@PathVariable(name = "gameId") long gameId, @PathVariable(name = "fieldNum") int fieldNum){
+        return workerService.highlightFieldMove(fieldNum, gameId);
+    }
+    @GetMapping("games/{gameId}/{fieldNum}/highlight/build")
+    ResponseEntity<List<Integer>> highlightFieldBuild(@PathVariable(name = "gameId") long gameId, @PathVariable(name = "fieldNum") int fieldNum){
+        return workerService.highlightFieldBuild(fieldNum, gameId);
     }
 
     //JUWE: Put mapping to place worker on field in initial round, afterwards move to method must be use
