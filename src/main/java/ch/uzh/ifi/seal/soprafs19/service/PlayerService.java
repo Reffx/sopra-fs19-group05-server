@@ -48,7 +48,7 @@ public class PlayerService {
     }
 
     //  get player by id
-    Player getPlayer(Long playerId) {
+    public Player getPlayer(Long playerId) {
         return playerRepository.getById(playerId);
     }
 
@@ -62,5 +62,8 @@ public class PlayerService {
         playerRepository.deleteById(playerId);
         return new ResponseEntity<String> (HttpStatus.OK);
     }
+
+    //get username
+    public String getUsername(Long playerId) {return userService.getUser(playerId).getUsername();}
 
 }

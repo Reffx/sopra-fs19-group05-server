@@ -1,6 +1,7 @@
 package ch.uzh.ifi.seal.soprafs19.entity;
 
 import ch.uzh.ifi.seal.soprafs19.constant.GameMode;
+import ch.uzh.ifi.seal.soprafs19.constant.GameStatus;
 import org.hibernate.annotations.Cascade;
 
 import java.io.Serializable;
@@ -18,11 +19,11 @@ public class Game implements Serializable {
     private Long id;
 
     //  unique by onetoone
-    @OneToOne(cascade = CascadeType.ALL)        //  to map the player database to the player database
+    @OneToOne(cascade = CascadeType.MERGE)        //  to map the player database to the player database
     private Player player1;                    // playerId = userId
 
     //  unique by onetoone
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.MERGE)
     private Player player2;
 
     @Column(nullable = false)
@@ -32,7 +33,7 @@ public class Game implements Serializable {
     private int size = 1;
 
     @Column
-    private String creationTime;
+    private GameStatus gameStatus= GameStatus.Start;
 
     @Column(nullable = false)
     private boolean isPlaying = false;
@@ -60,11 +61,11 @@ public class Game implements Serializable {
         return id;
     }
 
-    public void setCreationTime(String creationTime) {
-        this.creationTime = creationTime;
+    public void setGameStatus(GameStatus gameStatus) {
+        this.gameStatus = gameStatus;
     }
-    public String getCreationTime() {
-        return creationTime;
+    public GameStatus getGameStatus() {
+        return gameStatus;
     }
 
     public void setIsPlaying(boolean isPlaying) {

@@ -3,8 +3,10 @@ package ch.uzh.ifi.seal.soprafs19.controller;
 import ch.uzh.ifi.seal.soprafs19.constant.Color;
 import ch.uzh.ifi.seal.soprafs19.constant.GameMode;
 import ch.uzh.ifi.seal.soprafs19.entity.Game;
+import ch.uzh.ifi.seal.soprafs19.entity.Player;
 import ch.uzh.ifi.seal.soprafs19.entity.User;
 import ch.uzh.ifi.seal.soprafs19.service.GameService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,7 +22,10 @@ public class GameController {
 
     //  create a game
     @PostMapping("/games")
-    ResponseEntity<Game> createGame(@RequestBody Game game) {
+    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseBody
+    Game createGame(@RequestBody Game game) {
+//        System.out.println("?" + game.getPlayer1().getWorker1());
         return gameService.createGame(game);
     }
 
@@ -46,11 +51,11 @@ public class GameController {
         return gameService.getGame(gameId);
     }
 
-    //  add player2 or player1
+    //  add player2
     @PutMapping("/games/{gameId}/player")
     @CrossOrigin
-    ResponseEntity<String> addPlayer(@RequestBody Long userId, @PathVariable Long gameId) {
-        return gameService.addPlayer(userId, gameId);
+    ResponseEntity<Game> joinLobby(@RequestBody Long userId, @PathVariable Long gameId) {
+        return gameService.joinLobby(userId, gameId);
     }
 
     //  ser player color
@@ -70,19 +75,25 @@ public class GameController {
 
     //  set beginner
     @GetMapping("/games/{gameId}/beginner")
-    ResponseEntity<Long> setBeginner(@PathVariable Long gameId) {
+    public Long setBeginner(@PathVariable Long gameId) {
         return gameService.setBeginner(gameId);
     }
 
     //  remove player
-    @DeleteMapping("/games/{gameId}/{playerId}")
-    ResponseEntity<String> removePlayer2(@PathVariable(name = "gameId") Long gameId, @PathVariable(name = "playerId") Long playerId) {
-        return gameService.removePlayer(gameId, playerId);
+    @PutMapping("/games/{gameId}/{playerId}")
+    @CrossOrigin
+    ResponseEntity<String> leaveLobby(@PathVariable(name = "gameId") Long gameId, @PathVariable(name = "playerId") Long playerId) {
+        return gameService.leaveLobby(gameId, playerId);
     }
 
     //  delete a game
     @DeleteMapping("/games/{gameId}")
     ResponseEntity<String> deleteGame(@PathVariable Long gameId) {
         return gameService.deleteGame(gameId);
+    }
+
+    @PutMapping("/games/{gameId}/{playerId}/GodCard")
+    ResponseEntity<String> assignGodCard(@RequestBody String godCard, @PathVariable(name = "playerId") long playerId){
+        return gameService.assignGodCard(godCard, playerId);
     }
 }

@@ -24,16 +24,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest(classes= Application.class)
 @AutoConfigureMockMvc
 @Transactional
-public class CreatePlayerTest {
+public class CreateGameTest {
 
     @Autowired
     private MockMvc mvc;
 
-    //first version of create player mvc test
+    //first version of create game mvc test
     @Test
-    public void createPlayer() throws Exception {
+    public void createGame() throws Exception {
 
-        this.mvc.perform(post("/players")
+        this.mvc.perform(post("/games")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"id\": \"1\"}"))
                 .andExpect(status().is(201)).andDo(print());
