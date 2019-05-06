@@ -2,6 +2,7 @@ package ch.uzh.ifi.seal.soprafs19.service;
 
 import ch.uzh.ifi.seal.soprafs19.constant.Color;
 import ch.uzh.ifi.seal.soprafs19.constant.GameMode;
+import ch.uzh.ifi.seal.soprafs19.constant.GameStatus;
 import ch.uzh.ifi.seal.soprafs19.controller.DuplicateException;
 import ch.uzh.ifi.seal.soprafs19.controller.NonExistentGameException;
 import ch.uzh.ifi.seal.soprafs19.entity.Game;
@@ -237,8 +238,10 @@ public class GameService {
 
         int id_rand = random.nextInt(2);
         if (id_rand == 0) {
+            gameRepository.getById(gameId).setGameStatus(GameStatus.Move1);
             return player1Id;
         }
+        gameRepository.getById(gameId).setGameStatus(GameStatus.Move2);
         return player2Id;
     }
 
@@ -246,7 +249,7 @@ public class GameService {
     //  delete a game. when player1 exit
     public ResponseEntity<String> deleteGame(Long gameId) {
         if(gameRepository.getById(gameId)== null){
-            throw new NonExistentGameException("The game you want to delete can't be found in the repository!");
+            throw new NonExistentGameException("The game you want to delete couldn't be found in the repository!");
         }
         gameRepository.deleteById(gameId);
         return new ResponseEntity<String>(HttpStatus.OK); // response code: 204

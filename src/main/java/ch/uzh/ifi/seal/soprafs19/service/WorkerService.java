@@ -1,5 +1,6 @@
 package ch.uzh.ifi.seal.soprafs19.service;
 
+import ch.uzh.ifi.seal.soprafs19.constant.GameStatus;
 import ch.uzh.ifi.seal.soprafs19.entity.*;
 
 import ch.uzh.ifi.seal.soprafs19.repository.GameRepository;
@@ -22,13 +23,15 @@ public class WorkerService {
     private final BoardService boardService;
     private final GameService gameService;
     private final WorkerNormalRepository workerNormalRepository;
+    private final GameRepository gameRepository;
 
     @Autowired
-    public WorkerService(WorkerNormalRepository workerNormalRepository,PlayerService playerService, BoardService boardService, GameService gameService) {
+    public WorkerService(WorkerNormalRepository workerNormalRepository,PlayerService playerService, BoardService boardService, GameService gameService, GameRepository gameRepository) {
         this.playerService = playerService;
         this.boardService = boardService;
         this.gameService = gameService;
         this.workerNormalRepository = workerNormalRepository;
+        this.gameRepository = gameRepository;
     }
 
 
@@ -44,10 +47,28 @@ public class WorkerService {
 
         fieldToPlace.setOccupier(placingWorker);
         placingWorker.setPosition(dest);
-
+        Game currentGame = gameService.getGame(gameId).getBody();
         workerNormalRepository.save(placingWorker);
-
+       if(currentGame.getPlayer1().getWorker1() == placingWorker){
+           currentGame.setGameStatus(GameStatus.Move1);
+       }
+       else if(currentGame.getPlayer1().getWorker2() == placingWorker){
+           currentGame.setGameStatus(GameStatus.Move1);
+       }
+       else if(currentGame.getPlayer1().getWorker1().getPosition() != -1 && currentGame.getPlayer1().getWorker2().getPosition() != -1){
+           currentGame.setGameStatus(GameStatus.Move2);
+       }
+       else if(currentGame.getPlayer2().getWorker1() == placingWorker){
+           currentGame.setGameStatus(GameStatus.Move2);
+       }
+       else if(currentGame.getPlayer2().getWorker2() == placingWorker){
+           currentGame.setGameStatus(GameStatus.Move2);
+       }
+       else if(currentGame.getPlayer2().getWorker1().getPosition() != -1 && currentGame.getPlayer2().getWorker2().getPosition() != -1){
+           currentGame.setGameStatus(GameStatus.Move1);
+       }
         boardService.updateBoard(board);
+        gameRepository.save(currentGame);
         return new ResponseEntity<Integer>(dest, HttpStatus.OK);
     }
 
@@ -125,10 +146,18 @@ public class WorkerService {
         WorkerNormal movingWorker = workerNormalRepository.findById(workerId);
         Field currentField = boardService.getField(movingWorker.getPosition(), gameId);
         Field destination = boardService.getField(dest, gameId);
+        Game currentGame = gameService.getGame(gameId).getBody();
 
         destination.setOccupier(movingWorker);
         movingWorker.setPosition(destination.getFieldNum());
         currentField.setOccupier(null);
+        if(currentGame.getGameStatus()==GameStatus.Move1){
+            currentGame.setGameStatus(GameStatus.Build1);
+        }
+        else if(currentGame.getGameStatus() == GameStatus.Move2){
+            currentGame.setGameStatus(GameStatus.Build2);
+        }
+        gameRepository.save(currentGame);
         workerNormalRepository.save(movingWorker);
 
         WinningCondition(gameId, currentField.getFieldNum(), dest, workerId);
@@ -141,6 +170,14 @@ public class WorkerService {
     public ResponseEntity<String> build(long gameId, int fieldNum){
         Board board = boardService.getBoard(gameId);
         Field currentField = boardService.getField(fieldNum, gameId);
+        Game currentGame = gameService.getGame(gameId).getBody();
+
+        if(currentGame.getGameStatus() == GameStatus.Build1){
+            currentGame.setGameStatus(GameStatus.Move2);
+        }
+        else if(currentGame.getGameStatus() == GameStatus.Build2){
+            currentGame.setGameStatus(GameStatus.Move1);
+        }
 
         int h = currentField.getHeight();
         currentField.setHeight(h + 1);
