@@ -51,6 +51,7 @@ public class WorkerService {
         placingWorker.setPosition(dest);
         Game currentGame = gameService.getGame(gameId).getBody();
         workerNormalRepository.save(placingWorker);
+        gameRepository.save(currentGame);
        if(currentGame.getPlayer1().getWorker1() == placingWorker){
            currentGame.setGameStatus(GameStatus.Move1);
        }
