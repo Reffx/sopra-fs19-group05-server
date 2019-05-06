@@ -1,6 +1,7 @@
 package ch.uzh.ifi.seal.soprafs19.service;
 
 
+import ch.uzh.ifi.seal.soprafs19.constant.GameMode;
 import ch.uzh.ifi.seal.soprafs19.entity.Board;
 import ch.uzh.ifi.seal.soprafs19.entity.Record;
 import ch.uzh.ifi.seal.soprafs19.repository.RecordRepository;
@@ -24,6 +25,12 @@ public class RecordService {
     public Iterable<Record> allRecords() {
         return recordRepository.findAll();
     }
+
+    //  find records by gameMode
+    public Iterable<Record> findByGameMode(GameMode gameMode) {
+        return recordRepository.findByGameMode();
+    }
+
     // add a state(Board) to the list in Record
     public void addState(Long gameId, Board board) {
         Record record = recordRepository.getById(gameId);

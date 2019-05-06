@@ -8,4 +8,5 @@ import org.springframework.stereotype.Repository;
 @Repository("recordRepository")
 public interface RecordRepository extends CrudRepository<Record, Long> {
     Record getById(long Id);
+    Iterable<Record> findByGameMode();
 }
