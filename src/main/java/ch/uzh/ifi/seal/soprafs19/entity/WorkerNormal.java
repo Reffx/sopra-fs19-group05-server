@@ -16,11 +16,15 @@ public class WorkerNormal{
     private int position = -1;
     private boolean isNext = false;
     private GodCards godCard;
+    private boolean isWinner = false;
 
 
-    public boolean isWinner(){
-        return true;
-    };
+    public void setIsWinner(boolean isWinner) {
+        this.isWinner = isWinner;
+    }
+    public boolean getIsWinner() {
+        return this.isWinner;
+    }
 
     public int getWorkerId() {
         return workerId;

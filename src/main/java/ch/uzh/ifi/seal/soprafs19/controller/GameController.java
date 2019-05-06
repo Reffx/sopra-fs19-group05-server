@@ -91,4 +91,9 @@ public class GameController {
     ResponseEntity<String> deleteGame(@PathVariable Long gameId) {
         return gameService.deleteGame(gameId);
     }
+
+    @PutMapping("/games/{gameId}/{playerId}/GodCard")
+    ResponseEntity<String> assignGodCard(@RequestBody String godCard, @PathVariable(name = "playerId") long playerId){
+        return gameService.assingGodCard(godCard, playerId);
+    }
 }

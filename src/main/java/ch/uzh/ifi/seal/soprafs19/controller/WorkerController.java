@@ -44,6 +44,4 @@ public class WorkerController {
     ResponseEntity<String> build(@PathVariable (name = "gameId") long gameId, @PathVariable(name = "fieldNum") int fieldNum){
         return workerService.build(gameId, fieldNum);
     }
-
-
 }
