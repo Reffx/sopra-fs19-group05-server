@@ -46,33 +46,32 @@ public class WorkerService {
         Board board = boardService.getBoard(gameId);
         WorkerNormal placingWorker = workerNormalRepository.findById(workerId);
         Field fieldToPlace = boardService.getField(dest, gameId);
-
-        fieldToPlace.setOccupier(placingWorker);
-        placingWorker.setPosition(dest);
-        Game currentGame = gameService.getGame(gameId).getBody();
-        workerNormalRepository.save(placingWorker);
-        gameRepository.save(currentGame);
-       if(currentGame.getPlayer1().getWorker1() == placingWorker){
-           currentGame.setGameStatus(GameStatus.Move1);
-       }
-       else if(currentGame.getPlayer1().getWorker2() == placingWorker){
-           currentGame.setGameStatus(GameStatus.Move1);
-       }
-       else if(currentGame.getPlayer1().getWorker1().getPosition() != -1 && currentGame.getPlayer1().getWorker2().getPosition() != -1){
-           currentGame.setGameStatus(GameStatus.Move2);
-       }
-       else if(currentGame.getPlayer2().getWorker1() == placingWorker){
-           currentGame.setGameStatus(GameStatus.Move2);
-       }
-       else if(currentGame.getPlayer2().getWorker2() == placingWorker){
-           currentGame.setGameStatus(GameStatus.Move2);
-       }
-       else if(currentGame.getPlayer2().getWorker1().getPosition() != -1 && currentGame.getPlayer2().getWorker2().getPosition() != -1){
-           currentGame.setGameStatus(GameStatus.Move1);
-       }
-        boardService.updateBoard(board);
-        gameRepository.save(currentGame);
-        return new ResponseEntity<Integer>(dest, HttpStatus.OK);
+        if(fieldToPlace.getOccupier() == null) {
+            fieldToPlace.setOccupier(placingWorker);
+            placingWorker.setPosition(dest);
+            Game currentGame = gameService.getGame(gameId).getBody();
+            workerNormalRepository.save(placingWorker);
+            gameRepository.save(currentGame);
+            if (currentGame.getPlayer1().getWorker1() == placingWorker && currentGame.getPlayer1().getWorker2().getPosition() == -1) {
+                currentGame.setGameStatus(GameStatus.Move1);
+            } else if (currentGame.getPlayer1().getWorker2() == placingWorker && currentGame.getPlayer1().getWorker1().getPosition() == -1) {
+                currentGame.setGameStatus(GameStatus.Move1);
+            } else if (currentGame.getPlayer1().getWorker1().getPosition() != -1 && currentGame.getPlayer1().getWorker2().getPosition() != -1) {
+                currentGame.setGameStatus(GameStatus.Move2);
+            } else if (currentGame.getPlayer2().getWorker1() == placingWorker && currentGame.getPlayer2().getWorker2().getPosition() == -1) {
+                currentGame.setGameStatus(GameStatus.Move2);
+            } else if (currentGame.getPlayer2().getWorker2() == placingWorker && currentGame.getPlayer2().getWorker1().getPosition() == -1) {
+                currentGame.setGameStatus(GameStatus.Move2);
+            } else if (currentGame.getPlayer2().getWorker1().getPosition() != -1 && currentGame.getPlayer2().getWorker2().getPosition() != -1) {
+                currentGame.setGameStatus(GameStatus.Move1);
+            }
+            boardService.updateBoard(board);
+            gameRepository.save(currentGame);
+            return new ResponseEntity<Integer>(dest, HttpStatus.OK);
+        }
+        else{
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        }
     }
 
     public ResponseEntity<List<Integer>> highlightFieldBuild(int fieldNum, long gameId){
