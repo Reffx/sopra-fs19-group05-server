@@ -25,6 +25,9 @@ public class Record implements Serializable {
     @Column
     private GameMode gameMode;
 
+    @Column
+    private boolean isDone = false;
+
     //  setters and getters
     public long getId() {return id;}
     public void setId(long id) {this.id = id;}
@@ -34,6 +37,9 @@ public class Record implements Serializable {
 
     public GameMode getGameMode() { return gameMode;}
     public void setGameMode(GameMode gameMode) { this.gameMode = gameMode;}
+
+    public void setIsDone(boolean isDone) {this.isDone = isDone;}
+    public boolean getIsDone() {return this.isDone;}
 
 
 }
