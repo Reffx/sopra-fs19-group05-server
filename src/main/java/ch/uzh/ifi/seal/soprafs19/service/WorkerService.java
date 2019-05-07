@@ -293,7 +293,7 @@ public class WorkerService {
             }
             else{
                 currentGame.setGameStatus(GameStatus.Winner2);
-                gameRepository.save(currentGame)
+                gameRepository.save(currentGame);
             }
             winningWorker.setIsWinner(true);
             return new ResponseEntity<Boolean>(winningWorker.getIsWinner(), HttpStatus.OK);
