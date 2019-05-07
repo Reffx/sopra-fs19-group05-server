@@ -67,7 +67,12 @@ public class WorkerServiceTest {
 
     @Test
     public void placeWorker(){
+        gameRepository.deleteAll();
+        workerNormalRepository.deleteAll();
+        playerRepository.deleteAll();
         Assert.assertNull(gameRepository.getById(1));
+        Assert.assertNull(workerNormalRepository.findById(1));
+        Assert.assertNull(playerRepository.findByUsername("testUSer"));
         Game testGame = new Game();
         Player player1 = new Player();
         testGame.setPlayer1(player1);
@@ -80,13 +85,14 @@ public class WorkerServiceTest {
 
         // init board
 
-        boardService.getBoard(createdGame.getId());
 
-        /*workerService.placeWorker(createdGame.getId(), createdGame.getPlayer1().getWorker1().getWorkerId(), 6);
+        workerService.placeWorker(createdGame.getId(),player1.getWorker1().getWorkerId(), 6);
 
-        Assert.assertEquals(workerNormalRepository.findById(player1.getWorker1().getWorkerId()).getPosition(), 6);
+        Assert.assertEquals(playerRepository.findByUsername("testPlayer91").getWorker1().getPosition(), 6);
         Assert.assertNotNull(boardService.getField(createdGame.getPlayer1().getWorker1().getPosition(), createdGame.getId()));
-        */
+
+        gameRepository.deleteAll();
+
     }
 
 }

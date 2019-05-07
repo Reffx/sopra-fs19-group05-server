@@ -5,6 +5,7 @@ import ch.uzh.ifi.seal.soprafs19.constant.GodCards;
 import ch.uzh.ifi.seal.soprafs19.entity.*;
 
 import ch.uzh.ifi.seal.soprafs19.repository.GameRepository;
+import ch.uzh.ifi.seal.soprafs19.repository.PlayerRepository;
 import ch.uzh.ifi.seal.soprafs19.repository.WorkerNormalRepository;
 import ch.uzh.ifi.seal.soprafs19.service.BoardService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,14 +27,16 @@ public class WorkerService {
     private final GameService gameService;
     private final WorkerNormalRepository workerNormalRepository;
     private final GameRepository gameRepository;
+    private final PlayerRepository playerRepository;
 
     @Autowired
-    public WorkerService(WorkerNormalRepository workerNormalRepository,PlayerService playerService, BoardService boardService, GameService gameService, GameRepository gameRepository) {
+    public WorkerService(WorkerNormalRepository workerNormalRepository,PlayerService playerService, BoardService boardService, GameService gameService, GameRepository gameRepository, PlayerRepository playerRepository) {
         this.playerService = playerService;
         this.boardService = boardService;
         this.gameService = gameService;
         this.workerNormalRepository = workerNormalRepository;
         this.gameRepository = gameRepository;
+        this.playerRepository = playerRepository;
     }
 
 
@@ -45,13 +48,17 @@ public class WorkerService {
     public ResponseEntity<Integer> placeWorker(long gameId, int workerId, int dest){
         Board board = boardService.getBoard(gameId);
         WorkerNormal placingWorker = workerNormalRepository.findById(workerId);
+        placingWorker.setPosition(0);
+        //System.out.println("Worker position: "+ placingWorker.getPosition());
         Field fieldToPlace = boardService.getField(dest, gameId);
         if(fieldToPlace.getOccupier() == null) {
             fieldToPlace.setOccupier(placingWorker);
             placingWorker.setPosition(dest);
             Game currentGame = gameService.getGame(gameId).getBody();
+            //System.out.println("Checkpoint!");
             workerNormalRepository.save(placingWorker);
             gameRepository.save(currentGame);
+            //System.out.println("Checkpoint2!");
             if (currentGame.getPlayer1().getWorker1() == placingWorker && currentGame.getPlayer1().getWorker2().getPosition() == -1) {
                 currentGame.setGameStatus(GameStatus.Move1);
             } else if (currentGame.getPlayer1().getWorker2() == placingWorker && currentGame.getPlayer1().getWorker1().getPosition() == -1) {
@@ -66,7 +73,11 @@ public class WorkerService {
                 currentGame.setGameStatus(GameStatus.Move1);
             }
             boardService.updateBoard(board);
+            //System.out.println("Checkpoint3!");
+            playerRepository.save(currentGame.getPlayer1());
+            workerNormalRepository.save(placingWorker);
             gameRepository.save(currentGame);
+            //System.out.println("Checkpoint4!");
             return new ResponseEntity<Integer>(dest, HttpStatus.OK);
         }
         else{
@@ -272,9 +283,16 @@ public class WorkerService {
                     winningWorker.setIsWinner(true);
                     return new ResponseEntity<Boolean>(winningWorker.getIsWinner(), HttpStatus.OK);
                 }
-                winningWorker.setIsWinner(true);
-                return new ResponseEntity<Boolean>(winningWorker.getIsWinner(), HttpStatus.OK);
+
             }
+            if(gameRepository.getById(gameId).getPlayer1().getWorker1() == winningWorker || gameRepository.getById(gameId).getPlayer1().getWorker2() == winningWorker){
+                gameRepository.getById(gameId).setGameStatus(GameStatus.Winner1);
+            }
+            else{
+                gameRepository.getById(gameId).setGameStatus(GameStatus.Winner2);
+            }
+            winningWorker.setIsWinner(true);
+            return new ResponseEntity<Boolean>(winningWorker.getIsWinner(), HttpStatus.OK);
         }
         return new ResponseEntity<Boolean>(false, HttpStatus.OK);
     }
