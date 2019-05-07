@@ -4,6 +4,7 @@ import ch.uzh.ifi.seal.soprafs19.constant.GameMode;
 import ch.uzh.ifi.seal.soprafs19.entity.Record;
 import ch.uzh.ifi.seal.soprafs19.service.RecordService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,9 +25,15 @@ public class RecordController {
         return recordService.allRecords();
     }
 
-    //  find records by gameMode
+//    //  find records by gameMode
+//    @GetMapping("/records/{gameMode}")
+//    Iterable<Record>  findByGameMode(GameMode gameMode) {
+//        return recordService.findByGameMode(gameMode);
+//    }
+
+    //  find one record by gameMode
     @GetMapping("/records/{gameMode}")
-    Iterable<Record>  findByGameMode(GameMode gameMode) {
-        return recordService.findByGameMode(gameMode);
+    ResponseEntity<Record> findByGameMode(GameMode gameMode) {
+        return recordService.findOne(gameMode);
     }
 }
