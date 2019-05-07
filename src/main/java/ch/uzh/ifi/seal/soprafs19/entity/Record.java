@@ -19,7 +19,7 @@ public class Record implements Serializable {
     @Id
     private Long id; //equal to gameId
 
-    @OneToMany
+    @ElementCollection
     private List<Board> states;
 
     @Column
