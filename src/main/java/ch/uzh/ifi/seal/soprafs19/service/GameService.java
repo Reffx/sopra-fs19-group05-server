@@ -269,4 +269,18 @@ public class GameService {
         }
         return new ResponseEntity<String>(HttpStatus.OK);
     }
+
+    public ResponseEntity<String> surrender(Long gameId, long playerId){
+
+        Game currentGame = gameRepository.getById(gameId);
+        if(currentGame.getPlayer1().getId() == playerId){
+            currentGame.setGameStatus(GameStatus.Winner2);
+        }
+        else{
+            currentGame.setGameStatus(GameStatus.Winner1);
+        }
+        gameRepository.save(currentGame);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }
