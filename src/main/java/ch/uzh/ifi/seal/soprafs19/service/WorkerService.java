@@ -275,6 +275,8 @@ public class WorkerService {
         int h1 = boardService.getField(currentFieldNum, gameId).getHeight();
         int h2 = boardService.getField(destFieldNum, gameId).getHeight();
 
+       Game  currentGame = gameRepository.getById(gameId);
+
         WorkerNormal winningWorker = workerNormalRepository.findById(workerId);
 
         if (h1 == 2 && h2 == 3) {
@@ -285,11 +287,13 @@ public class WorkerService {
                 }
 
             }
-            if(gameRepository.getById(gameId).getPlayer1().getWorker1() == winningWorker || gameRepository.getById(gameId).getPlayer1().getWorker2() == winningWorker){
-                gameRepository.getById(gameId).setGameStatus(GameStatus.Winner1);
+            if(currentGame.getPlayer1().getWorker1() == winningWorker || currentGame.getPlayer1().getWorker2() == winningWorker){
+                currentGame.setGameStatus(GameStatus.Winner1);
+                gameRepository.save(currentGame);
             }
             else{
-                gameRepository.getById(gameId).setGameStatus(GameStatus.Winner2);
+                currentGame.setGameStatus(GameStatus.Winner2);
+                gameRepository.save(currentGame)
             }
             winningWorker.setIsWinner(true);
             return new ResponseEntity<Boolean>(winningWorker.getIsWinner(), HttpStatus.OK);
