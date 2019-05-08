@@ -4,7 +4,7 @@ import ch.uzh.ifi.seal.soprafs19.entity.WorkerNormal;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-@Repository
+@Repository("workerNormalRepository")
 public interface WorkerNormalRepository extends CrudRepository<WorkerNormal, Integer> {
     WorkerNormal findById(int id);
 }
