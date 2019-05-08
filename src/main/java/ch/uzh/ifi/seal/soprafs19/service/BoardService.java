@@ -59,7 +59,12 @@ public class BoardService {
         if(tempBoard ==null){
             throw new NonExistentGameException("Could not update board because it doesn't exist");
         }
+
         boardRepository.save(tempBoard);
+
+        // do recording
+        recordService.addState(newBoard.getId(), newBoard);
+
         return newBoard;
     }
 
