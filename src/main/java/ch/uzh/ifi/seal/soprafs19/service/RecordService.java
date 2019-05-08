@@ -56,12 +56,16 @@ public class RecordService {
     public void addState(Long gameId, Board board) {
         Record record = recordRepository.getById(gameId);
 
+
+
         //  if record doesn't exist, create a new record
         if (record == null) {
             record = createRecord(gameId);
         }
 
         List<Board> states = record.getStates();
+        System.out.println("Record3" + record);
+        System.out.println("board" + board);
         states.add(board);
         record.setStates(states);
 
@@ -73,6 +77,10 @@ public class RecordService {
     public Record createRecord(Long gameId) {
         Record record = new Record();
         record.setId(gameId);
+
+        //  initialize states
+        List<Board> states = new ArrayList<>();
+        record.setStates(states);
 
         return record;
     }
