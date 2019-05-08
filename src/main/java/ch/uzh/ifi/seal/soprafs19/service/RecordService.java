@@ -34,21 +34,30 @@ public class RecordService {
         return recordRepository.findAll();
     }
 
-    //  find one record
+    //  find  record by Id
     public Record findById(long gameId) {
         return recordRepository.getById(gameId);
     }
 
     //  find records by gameMode
     public Iterable<Record> findByGameMode(GameMode gameMode) {
-        return recordRepository.findByGameModeAndIsDone(gameMode, true);
+        return recordRepository.findByGameMode(gameMode);
     }
 
     //  randomly find record by gameMode
     public ResponseEntity<Record> findOne(GameMode gameMode) {
-        Iterable<Record> records = recordRepository.findByGameModeAndIsDone(gameMode, true);
-        int size = ((ArrayList<?>) records).size(); // cast to collection and get its size
+        Iterable<Record> records = recordRepository.findByGameMode(gameMode);
 
+        //  find finished game records
+        Iterable<Record> recordsDone = new ArrayList<>();
+        for (Record r : records) {
+            if (r.getIsDone()) {
+                ((ArrayList<Record>) recordsDone).add(r);
+            }
+        }
+
+        //  check if no finished record
+        int size = ((ArrayList<?>) recordsDone).size(); // cast to collection and get its size
         if (size == 0) {
             return new ResponseEntity<Record>(HttpStatus.NOT_FOUND);
         }
@@ -56,7 +65,7 @@ public class RecordService {
         //  get a randon index and return one record
         Random rand = new Random();
         int idx = rand.nextInt(size);
-        Record record = ((ArrayList<Record>) records).get(idx);
+        Record record = ((ArrayList<Record>) recordsDone).get(idx);
         return new ResponseEntity<Record> (record, HttpStatus.OK);
     }
 
