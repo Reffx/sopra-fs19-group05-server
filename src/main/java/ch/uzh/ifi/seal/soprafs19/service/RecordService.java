@@ -55,12 +55,26 @@ public class RecordService {
     // add a state(Board) to the list in Record
     public void addState(Long gameId, Board board) {
         Record record = recordRepository.getById(gameId);
+
+        //  if record doesn't exist, create a new record
+        if (record == null) {
+            record = createRecord(gameId);
+        }
+
         List<Board> states = record.getStates();
         states.add(board);
         record.setStates(states);
 
         //  save the record
         recordRepository.save(record);
+    }
+
+    //  create a reocrd
+    public Record createRecord(Long gameId) {
+        Record record = new Record();
+        record.setId(gameId);
+
+        return record;
     }
 
 
