@@ -49,16 +49,13 @@ public class WorkerService {
         Board board = boardService.getBoard(gameId);
         WorkerNormal placingWorker = workerNormalRepository.findById(workerId);
         placingWorker.setPosition(0);
-        //System.out.println("Worker position: "+ placingWorker.getPosition());
         Field fieldToPlace = boardService.getField(dest, gameId);
         if(fieldToPlace.getOccupier() == null) {
             fieldToPlace.setOccupier(placingWorker);
             placingWorker.setPosition(dest);
             Game currentGame = gameService.getGame(gameId).getBody();
-            //System.out.println("Checkpoint!");
             workerNormalRepository.save(placingWorker);
             gameRepository.save(currentGame);
-            //System.out.println("Checkpoint2!");
             if (currentGame.getPlayer1().getWorker1() == placingWorker && currentGame.getPlayer1().getWorker2().getPosition() == -1) {
                 currentGame.setGameStatus(GameStatus.Move1);
             } else if (currentGame.getPlayer1().getWorker2() == placingWorker && currentGame.getPlayer1().getWorker1().getPosition() == -1) {
@@ -73,11 +70,9 @@ public class WorkerService {
                 currentGame.setGameStatus(GameStatus.Move1);
             }
             boardService.updateBoard(board);
-            //System.out.println("Checkpoint3!");
             playerRepository.save(currentGame.getPlayer1());
             workerNormalRepository.save(placingWorker);
             gameRepository.save(currentGame);
-            //System.out.println("Checkpoint4!");
             return new ResponseEntity<Integer>(dest, HttpStatus.OK);
         }
         else{
@@ -285,7 +280,6 @@ public class WorkerService {
                     winningWorker.setIsWinner(true);
                     return new ResponseEntity<Boolean>(winningWorker.getIsWinner(), HttpStatus.OK);
                 }
-
             }
             if(currentGame.getPlayer1().getWorker1() == winningWorker || currentGame.getPlayer1().getWorker2() == winningWorker){
                 currentGame.setGameStatus(GameStatus.Winner1);

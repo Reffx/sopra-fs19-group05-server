@@ -597,6 +597,29 @@ public class GameServiceTest {
         userRepository.deleteAll();
     }
 
+    @Test
+    public void surrender(){
+        Assert.assertNull(gameRepository.getById(1));
+        Game testGame = new Game();
+        Player player1 = new Player();
+        long player1ID = 46;
+        player1.setId(player1ID);
+        player1.setUsername("TestPlayer46");
+        testGame.setPlayer1(player1);
+        testGame.setGameMode(GameMode.NORMAL);
+        testGame.setIsPlaying(false);
 
+        Game createdGame = gameService.createGame(testGame);
+
+        gameService.surrender(createdGame.getId(), player1ID).getBody();
+
+        Game gameTest = gameRepository.getById(createdGame.getId());
+        System.out.println(gameTest.getGameStatus());
+
+
+        System.out.println(createdGame.getGameStatus());
+        Assert.assertEquals(gameTest.getGameStatus(), GameStatus.Winner2);
+        Assert.assertEquals(gameRepository.getById(createdGame.getId()).getId(), createdGame.getId());
+    }
 
 }

@@ -97,6 +97,7 @@ public class GameController {
         return gameService.assignGodCard(godCard, playerId);
     }
 
+    //surrender
     @PutMapping("/games/{gameId}/{playerId}/surrender")
     @CrossOrigin
     ResponseEntity<String> surrender(@PathVariable(name = "gameId") long gameId, @PathVariable(name = "playerId") long playerId){
