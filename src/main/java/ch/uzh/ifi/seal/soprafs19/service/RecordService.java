@@ -3,6 +3,7 @@ package ch.uzh.ifi.seal.soprafs19.service;
 
 import ch.uzh.ifi.seal.soprafs19.constant.GameMode;
 import ch.uzh.ifi.seal.soprafs19.entity.Board;
+import ch.uzh.ifi.seal.soprafs19.entity.Game;
 import ch.uzh.ifi.seal.soprafs19.entity.Record;
 import ch.uzh.ifi.seal.soprafs19.repository.RecordRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,10 +21,12 @@ import java.util.Random;
 @Transactional
 public class RecordService {
     private final RecordRepository recordRepository;
+    private final GameService gameService;
 
     @Autowired
-    public RecordService(RecordRepository recordRepository) {
+    public RecordService(RecordRepository recordRepository, GameService gameService) {
         this.recordRepository = recordRepository;
+        this.gameService = gameService;
     }
 
     //  find all records
@@ -81,6 +84,11 @@ public class RecordService {
         //  initialize states
         List<Board> states = new ArrayList<>();
         record.setStates(states);
+
+        //  set gameMode
+        Game game = gameService.getGame(gameId).getBody();
+        GameMode gameMode = game.getGameMode();
+        record.setGameMode(gameMode);
 
         return record;
     }
