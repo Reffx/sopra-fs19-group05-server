@@ -64,8 +64,6 @@ public class RecordService {
     public void addState(Long gameId, Board board) {
         Record record = recordRepository.getById(gameId);
 
-
-
         //  if record doesn't exist, create a new record
         if (record == null) {
             record = createRecord(gameId);
