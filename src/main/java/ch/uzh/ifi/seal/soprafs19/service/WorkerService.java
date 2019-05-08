@@ -28,15 +28,17 @@ public class WorkerService {
     private final WorkerNormalRepository workerNormalRepository;
     private final GameRepository gameRepository;
     private final PlayerRepository playerRepository;
+    private final RecordService recordService;
 
     @Autowired
-    public WorkerService(WorkerNormalRepository workerNormalRepository,PlayerService playerService, BoardService boardService, GameService gameService, GameRepository gameRepository, PlayerRepository playerRepository) {
+    public WorkerService(WorkerNormalRepository workerNormalRepository,PlayerService playerService, BoardService boardService, GameService gameService, GameRepository gameRepository, PlayerRepository playerRepository, RecordService recordService) {
         this.playerService = playerService;
         this.boardService = boardService;
         this.gameService = gameService;
         this.workerNormalRepository = workerNormalRepository;
         this.gameRepository = gameRepository;
         this.playerRepository = playerRepository;
+        this.recordService = recordService;
     }
 
 
@@ -283,6 +285,8 @@ public class WorkerService {
             if (winningWorker.getGodCard() == GodCards.Pan) {
                 if (h1 - h2 >= 2) {
                     winningWorker.setIsWinner(true);
+                    //  DO RECORDING
+                    recordService.findById(gameId).setIsDone(true);
                     return new ResponseEntity<Boolean>(winningWorker.getIsWinner(), HttpStatus.OK);
                 }
 
@@ -296,6 +300,9 @@ public class WorkerService {
                 gameRepository.save(currentGame);
             }
             winningWorker.setIsWinner(true);
+
+            //  DO RECORDING
+            recordService.findById(gameId).setIsDone(true);
             return new ResponseEntity<Boolean>(winningWorker.getIsWinner(), HttpStatus.OK);
         }
         return new ResponseEntity<Boolean>(false, HttpStatus.OK);

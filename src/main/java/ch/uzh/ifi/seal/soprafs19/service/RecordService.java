@@ -34,6 +34,11 @@ public class RecordService {
         return recordRepository.findAll();
     }
 
+    //  find one record
+    public Record findById(long gameId) {
+        return recordRepository.getById(gameId);
+    }
+
     //  find records by gameMode
     public Iterable<Record> findByGameMode(GameMode gameMode) {
         return recordRepository.findByGameModeAndIsDone(gameMode, true);
@@ -67,8 +72,6 @@ public class RecordService {
         }
 
         List<Board> states = record.getStates();
-        System.out.println("Record3" + record);
-        System.out.println("board" + board);
         states.add(board);
         record.setStates(states);
 
