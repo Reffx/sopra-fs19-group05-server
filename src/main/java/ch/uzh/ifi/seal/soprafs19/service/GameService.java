@@ -260,13 +260,27 @@ public class GameService {
     public ResponseEntity<String> assignGodCard(String godCard, long playerId){
         WorkerNormal worker1 = playerService.getPlayer(playerId).getWorker1();
         WorkerNormal worker2 = playerService.getPlayer(playerId).getWorker2();
-
+        //TODO: godCard == "Pan" didn't work, isequal or equals solved this problem
         if(godCard == "Pan"){
             worker1.setGodCard(GodCards.Pan);
             worker2.setGodCard(GodCards.Pan);
             workerNormalRepository.save(worker1);
             workerNormalRepository.save(worker2);
         }
+        return new ResponseEntity<String>(HttpStatus.OK);
+    }
+
+    public ResponseEntity<String> surrender(Long gameId, long playerId){
+
+        Game currentGame = gameRepository.getById(gameId);
+        if(currentGame.getPlayer1().getId() == playerId){
+            currentGame.setGameStatus(GameStatus.Winner2);
+        }
+        else{
+            currentGame.setGameStatus(GameStatus.Winner1);
+        }
+        gameRepository.save(currentGame);
+
         return new ResponseEntity<String>(HttpStatus.OK);
     }
 }
