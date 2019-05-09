@@ -113,6 +113,32 @@ public class GameServiceTest {
     }
 
     @Test
+    public void setGameStatus(){
+        gameRepository.deleteAll();
+        Game testGame = new Game();
+        Player testplayer1 = new Player();
+        testGame.setPlayer1(testplayer1);
+        testGame.setGameMode(GameMode.NORMAL);
+        testGame.setIsPlaying(false);
+        long player1ID = 7;
+        testplayer1.setId(player1ID);
+        testplayer1.setUsername("testPlayer33");
+        Game createdGame = gameService.createGame(testGame);
+
+        createdGame.setGameStatus(GameStatus.Move1);
+        Assert.assertEquals(createdGame.getGameStatus(), GameStatus.Move1);
+        createdGame.setGameStatus(GameStatus.Move2);
+        Assert.assertEquals(createdGame.getGameStatus(), GameStatus.Move2);
+        createdGame.setGameStatus(GameStatus.Build1);
+        Assert.assertEquals(createdGame.getGameStatus(), GameStatus.Build1);
+        createdGame.setGameStatus(GameStatus.Build2);
+        Assert.assertEquals(createdGame.getGameStatus(), GameStatus.Build2);
+        createdGame.setGameStatus(GameStatus.Start);
+        Assert.assertEquals(createdGame.getGameStatus(), GameStatus.Start);
+
+    }
+
+    @Test
     public void getGames(){
         gameRepository.deleteAll();
         Assert.assertNull(gameRepository.getById(1));

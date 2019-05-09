@@ -208,7 +208,7 @@ public class ComplexTest {
         User onlineUser2 = userService.checkUser(createdUser);
         Assert.assertEquals(onlineUser2.getStatus(),UserStatus.ONLINE);
 
-        User offlineUser2 = userService.logoutUser(onlineUser);
+        User offlineUser2 = userService.logoutUser(onlineUser2);
         Assert.assertEquals(offlineUser2.getStatus(),UserStatus.OFFLINE);
 
         //create a Game with User 1
@@ -260,6 +260,7 @@ public class ComplexTest {
         Assert.assertEquals(boardService.getField(5,tempGame.getId()).getHeight(), 0);
         Assert.assertEquals(boardService.getField(5,tempGame.getId()).getOccupier(), player1.getWorker1());
         Assert.assertEquals(tempGame.getPlayer1().getWorker1().getPosition(), 5);
+        Assert.assertFalse(tempGame.getPlayer1().getWorker1().getIsWinner());
 
         //Place Worker2 of Player1 on Field Number 6
 
@@ -270,6 +271,7 @@ public class ComplexTest {
         Assert.assertEquals(boardService.getField(6,tempGame.getId()).getHeight(), 0);
         Assert.assertEquals(boardService.getField(6,tempGame.getId()).getOccupier(), player1.getWorker2());
         Assert.assertEquals(tempGame.getPlayer1().getWorker2().getPosition(), 6);
+        Assert.assertFalse(tempGame.getPlayer1().getWorker2().getIsWinner());
 
         //Place Worker1 of Player2 on Field Number 12
 
@@ -280,6 +282,7 @@ public class ComplexTest {
         Assert.assertEquals(boardService.getField(12,tempGame.getId()).getHeight(), 0);
         Assert.assertEquals(boardService.getField(12,tempGame.getId()).getOccupier(), player2.getWorker1());
         Assert.assertEquals(tempGame.getPlayer2().getWorker1().getPosition(), 12);
+        Assert.assertFalse(tempGame.getPlayer2().getWorker1().getIsWinner());
 
         // Place Worker 2 of Player2 on FieldNumber 20
 
@@ -290,9 +293,33 @@ public class ComplexTest {
         Assert.assertEquals(boardService.getField(20,tempGame.getId()).getHeight(), 0);
         Assert.assertEquals(boardService.getField(20,tempGame.getId()).getOccupier(), player2.getWorker2());
         Assert.assertEquals(tempGame.getPlayer2().getWorker2().getPosition(), 20);
+        Assert.assertFalse(tempGame.getPlayer2().getWorker2().getIsWinner());
 
         //Checkpoint:  Both players placed their workers on the board
-        System.out.println("Worker2 position: "+player1.getWorker1().getPosition());
+
+
+        //Now Player 1 can move one of his workers
+
+        workerService.moveTo(tempGame.getId(),player1.getWorker1().getWorkerId(), 2);
+        //check for updated Game Status Moving --> Building
+        Assert.assertEquals(tempGame.getGameStatus(), GameStatus.Build1);
+        Assert.assertNotNull(boardService.getField(2,tempGame.getId()).getOccupier());
+        //old position shouldn't have a worker object on it
+        Assert.assertNull(boardService.getField(5, tempGame.getId()).getOccupier());
+        Assert.assertNotNull(boardRepository.findById(tempGame.getId()));
+        Assert.assertEquals(boardService.getField(2,tempGame.getId()).getHeight(), 0);
+        Assert.assertEquals(boardService.getField(2,tempGame.getId()).getOccupier(), player1.getWorker1());
+        Assert.assertEquals(tempGame.getPlayer1().getWorker1().getPosition(), 2);
+
+        //Build with Worker1
+        workerService.build(tempGame.getId(), 3);
+        Assert.assertEquals(boardService.getField(3,tempGame.getId()).getHeight(), 1);
+        //FieldNum 3 has building level 1
+
+
+
+
+
 
 
 

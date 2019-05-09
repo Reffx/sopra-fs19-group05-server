@@ -1,12 +1,10 @@
 package ch.uzh.ifi.seal.soprafs19.service;
 
 import ch.uzh.ifi.seal.soprafs19.Application;
-import ch.uzh.ifi.seal.soprafs19.constant.Color;
-import ch.uzh.ifi.seal.soprafs19.constant.GameStatus;
-import ch.uzh.ifi.seal.soprafs19.constant.GodCards;
-import ch.uzh.ifi.seal.soprafs19.constant.GameMode;
+import ch.uzh.ifi.seal.soprafs19.constant.*;
 import ch.uzh.ifi.seal.soprafs19.controller.FullLobbyException;
 import ch.uzh.ifi.seal.soprafs19.controller.NonExistentGameException;
+import ch.uzh.ifi.seal.soprafs19.entity.Board;
 import ch.uzh.ifi.seal.soprafs19.entity.Game;
 import ch.uzh.ifi.seal.soprafs19.entity.Player;
 import ch.uzh.ifi.seal.soprafs19.entity.User;
@@ -131,6 +129,76 @@ public class WorkerServiceTest {
         Assert.assertEquals(gameTest.getPlayer1().getWorker1().getPosition(), 9);
         Assert.assertEquals(boardService.getField(6, gameTest.getId()).getOccupier(), null );
 
+        userRepository.deleteAll();
+        gameRepository.deleteAll();
+    }
+
+    @Test
+    public void build(){
+        userRepository.deleteAll();
+        gameRepository.deleteAll();
+
+
+        //create 2 Users
+
+        //User1
+        User testUser1 = new User();
+        testUser1.setUsername("testUsername1");
+        testUser1.setPassword("test");
+        testUser1.setBirthday("16.03.1994");
+
+        User createdUser1 = userService.createUser(testUser1);
+        Assert.assertEquals(createdUser1.getStatus(), UserStatus.OFFLINE);
+
+        User onlineUser1 = userService.checkUser(createdUser1);
+        Assert.assertEquals(onlineUser1.getStatus(),UserStatus.ONLINE);
+
+        User offlineUser1 = userService.logoutUser(onlineUser1);
+        Assert.assertEquals(offlineUser1.getStatus(),UserStatus.OFFLINE);
+
+        //User2
+        User testUser3 = new User();
+        testUser3.setUsername("testUsername3");
+        testUser3.setPassword("test");
+        testUser3.setBirthday("16.03.1994");
+
+        User createdUser3 = userService.createUser(testUser3);
+        Assert.assertEquals(createdUser3.getStatus(), UserStatus.OFFLINE);
+
+        User onlineUser3 = userService.checkUser(createdUser3);
+        Assert.assertEquals(onlineUser3.getStatus(),UserStatus.ONLINE);
+
+        User offlineUser3 = userService.logoutUser(onlineUser3);
+        Assert.assertEquals(offlineUser3.getStatus(),UserStatus.OFFLINE);
+
+        //create a Game with User 1
+
+        Game testGame1 = new Game();
+        Player playerOne = new Player();
+        testGame1.setPlayer1(playerOne);
+        testGame1.setGameMode(GameMode.NORMAL);
+        testGame1.setIsPlaying(false);
+
+        playerOne.setId(createdUser1.getId());
+        playerOne.setUsername(createdUser1.getUsername());
+        Game createdGame1 = gameService.createGame(testGame1);
+
+        Assert.assertEquals(createdGame1.getPlayer1().getUsername(), testUser1.getUsername());
+        Assert.assertEquals(createdGame1.getSize(),1);
+
+        //Join the created game with createdUser2 (Player2)
+        Game tempGame1 = gameService.joinLobby(createdUser3.getId(), createdGame1.getId()).getBody();
+
+        Player playerTwo = tempGame1.getPlayer2();
+
+        Board tempBoard = boardService.getBoard(tempGame1.getId());
+
+        playerOne.getWorker1().setPosition(4);
+        workerService.highlightFieldBuild(playerOne.getWorker1().getPosition(), tempGame1.getId());
+        Assert.assertNotNull(workerService.highlightFieldBuild(playerOne.getWorker1().getPosition(), tempGame1.getId()));
+
+        workerService.build(tempGame1.getId(), 5);
+        Assert.assertEquals(boardService.getField(5,tempGame1.getId()).getHeight(), 1);
     }
 
 }
