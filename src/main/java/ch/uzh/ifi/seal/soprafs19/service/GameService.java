@@ -261,13 +261,13 @@ public class GameService {
         WorkerNormal worker1 = playerService.getPlayer(playerId).getWorker1();
         WorkerNormal worker2 = playerService.getPlayer(playerId).getWorker2();
         //TODO: godCard == "Pan" didn't work, isequal or equals solved this problem
-        if(godCard.equals(GodCards.Pan)){
+        if(godCard.equals("Pan")){
             worker1.setGodCard(GodCards.Pan);
             worker2.setGodCard(GodCards.Pan);
             workerNormalRepository.save(worker1);
             workerNormalRepository.save(worker2);
         }
-        if(godCard.equals(GodCards.Artemis)){
+        if(godCard.equals("Artemis")){
             worker1.setGodCard(GodCards.Artemis);
             worker2.setGodCard(GodCards.Artemis);
             workerNormalRepository.save(worker1);
