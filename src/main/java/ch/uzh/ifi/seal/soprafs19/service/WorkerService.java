@@ -76,6 +76,10 @@ public class WorkerService {
             playerRepository.save(currentGame.getPlayer1());
             workerNormalRepository.save(placingWorker);
             gameRepository.save(currentGame);
+
+            //  do recording
+            recordService.addState(gameId, board);
+
             return new ResponseEntity<Integer>(dest, HttpStatus.OK);
         }
         else{
