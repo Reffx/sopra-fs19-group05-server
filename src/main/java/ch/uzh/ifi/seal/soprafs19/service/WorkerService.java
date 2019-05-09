@@ -283,6 +283,7 @@ public class WorkerService {
             currentGame.setGameStatus(GameStatus.Move1);
         }
 
+
         int h = currentField.getHeight();
         currentField.setHeight(h + 1);
 
@@ -299,6 +300,7 @@ public class WorkerService {
         WorkerNormal winningWorker = workerNormalRepository.findById(workerId);
 
         if (h1 == 2 && h2 == 3) {
+            // checking for GodCard Pan, if true winning condition changes
             if (winningWorker.getGodCard() == GodCards.Pan) {
                 if (h1 - h2 >= 2) {
                     winningWorker.setIsWinner(true);

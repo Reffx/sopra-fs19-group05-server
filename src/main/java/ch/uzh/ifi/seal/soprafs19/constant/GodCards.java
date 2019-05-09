@@ -1,5 +1,5 @@
 package ch.uzh.ifi.seal.soprafs19.constant;
 
 public enum GodCards {
-    Pan, Artemis, None
+    Pan, Artemis, Demeter, None
 }
