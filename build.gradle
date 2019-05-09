@@ -51,6 +51,13 @@ test {
     maxParallelForks = 1
 }
 
+sonarqube {
+properties {
+property "sonar.projectName", "sopra-fs19-group05-service"
+property "sonar.projectKey", "sopra-fs19-group05-service"
+}
+}
+
 jacocoTestReport {
     group = "Reporting"
     reports {
