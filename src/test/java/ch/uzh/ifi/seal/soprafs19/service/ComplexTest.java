@@ -1,4 +1,4 @@
-package ch.uzh.ifi.seal.soprafs19.REST;
+package ch.uzh.ifi.seal.soprafs19.service;
 
 import ch.uzh.ifi.seal.soprafs19.Application;
 import ch.uzh.ifi.seal.soprafs19.constant.GameMode;
@@ -229,6 +229,8 @@ public class ComplexTest {
         //Join the created game with createdUser2 (Player2)
         Game tempGame = gameService.joinLobby(createdUser2.getId(), createdGame.getId()).getBody();
 
+        Player player2 = tempGame.getPlayer2();
+
         Assert.assertNotNull(tempGame.getPlayer2());
         Assert.assertEquals(tempGame.getPlayer2().getUsername(), createdUser2.getUsername());
         Assert.assertNotNull(tempGame.getPlayer1());
@@ -268,6 +270,32 @@ public class ComplexTest {
         Assert.assertEquals(boardService.getField(6,tempGame.getId()).getHeight(), 0);
         Assert.assertEquals(boardService.getField(6,tempGame.getId()).getOccupier(), player1.getWorker2());
         Assert.assertEquals(tempGame.getPlayer1().getWorker2().getPosition(), 6);
+
+        //Place Worker1 of Player2 on Field Number 12
+
+        workerService.placeWorker(tempGame.getId(), player2.getWorker1().getWorkerId(), 12);
+        Assert.assertEquals(tempGame.getGameStatus(), GameStatus.Move2);
+        Assert.assertNotNull(boardService.getField(12,tempGame.getId()).getOccupier());
+        Assert.assertNotNull(boardRepository.findById(tempGame.getId()));
+        Assert.assertEquals(boardService.getField(12,tempGame.getId()).getHeight(), 0);
+        Assert.assertEquals(boardService.getField(12,tempGame.getId()).getOccupier(), player2.getWorker1());
+        Assert.assertEquals(tempGame.getPlayer2().getWorker1().getPosition(), 12);
+
+        // Place Worker 2 of Player2 on FieldNumber 20
+
+        workerService.placeWorker(tempGame.getId(), player2.getWorker2().getWorkerId(), 20);
+        Assert.assertEquals(tempGame.getGameStatus(), GameStatus.Move1);
+        Assert.assertNotNull(boardService.getField(20,tempGame.getId()).getOccupier());
+        Assert.assertNotNull(boardRepository.findById(tempGame.getId()));
+        Assert.assertEquals(boardService.getField(20,tempGame.getId()).getHeight(), 0);
+        Assert.assertEquals(boardService.getField(20,tempGame.getId()).getOccupier(), player2.getWorker2());
+        Assert.assertEquals(tempGame.getPlayer2().getWorker2().getPosition(), 20);
+
+        //Checkpoint:  Both players placed their workers on the board
+        System.out.println("Worker2 position: "+player1.getWorker1().getPosition());
+
+
+
 
 
 

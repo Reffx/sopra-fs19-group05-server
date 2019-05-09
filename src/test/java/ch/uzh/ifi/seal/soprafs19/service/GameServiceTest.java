@@ -588,6 +588,10 @@ public class GameServiceTest {
 
         gameService.assignGodCard("Pan", player1.getId());
         Assert.assertEquals(workerNormalRepository.findById(player1.getWorker1().getWorkerId()).getGodCard(), GodCards.Pan);
+        gameService.assignGodCard("Artemis", player1.getId());
+        Assert.assertEquals(workerNormalRepository.findById(player1.getWorker1().getWorkerId()).getGodCard(), GodCards.Artemis);
+        gameService.assignGodCard("Demeter", player1.getId());
+        Assert.assertEquals(workerNormalRepository.findById(player1.getWorker1().getWorkerId()).getGodCard(), GodCards.Demeter);
         Assert.assertEquals(player1.getWorker1().getPosition(), -1);
         Assert.assertEquals(player1.getWorker2().getPosition(), -1);
 
