@@ -69,7 +69,7 @@ public class GameService {
     //  create a game
     public Game createGame(Game game) {
         //added if statement to check if the same user wants to create multiple games
-        if(game.getPlayer1() !=null){
+        if(playerRepository.findByUsername(game.getPlayer1().getUsername())!= null && game.getPlayer1() !=null){
             throw new DuplicateException("You have already created a game!");
         }
         Player player1 = game.getPlayer1();   //  set the player1 as the creator
