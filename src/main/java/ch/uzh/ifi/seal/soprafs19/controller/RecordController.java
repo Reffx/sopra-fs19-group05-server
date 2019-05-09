@@ -6,6 +6,7 @@ import ch.uzh.ifi.seal.soprafs19.service.RecordService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -31,9 +32,9 @@ public class RecordController {
 //        return recordService.findByGameMode(gameMode);
 //    }
 
-    //  find one record by gameMode
+    //  find one record by gameMode. UPPERCASE IN THE PATHRIABLE
     @GetMapping("/records/{gameMode}")
-    ResponseEntity<Record> findByGameMode(GameMode gameMode) {
+    ResponseEntity<Record> findByGameMode(@PathVariable GameMode gameMode) {
         return recordService.findOne(gameMode);
     }
 }

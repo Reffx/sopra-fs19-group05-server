@@ -19,13 +19,15 @@ public class BoardService {
     private final BoardRepository boardRepository;
     private final FieldService fieldService;
     private final GameRepository gameRepository;
+    private final RecordService recordService;
 
     @Autowired
-    public BoardService(BoardRepository boardRepository, FieldService fieldService, GameRepository gameRepository) {
+    public BoardService(BoardRepository boardRepository, FieldService fieldService, GameRepository gameRepository, RecordService recordService) {
 
         this.boardRepository = boardRepository;
         this.fieldService = fieldService;
         this.gameRepository = gameRepository;
+        this.recordService = recordService;
     }
 
     public Board initBoard(Long gameId) {
@@ -57,7 +59,12 @@ public class BoardService {
         if(tempBoard ==null){
             throw new NonExistentGameException("Could not update board because it doesn't exist");
         }
+
         boardRepository.save(tempBoard);
+
+        // do recording
+        recordService.addState(newBoard.getId(), newBoard);
+
         return newBoard;
     }
 
@@ -70,7 +77,10 @@ public class BoardService {
             throw new NonExistentGameException("Game was not found, Could not retrieve board!");
         }
         else{
-            return initBoard(gameId);
+            //  do recording
+            Board newBoard = initBoard(gameId);
+            recordService.addState(gameId, newBoard);
+            return newBoard;
         }
     }
 
