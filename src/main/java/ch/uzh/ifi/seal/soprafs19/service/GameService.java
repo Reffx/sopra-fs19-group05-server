@@ -267,6 +267,12 @@ public class GameService {
             workerNormalRepository.save(worker1);
             workerNormalRepository.save(worker2);
         }
+        if(godCard.equals(GodCards.Artemis)){
+            worker1.setGodCard(GodCards.Artemis);
+            worker2.setGodCard(GodCards.Artemis);
+            workerNormalRepository.save(worker1);
+            workerNormalRepository.save(worker2);
+        }
         return new ResponseEntity<String>(HttpStatus.OK);
     }
 
