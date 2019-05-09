@@ -48,7 +48,6 @@ public class WorkerService {
     public ResponseEntity<Integer> placeWorker(long gameId, int workerId, int dest){
         Board board = boardService.getBoard(gameId);
         WorkerNormal placingWorker = workerNormalRepository.findById(workerId);
-        placingWorker.setPosition(0);
         Field fieldToPlace = boardService.getField(dest, gameId);
         if(fieldToPlace.getOccupier() == null) {
             fieldToPlace.setOccupier(placingWorker);
@@ -60,7 +59,8 @@ public class WorkerService {
                 currentGame.setGameStatus(GameStatus.Move1);
             } else if (currentGame.getPlayer1().getWorker2() == placingWorker && currentGame.getPlayer1().getWorker1().getPosition() == -1) {
                 currentGame.setGameStatus(GameStatus.Move1);
-            } else if (currentGame.getPlayer1().getWorker1().getPosition() != -1 && currentGame.getPlayer1().getWorker2().getPosition() != -1) {
+            } else if (currentGame.getPlayer1().getWorker1().getPosition() != -1 && currentGame.getPlayer1().getWorker2().getPosition() != -1
+                    && currentGame.getPlayer2().getWorker1().getPosition() == -1 && currentGame.getPlayer2().getWorker2().getPosition() == -1) {
                 currentGame.setGameStatus(GameStatus.Move2);
             } else if (currentGame.getPlayer2().getWorker1() == placingWorker && currentGame.getPlayer2().getWorker2().getPosition() == -1) {
                 currentGame.setGameStatus(GameStatus.Move2);
