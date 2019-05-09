@@ -79,7 +79,7 @@ public class RecordService {
         }
 
         List<Board> states = record.getStates();
-        states.add(board);
+//        states.add(board);
         record.setStates(states);
 
         //  save the record
