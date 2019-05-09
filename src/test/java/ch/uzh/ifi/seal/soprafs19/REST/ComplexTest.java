@@ -2,9 +2,11 @@ package ch.uzh.ifi.seal.soprafs19.REST;
 
 import ch.uzh.ifi.seal.soprafs19.Application;
 import ch.uzh.ifi.seal.soprafs19.constant.GameMode;
+import ch.uzh.ifi.seal.soprafs19.constant.GameStatus;
 import ch.uzh.ifi.seal.soprafs19.constant.UserStatus;
 import ch.uzh.ifi.seal.soprafs19.controller.DuplicateException;
 import ch.uzh.ifi.seal.soprafs19.controller.NonExistentGameException;
+import ch.uzh.ifi.seal.soprafs19.entity.Board;
 import ch.uzh.ifi.seal.soprafs19.entity.Game;
 import ch.uzh.ifi.seal.soprafs19.entity.Player;
 import ch.uzh.ifi.seal.soprafs19.entity.User;
@@ -222,6 +224,38 @@ public class ComplexTest {
         Game createdGame = gameService.createGame(testGame);
 
         Assert.assertEquals(createdGame.getPlayer1().getUsername(), testUser.getUsername());
+
+
+        //Join the created game with createdUser2 (Player2)
+        Game tempGame = gameService.joinLobby(createdUser2.getId(), createdGame.getId()).getBody();
+
+        Assert.assertNotNull(tempGame.getPlayer2());
+        Assert.assertEquals(tempGame.getPlayer2().getUsername(), createdUser2.getUsername());
+        Assert.assertNotNull(tempGame.getPlayer1());
+        Assert.assertNotNull(tempGame.getPlayer2());
+        Assert.assertNotNull(tempGame.getPlayer1().getWorker1());
+        Assert.assertNotNull(tempGame.getPlayer1().getWorker2());
+        Assert.assertNotNull(tempGame.getPlayer2().getWorker1());
+        Assert.assertNotNull(tempGame.getPlayer2().getWorker2());
+
+        Assert.assertEquals(tempGame.getGameMode(), GameMode.NORMAL);
+        Assert.assertEquals(tempGame.getGameStatus(), GameStatus.Start);
+        Assert.assertEquals(userRepository.findByUsername(createdUser.getUsername()), createdUser);
+        Assert.assertEquals(userRepository.findByUsername(createdUser2.getUsername()), createdUser2);
+
+
+        // initialize board
+
+        Board tempBoard = boardService.getBoard(tempGame.getId());
+
+        workerService.placeWorker(tempGame.getId(),player1.getWorker1().getWorkerId(), 5);
+        Assert.assertEquals(tempGame.getGameStatus(), GameStatus.Move1);
+        Assert.assertNotNull(boardService.getField(5,tempGame.getId()).getOccupier());
+        Assert.assertNotNull(boardRepository.findById(tempGame.getId()));
+
+
+
+
 
         userRepository.deleteAll();
         gameRepository.deleteAll();
