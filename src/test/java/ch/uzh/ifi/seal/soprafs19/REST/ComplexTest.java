@@ -1,6 +1,11 @@
 package ch.uzh.ifi.seal.soprafs19.REST;
 
 import ch.uzh.ifi.seal.soprafs19.Application;
+import ch.uzh.ifi.seal.soprafs19.constant.GameMode;
+import ch.uzh.ifi.seal.soprafs19.controller.DuplicateException;
+import ch.uzh.ifi.seal.soprafs19.controller.NonExistentGameException;
+import ch.uzh.ifi.seal.soprafs19.entity.Game;
+import ch.uzh.ifi.seal.soprafs19.entity.Player;
 import ch.uzh.ifi.seal.soprafs19.entity.User;
 import ch.uzh.ifi.seal.soprafs19.repository.*;
 import ch.uzh.ifi.seal.soprafs19.service.*;
@@ -71,6 +76,9 @@ public class ComplexTest {
     //starting with testing user creation
     @Test
     public void createUser() throws Exception {
+        userRepository.deleteAll();
+        playerRepository.deleteAll();
+        gameRepository.deleteAll();
 
         //making a post request to the users endpoint to create a user, after that the same credentials are used to create a second user
         //expected HTTP status is 409
@@ -88,13 +96,63 @@ public class ComplexTest {
         Assert.assertEquals(userRepository.findByUsername("testUser1").getUsername(), "testUser1");
         Assert.assertNotNull(userRepository.findByPassword("testPassword1").getId());
         Assert.assertEquals(userRepository.findByUsername("testUser1").getPassword(), "testPassword1");
-        Assert.assertEquals(userRepository.findById(1).getUsername(), "testUser1");
+        System.out.print(userRepository.findByUsername("testUser1").getId());
+        Assert.assertEquals(userRepository.findById(4).getUsername(), "testUser1");
 
 
         //now we test if the createUser method without performing a post method
-        Assert.assertNotNull(userRepository.findById(1));
+        Assert.assertNotNull(userRepository.findById(4));
+
+        userRepository.deleteAll();
+        playerRepository.deleteAll();
+        gameRepository.deleteAll();
+
+    }
 
 
+    // 1. Complex Unit Test for presentation
+    @Test(expected = DuplicateException.class)
+    public void complexUnitTest(){
+
+        userRepository.deleteAll();
+        gameRepository.deleteAll();
+        playerRepository.deleteAll();
+
+        Assert.assertNull(gameRepository.getById(1));
+        Game testGame = new Game();
+        Player player1 = new Player();
+        long player1Id = 50;
+        player1.setId(player1Id);
+        player1.setUsername("TestPlayer50");
+        testGame.setPlayer1(player1);
+        testGame.setGameMode(GameMode.NORMAL);
+        testGame.setIsPlaying(false);
+
+        //test the if values are set correctly in player1 object
+
+        Assert.assertEquals(player1.getUsername(), "TestPlayer50");
+        Assert.assertNull(player1.getColor());
+        Assert.assertEquals(player1.getId(), testGame.getPlayer1().getId());
+        Assert.assertFalse(player1.getStatus());
+        Assert.assertEquals(testGame.getGameMode(), GameMode.NORMAL);
+        Assert.assertNull(testGame.getPlayer2());
+
+        Game createdGame = gameService.createGame(testGame);
+
+
+        //check if all values are still set correctly after the createGame function is triggered
+        Assert.assertNull(createdGame.getPlayer2());
+        Assert.assertEquals(createdGame.getPlayer1().getUsername(), "TestPlayer50");
+        Assert.assertEquals(createdGame.getPlayer1().getId(), player1.getId());
+
+
+        //try to create a game with the same player
+        gameService.createGame(testGame);
+
+        userRepository.deleteAll();
+        gameRepository.deleteAll();
+        playerRepository.deleteAll();
+        
     }
 
 
