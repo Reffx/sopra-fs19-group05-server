@@ -97,11 +97,11 @@ public class ComplexTest {
         Assert.assertNotNull(userRepository.findByPassword("testPassword1").getId());
         Assert.assertEquals(userRepository.findByUsername("testUser1").getPassword(), "testPassword1");
         System.out.print(userRepository.findByUsername("testUser1").getId());
-        Assert.assertEquals(userRepository.findById(4).getUsername(), "testUser1");
+        Assert.assertEquals(userRepository.findById(1).getUsername(), "testUser1");
 
 
         //now we test if the createUser method without performing a post method
-        Assert.assertNotNull(userRepository.findById(4));
+        Assert.assertNotNull(userRepository.findById(1));
 
         userRepository.deleteAll();
         playerRepository.deleteAll();
@@ -110,7 +110,7 @@ public class ComplexTest {
     }
 
 
-    // 1. Complex Unit Test for presentation
+    // 1. Complex Unit Test --> test the createGame function (trying to set up 2 games with the same player, change username try again, change id and try again)
     @Test(expected = DuplicateException.class)
     public void complexUnitTest(){
 
@@ -145,16 +145,35 @@ public class ComplexTest {
         Assert.assertEquals(createdGame.getPlayer1().getUsername(), "TestPlayer50");
         Assert.assertEquals(createdGame.getPlayer1().getId(), player1.getId());
 
-
         //try to create a game with the same player
         gameService.createGame(testGame);
+
+        //change id and try to create a new game
+        long newPlayerId = 27;
+        player1.setId(newPlayerId);
+        Assert.assertEquals(createdGame.getPlayer1().getId(), player1.getId() );
+
+        gameService.createGame(testGame);
+
+        player1.setUsername("BestPlayer69");
+
+        Assert.assertEquals(createdGame.getPlayer1().getUsername(), player1.getUsername());
+
+        gameService.createGame(testGame);
+
 
         userRepository.deleteAll();
         gameRepository.deleteAll();
         playerRepository.deleteAll();
-        
+
     }
 
 
+    //2. Complex Integration Test
+    @Test
+    public void complexIntegrationTest(){
+        
+
+    }
 }
 
