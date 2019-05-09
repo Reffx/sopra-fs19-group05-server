@@ -1,5 +1,6 @@
 package ch.uzh.ifi.seal.soprafs19.service;
 
+import ch.uzh.ifi.seal.soprafs19.constant.GameMode;
 import ch.uzh.ifi.seal.soprafs19.constant.GameStatus;
 import ch.uzh.ifi.seal.soprafs19.constant.GodCards;
 import ch.uzh.ifi.seal.soprafs19.entity.*;
@@ -221,6 +222,7 @@ public class WorkerService {
                 highlightedFields.add(highlight8.getFieldNum());
             }
         }
+
         return new ResponseEntity<List<Integer>>(highlightedFields, HttpStatus.OK);
     }
     public ResponseEntity<Integer> moveTo(long gameId, int workerId, int dest){
@@ -233,12 +235,34 @@ public class WorkerService {
         destination.setOccupier(movingWorker);
         movingWorker.setPosition(destination.getFieldNum());
         currentField.setOccupier(null);
-        if(currentGame.getGameStatus()==GameStatus.Move1){
+        if(currentGame.getGameStatus()==GameStatus.Move1 && currentGame.getGameMode().equals(GameMode.NORMAL)){
             currentGame.setGameStatus(GameStatus.Build1);
         }
-        else if(currentGame.getGameStatus() == GameStatus.Move2){
+        else if(currentGame.getGameStatus() == GameStatus.Move2 && currentGame.getGameMode().equals(GameMode.NORMAL)){
             currentGame.setGameStatus(GameStatus.Build2);
         }
+        // below youll find the conditions for the moving of Artemis
+        if(currentGame.getGameMode().equals(GameMode.GOD) && workerNormalRepository.findById(workerId).getGodCard().equals(GodCards.Artemis)) {
+            int i = 0;
+             if (currentGame.getGameStatus() == GameStatus.Move1) {
+
+                while (i < 2) {
+                    currentGame.setGameStatus(GameStatus.Move1);
+                    i++;
+                }
+
+            }
+            else if(currentGame.getGameStatus().equals(GameStatus.Move2)){
+
+                 while (i < 2) {
+                     currentGame.setGameStatus(GameStatus.Move1);
+                     i++;
+                 }
+             }
+            movingWorker.setGodCard(GodCards.None);
+            currentGame.setGameStatus(GameStatus.Build2);
+        }
+
         gameRepository.save(currentGame);
         workerNormalRepository.save(movingWorker);
 
