@@ -224,7 +224,7 @@ public class ComplexTest {
         Game createdGame = gameService.createGame(testGame);
 
         Assert.assertEquals(createdGame.getPlayer1().getUsername(), testUser.getUsername());
-
+        Assert.assertEquals(createdGame.getSize(),1);
 
         //Join the created game with createdUser2 (Player2)
         Game tempGame = gameService.joinLobby(createdUser2.getId(), createdGame.getId()).getBody();
@@ -242,16 +242,32 @@ public class ComplexTest {
         Assert.assertEquals(tempGame.getGameStatus(), GameStatus.Start);
         Assert.assertEquals(userRepository.findByUsername(createdUser.getUsername()), createdUser);
         Assert.assertEquals(userRepository.findByUsername(createdUser2.getUsername()), createdUser2);
+        Assert.assertEquals(tempGame.getSize(),2);
 
 
         // initialize board
 
         Board tempBoard = boardService.getBoard(tempGame.getId());
 
+        //place worker1 of player1 on field 5
+
         workerService.placeWorker(tempGame.getId(),player1.getWorker1().getWorkerId(), 5);
         Assert.assertEquals(tempGame.getGameStatus(), GameStatus.Move1);
         Assert.assertNotNull(boardService.getField(5,tempGame.getId()).getOccupier());
         Assert.assertNotNull(boardRepository.findById(tempGame.getId()));
+        Assert.assertEquals(boardService.getField(5,tempGame.getId()).getHeight(), 0);
+        Assert.assertEquals(boardService.getField(5,tempGame.getId()).getOccupier(), player1.getWorker1());
+        Assert.assertEquals(tempGame.getPlayer1().getWorker1().getPosition(), 5);
+
+        //Place Worker2 of Player1 on Field Number 6
+
+        workerService.placeWorker(tempGame.getId(),player1.getWorker2().getWorkerId(), 6);
+        Assert.assertEquals(tempGame.getGameStatus(), GameStatus.Move2);
+        Assert.assertNotNull(boardService.getField(6,tempGame.getId()).getOccupier());
+        Assert.assertNotNull(boardRepository.findById(tempGame.getId()));
+        Assert.assertEquals(boardService.getField(6,tempGame.getId()).getHeight(), 0);
+        Assert.assertEquals(boardService.getField(6,tempGame.getId()).getOccupier(), player1.getWorker2());
+        Assert.assertEquals(tempGame.getPlayer1().getWorker2().getPosition(), 6);
 
 
 
