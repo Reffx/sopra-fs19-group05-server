@@ -240,6 +240,7 @@ public class WorkerService {
             currentGame.setGameStatus(GameStatus.Build2);
         }
         // below youll find the conditions for the moving of Artemis
+        // DA: added godCard artemis //
         if(currentGame.getGameMode().equals(GameMode.GOD) && workerNormalRepository.findById(workerId).getGodCard().equals(GodCards.Artemis)) {
             int i = 0;
              if (currentGame.getGameStatus() == GameStatus.Move1) {
