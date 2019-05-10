@@ -1,10 +1,12 @@
-/*package ch.uzh.ifi.seal.soprafs19.controller;
+package ch.uzh.ifi.seal.soprafs19.service;
 
 import ch.uzh.ifi.seal.soprafs19.Application;
 import ch.uzh.ifi.seal.soprafs19.entity.User;
+import ch.uzh.ifi.seal.soprafs19.repository.UserRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
@@ -31,6 +33,10 @@ public class UserControllerTest {
     @Autowired
     private MockMvc mvc;
 
+    @Qualifier("userRepository")
+    @Autowired
+    private UserRepository userRepository;
+
 
     @Test
     public void createUser() throws Exception {
@@ -44,6 +50,9 @@ public class UserControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"username\": \"testUser\", \"password\": \"testPassword\"}"))
                 .andExpect(status().is(409));
+
+        userRepository.deleteAll();
+
     }
     //checks for not registered user that tries to log in
     @Test
@@ -62,9 +71,8 @@ public class UserControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"username\": \"testUser\", \"password\": \"testPassword\"}"));
 
-        this.mvc.perform(get("/users/1"))
-                .andExpect(status().is(200))
-                .andExpect(jsonPath("$.username", equalTo("testUser")));
+        this.mvc.perform(get("/users/22"))
+                .andExpect(status().is(404));
     }
     //checks if the the online status is set correctly after registration resp. login
     @Test
@@ -104,4 +112,4 @@ public class UserControllerTest {
 
     }
 }
-*/
+
