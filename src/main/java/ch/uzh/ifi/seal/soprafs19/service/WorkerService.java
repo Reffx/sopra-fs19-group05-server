@@ -251,19 +251,23 @@ public class WorkerService {
 
             if (currentGame.getGameStatus() == GameStatus.Move1) {
                 if (movingWorker.isNext() == false) {
-                    movingWorker.setNext(true);
+                    currentGame.getPlayer1().getWorker1().setNext(true);
+                    currentGame.getPlayer1().getWorker2().setNext(true);
                 }
                 else if (movingWorker.isNext() == true) {
-                    movingWorker.setNext(false);
+                    currentGame.getPlayer1().getWorker1().setNext(false);
+                    currentGame.getPlayer1().getWorker2().setNext(false);
                     currentGame.setGameStatus(GameStatus.Build1);
                 }
             }
             else if(currentGame.getGameStatus().equals(GameStatus.Move2)){
                 if (movingWorker.isNext() == false) {
-                    movingWorker.setNext(true);
+                    currentGame.getPlayer2().getWorker1().setNext(true);
+                    currentGame.getPlayer2().getWorker2().setNext(true);
                 }
                 else if (movingWorker.isNext() == true) {
-                    movingWorker.setNext(false);
+                    currentGame.getPlayer2().getWorker1().setNext(false);
+                    currentGame.getPlayer2().getWorker2().setNext(false);
                     currentGame.setGameStatus(GameStatus.Build2);
                 }
             }
@@ -283,11 +287,46 @@ public class WorkerService {
         Board board = boardService.getBoard(gameId);
         Field currentField = boardService.getField(fieldNum, gameId);
         Game currentGame = gameService.getGame(gameId).getBody();
+        WorkerNormal neededWorker = currentGame.getPlayer1().getWorker1();
+        if (currentGame.getGameStatus() == GameStatus.Build2) {
+            neededWorker = currentGame.getPlayer2().getWorker1();
+        }
 
-        if(currentGame.getGameStatus() == GameStatus.Build1){
+        if (neededWorker.getGodCard() == GodCards.Demeter){
+            if (currentGame.getGameStatus() == GameStatus.Build1) {
+                if (neededWorker.isNext() == false) {
+                    currentGame.getPlayer1().getWorker1().setNext(true);
+                    currentGame.getPlayer1().getWorker2().setNext(true);
+                }
+                else if (neededWorker.isNext() == true) {
+                    currentGame.getPlayer1().getWorker1().setNext(false);
+                    currentGame.getPlayer1().getWorker2().setNext(false);
+                    currentGame.setGameStatus(GameStatus.Move2);
+                }
+            }
+            else if(currentGame.getGameStatus().equals(GameStatus.Build2)){
+                if (neededWorker.isNext() == false) {
+                    currentGame.getPlayer2().getWorker1().setNext(true);
+                    currentGame.getPlayer2().getWorker2().setNext(true);
+                }
+                else if (neededWorker.isNext() == true) {
+                    currentGame.getPlayer2().getWorker1().setNext(false);
+                    currentGame.getPlayer2().getWorker2().setNext(false);
+                    currentGame.setGameStatus(GameStatus.Move1);
+                }
+            }
+        }
+
+        else if(currentGame.getGameStatus() == GameStatus.Build1 && currentGame.getGameMode() == GameMode.NORMAL){
             currentGame.setGameStatus(GameStatus.Move2);
         }
-        else if(currentGame.getGameStatus() == GameStatus.Build2){
+        else if(currentGame.getGameStatus() == GameStatus.Build2 && currentGame.getGameMode() == GameMode.NORMAL){
+            currentGame.setGameStatus(GameStatus.Move1);
+        }
+        else if(currentGame.getGameStatus() == GameStatus.Build1 && currentGame.getGameMode() == GameMode.GOD && currentGame.getPlayer1().getWorker1().getGodCard() != GodCards.Demeter ){
+            currentGame.setGameStatus(GameStatus.Move2);
+        }
+        else if(currentGame.getGameStatus() == GameStatus.Build2 && currentGame.getGameMode() == GameMode.GOD && currentGame.getPlayer2().getWorker1().getGodCard()!= GodCards.Demeter ){
             currentGame.setGameStatus(GameStatus.Move1);
         }
 
