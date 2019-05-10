@@ -24,6 +24,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.security.spec.ECField;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -194,8 +195,13 @@ public class WorkerServiceTest {
         Board tempBoard = boardService.getBoard(tempGame1.getId());
 
         playerOne.getWorker1().setPosition(4);
+        //test the highlightFieldBuild
         workerService.highlightFieldBuild(playerOne.getWorker1().getPosition(), tempGame1.getId());
         Assert.assertNotNull(workerService.highlightFieldBuild(playerOne.getWorker1().getPosition(), tempGame1.getId()));
+        Assert.assertNotEquals(workerService.highlightFieldBuild(playerOne.getWorker1().getPosition(), tempGame1.getId()).getBody(), 1);
+
+        workerService.highlightFieldMove(5,tempGame1.getId());
+        Assert.assertNotNull(workerService.highlightFieldMove(5,tempGame1.getId()));
 
         workerService.build(tempGame1.getId(), 5);
         Assert.assertEquals(boardService.getField(5,tempGame1.getId()).getHeight(), 1);

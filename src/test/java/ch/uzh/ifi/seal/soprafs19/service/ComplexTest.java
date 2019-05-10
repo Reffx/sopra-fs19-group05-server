@@ -315,7 +315,7 @@ public class ComplexTest {
         workerService.build(tempGame.getId(), 3);
         Assert.assertEquals(boardService.getField(3,tempGame.getId()).getHeight(), 1);
         //FieldNum 3 has building level 1
-
+        
 
 
 
