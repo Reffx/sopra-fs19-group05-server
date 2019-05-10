@@ -16,7 +16,7 @@ public class PlayerController {
         this.playerService = playerService;
     }
 
-    
+
 
     @GetMapping("/players")
     Iterable<Player> all() {

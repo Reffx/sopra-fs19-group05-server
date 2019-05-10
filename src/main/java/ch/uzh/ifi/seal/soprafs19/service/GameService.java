@@ -260,7 +260,6 @@ public class GameService {
     public ResponseEntity<String> assignGodCard(String godCard, long playerId){
         WorkerNormal worker1 = playerService.getPlayer(playerId).getWorker1();
         WorkerNormal worker2 = playerService.getPlayer(playerId).getWorker2();
-        //TODO: godCard == "Pan" didn't work, isequal or equals solved this problem
         if(godCard.equals("Pan")){
             worker1.setGodCard(GodCards.Pan);
             worker2.setGodCard(GodCards.Pan);
