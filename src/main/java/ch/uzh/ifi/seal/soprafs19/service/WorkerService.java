@@ -233,39 +233,40 @@ public class WorkerService {
         destination.setOccupier(movingWorker);
         movingWorker.setPosition(destination.getFieldNum());
         currentField.setOccupier(null);
-        if(currentGame.getGameStatus()==GameStatus.Move1 && currentGame.getGameMode().equals(GameMode.NORMAL)){
+        if(currentGame.getGameStatus()==GameStatus.Move1 && currentGame.getGameMode() == (GameMode.NORMAL)){
             currentGame.setGameStatus(GameStatus.Build1);
         }
-        else if(currentGame.getGameStatus() == GameStatus.Move2 && currentGame.getGameMode().equals(GameMode.NORMAL)){
+        else if(currentGame.getGameStatus() == GameStatus.Move2 && currentGame.getGameMode() == (GameMode.NORMAL)){
             currentGame.setGameStatus(GameStatus.Build2);
         }
-        if(currentGame.getGameStatus()==GameStatus.Move1 && currentGame.getGameMode().equals(GameMode.GOD) && workerNormalRepository.findById(workerId).getGodCard().equals(GodCards.Artemis) != true){
+        else if(currentGame.getGameStatus()==GameStatus.Move1 && currentGame.getGameMode() == (GameMode.GOD) && movingWorker.getGodCard() != (GodCards.Artemis)){
             currentGame.setGameStatus(GameStatus.Build1);
         }
-        else if(currentGame.getGameStatus() == GameStatus.Move2 && currentGame.getGameMode().equals(GameMode.GOD) && workerNormalRepository.findById(workerId).getGodCard().equals(GodCards.Artemis) != true)){
+        else if(currentGame.getGameStatus() == GameStatus.Move2 && currentGame.getGameMode() == (GameMode.GOD) && movingWorker.getGodCard() != (GodCards.Artemis)){
             currentGame.setGameStatus(GameStatus.Build2);
         }
         // below youll find the conditions for the moving of Artemis
         // DA: added godCard artemis //
-        if(currentGame.getGameMode().equals(GameMode.GOD) && workerNormalRepository.findById(workerId).getGodCard().equals(GodCards.Artemis)) {
-            int i = 0;
-             if (currentGame.getGameStatus() == GameStatus.Move1) {
+        else if(movingWorker.getGodCard() == GodCards.Artemis) {
 
-                while (i < 2) {
-                    currentGame.setGameStatus(GameStatus.Move1);
-                    i++;
+            if (currentGame.getGameStatus() == GameStatus.Move1) {
+                if (movingWorker.isNext() == false) {
+                    movingWorker.setNext(true);
                 }
-
+                else if (movingWorker.isNext() == true) {
+                    movingWorker.setNext(false);
+                    currentGame.setGameStatus(GameStatus.Build1);
+                }
             }
             else if(currentGame.getGameStatus().equals(GameStatus.Move2)){
-
-                 while (i < 2) {
-                     currentGame.setGameStatus(GameStatus.Move2);
-                     i++;
-                 }
-             }
-            movingWorker.setGodCard(GodCards.None);
-            currentGame.setGameStatus(GameStatus.Build2);
+                if (movingWorker.isNext() == false) {
+                    movingWorker.setNext(true);
+                }
+                else if (movingWorker.isNext() == true) {
+                    movingWorker.setNext(false);
+                    currentGame.setGameStatus(GameStatus.Build2);
+                }
+            }
         }
 
         gameRepository.save(currentGame);
