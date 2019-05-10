@@ -254,7 +254,7 @@ public class WorkerService {
             else if(currentGame.getGameStatus().equals(GameStatus.Move2)){
 
                  while (i < 2) {
-                     currentGame.setGameStatus(GameStatus.Move1);
+                     currentGame.setGameStatus(GameStatus.Move2);
                      i++;
                  }
              }
