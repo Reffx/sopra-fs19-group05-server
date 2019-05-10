@@ -239,6 +239,12 @@ public class WorkerService {
         else if(currentGame.getGameStatus() == GameStatus.Move2 && currentGame.getGameMode().equals(GameMode.NORMAL)){
             currentGame.setGameStatus(GameStatus.Build2);
         }
+        if(currentGame.getGameStatus()==GameStatus.Move1 && currentGame.getGameMode().equals(GameMode.GOD) && workerNormalRepository.findById(workerId).getGodCard().equals(GodCards.Artemis) != true){
+            currentGame.setGameStatus(GameStatus.Build1);
+        }
+        else if(currentGame.getGameStatus() == GameStatus.Move2 && currentGame.getGameMode().equals(GameMode.GOD) && workerNormalRepository.findById(workerId).getGodCard().equals(GodCards.Artemis) != true)){
+            currentGame.setGameStatus(GameStatus.Build2);
+        }
         // below youll find the conditions for the moving of Artemis
         // DA: added godCard artemis //
         if(currentGame.getGameMode().equals(GameMode.GOD) && workerNormalRepository.findById(workerId).getGodCard().equals(GodCards.Artemis)) {
