@@ -300,14 +300,24 @@ public class WorkerService {
 
         WorkerNormal winningWorker = workerNormalRepository.findById(workerId);
 
-        if (h1 == 2 && h2 == 3) {
-            // checking for GodCard Pan, if true winning condition changes
-            if (winningWorker.getGodCard() == GodCards.Pan) {
-                if (h1 - h2 >= 2) {
-                    winningWorker.setIsWinner(true);
-                    return new ResponseEntity<Boolean>(winningWorker.getIsWinner(), HttpStatus.OK);
+        // checking for GodCard Pan, if true winning condition changes
+        if (winningWorker.getGodCard() == GodCards.Pan) {
+            if (h1 - h2 >= 2) {
+                if(currentGame.getPlayer1().getWorker1() == winningWorker || currentGame.getPlayer1().getWorker2() == winningWorker){
+                    currentGame.setGameStatus(GameStatus.Winner1);
+                    gameRepository.save(currentGame);
                 }
+                else{
+                    currentGame.setGameStatus(GameStatus.Winner2);
+                    gameRepository.save(currentGame);
+                }
+                winningWorker.setIsWinner(true);
+                return new ResponseEntity<Boolean>(winningWorker.getIsWinner(), HttpStatus.OK);
             }
+        }
+
+        if (h1 == 2 && h2 == 3) {
+
             if(currentGame.getPlayer1().getWorker1() == winningWorker || currentGame.getPlayer1().getWorker2() == winningWorker){
                 currentGame.setGameStatus(GameStatus.Winner1);
                 gameRepository.save(currentGame);
