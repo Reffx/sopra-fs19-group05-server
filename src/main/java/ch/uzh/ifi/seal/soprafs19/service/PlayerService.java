@@ -29,18 +29,6 @@ public class PlayerService {
         this.userService = userService;
     }
 
-    //  create a new player
-    public ResponseEntity<Player> createPlayer(Player newPlayer) {
-
-        //  set the username here and save it to the player
-        Long userId = newPlayer.getId();
-        User user = userService.getUser(userId);
-        String username = user.getUsername();
-        newPlayer.setUsername(username);
-
-        playerRepository.save(newPlayer);
-        return new ResponseEntity<Player>(newPlayer, HttpStatus.CREATED);
-    }
 
     //  all players
     public Iterable<Player> allPlayers() {

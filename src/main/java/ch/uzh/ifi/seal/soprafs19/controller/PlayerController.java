@@ -16,11 +16,7 @@ public class PlayerController {
         this.playerService = playerService;
     }
 
-
-    @PostMapping("/players")
-    ResponseEntity<Player> createPlayer(@RequestBody Player player){
-        return playerService.createPlayer(player);
-    }
+    
 
     @GetMapping("/players")
     Iterable<Player> all() {
