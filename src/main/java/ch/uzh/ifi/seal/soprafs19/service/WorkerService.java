@@ -32,7 +32,7 @@ public class WorkerService {
     private final RecordService recordService;
 
     @Autowired
-    public WorkerService(WorkerNormalRepository workerNormalRepository,PlayerService playerService, BoardService boardService, GameService gameService, GameRepository gameRepository, PlayerRepository playerRepository, RecordService recordService) {
+    public WorkerService(WorkerNormalRepository workerNormalRepository, PlayerService playerService, BoardService boardService, GameService gameService, GameRepository gameRepository, PlayerRepository playerRepository, RecordService recordService) {
         this.playerService = playerService;
         this.boardService = boardService;
         this.gameService = gameService;
@@ -48,11 +48,11 @@ public class WorkerService {
         return (x * 5 + y);
     }
 
-    public ResponseEntity<Integer> placeWorker(long gameId, int workerId, int dest){
+    public ResponseEntity<Integer> placeWorker(long gameId, int workerId, int dest) {
         Board board = boardService.getBoard(gameId);
         WorkerNormal placingWorker = workerNormalRepository.findById(workerId);
         Field fieldToPlace = boardService.getField(dest, gameId);
-        if(fieldToPlace.getOccupier() == null) {
+        if (fieldToPlace.getOccupier() == null) {
             fieldToPlace.setOccupier(placingWorker);
             placingWorker.setPosition(dest);
             Game currentGame = gameService.getGame(gameId).getBody();
@@ -81,74 +81,79 @@ public class WorkerService {
             recordService.addState(gameId, board);
 
             return new ResponseEntity<Integer>(dest, HttpStatus.OK);
-        }
-        else{
+        } else {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
     }
 
-    public ResponseEntity<List<Integer>> highlightFieldMove(int fieldNum, long gameId){
+    public ResponseEntity<List<Integer>> highlightFieldMove(int fieldNum, long gameId) {
         Field currentField = boardService.getField(fieldNum, gameId);
         Board board = boardService.getBoard(gameId);
         List<Integer> highlightedFields = new ArrayList<Integer>();
         WorkerNormal movingWorker = currentField.getOccupier();
         int x = currentField.getX_coordinate();
         int y = currentField.getY_coordinate();
-        int possibleXCoordinates[] = {x-1, x, x+1};
-        int possibleYCoordinates[] = {y-1, y, y+1};
+        int possibleXCoordinates[] = {x - 1, x, x + 1};
+        int possibleYCoordinates[] = {y - 1, y, y + 1};
         int initialHeight = currentField.getHeight();
 
-        for(int i = 0; i <= 2; i++){
-            for(int j = 0; j <= 2; j++){
+        for (int i = 0; i <= 2; i++) {
+            for (int j = 0; j <= 2; j++) {
                 int xToCheck = possibleXCoordinates[i];
                 int yToCheck = possibleYCoordinates[j];
 
-                if(xToCheck <= 4 && yToCheck <= 4 && xToCheck >= 0 && yToCheck >= 0) {
-                    Field highlightToMove = boardService.getField(coordsToId(xToCheck,yToCheck), gameId);
+                if (xToCheck <= 4 && yToCheck <= 4 && xToCheck >= 0 && yToCheck >= 0) {
+                    Field highlightToMove = boardService.getField(coordsToId(xToCheck, yToCheck), gameId);
                     int newHeight = highlightToMove.getHeight();
-                    if(highlightToMove.getHeight() != 4 && highlightToMove.getOccupier() == null && newHeight - initialHeight <= 1){
+                    if (highlightToMove.getHeight() != 4 && highlightToMove.getOccupier() == null && newHeight - initialHeight <= 1) {
                         highlightedFields.add(highlightToMove.getFieldNum());
-                    } }
+                    }
+                }
                 //DA: returns out of bounds error with this statement, somehow initial field does not include itself on its own
                 // highlightedFields.remove(fieldNum);
-            } }
-        if(movingWorker.getGodCard().equals(GodCards.Apollo)){
-            moveLikeApollo(highlightedFields, x, y, gameId);
+            }
+        }
+        if (movingWorker.getGodCard().equals(GodCards.Apollo) || movingWorker.getGodCard().equals(GodCards.Minotaur)) {
+            moveLikeApolloOrMinotaur(highlightedFields, x, y, gameId);
         }
         return new ResponseEntity<List<Integer>>(highlightedFields, HttpStatus.OK);
     }
-    public ResponseEntity<List<Integer>> highlightFieldBuild(int fieldNum, long gameId){
+
+    public ResponseEntity<List<Integer>> highlightFieldBuild(int fieldNum, long gameId) {
         Field currentField = boardService.getField(fieldNum, gameId);
         Board board = boardService.getBoard(gameId);
         List<Integer> highlightedFields = new ArrayList<Integer>();
         int x = currentField.getX_coordinate();
         int y = currentField.getY_coordinate();
-        int possibleXCoordinates[] = {x-1, x, x+1};
-        int possibleYCoordinates[] = {y-1, y, y+1};
+        int possibleXCoordinates[] = {x - 1, x, x + 1};
+        int possibleYCoordinates[] = {y - 1, y, y + 1};
 
-        for(int i = 0; i <= 2; i++){
-            for(int j = 0; j <= 2; j++){
+        for (int i = 0; i <= 2; i++) {
+            for (int j = 0; j <= 2; j++) {
                 int xToCheck = possibleXCoordinates[i];
                 int yToCheck = possibleYCoordinates[j];
 
-                if(xToCheck <= 4 && yToCheck <= 4 && xToCheck >= 0 && yToCheck >= 0) {
-                    Field highlightToBuild = boardService.getField(coordsToId(xToCheck,yToCheck), gameId);
-                    if(highlightToBuild.getHeight() != 4 && highlightToBuild.getOccupier() == null){
+                if (xToCheck <= 4 && yToCheck <= 4 && xToCheck >= 0 && yToCheck >= 0) {
+                    Field highlightToBuild = boardService.getField(coordsToId(xToCheck, yToCheck), gameId);
+                    if (highlightToBuild.getHeight() != 4 && highlightToBuild.getOccupier() == null) {
                         highlightedFields.add(highlightToBuild.getFieldNum());
-                    } }
+                    }
+                }
                 // highlightedFields.remove(fieldNum);
-            } }
+            }
+        }
         return new ResponseEntity<List<Integer>>(highlightedFields, HttpStatus.OK);
     }
-    public ResponseEntity<Integer> moveTo(long gameId, int workerId, int dest){
+
+    public ResponseEntity<Integer> moveTo(long gameId, int workerId, int dest) {
         Board board = boardService.getBoard(gameId);
         WorkerNormal movingWorker = workerNormalRepository.findById(workerId);
         Field currentField = boardService.getField(movingWorker.getPosition(), gameId);
         Field destination = boardService.getField(dest, gameId);
         Game currentGame = gameService.getGame(gameId).getBody();
         // DA: if condition for all god cards which enable to move to an occupied field //
-        if(destination.getOccupier() != null){
-            if(movingWorker.getGodCard().equals(GodCards.Apollo)){
+        if (destination.getOccupier() != null) {
+            if (movingWorker.getGodCard().equals(GodCards.Apollo)) {
                 WorkerNormal tempWorker = destination.getOccupier();
                 destination.setOccupier(movingWorker);
                 currentField.setOccupier(tempWorker);
@@ -160,27 +165,25 @@ public class WorkerService {
             movingWorker.setPosition(destination.getFieldNum());
             currentField.setOccupier(null);
         }
-        if(currentGame.getGameStatus()==GameStatus.Move1 && currentGame.getGameMode().equals(GameMode.NORMAL)){
+        if (currentGame.getGameStatus() == GameStatus.Move1 && currentGame.getGameMode().equals(GameMode.NORMAL)) {
             currentGame.setGameStatus(GameStatus.Build1);
-        }
-        else if(currentGame.getGameStatus() == GameStatus.Move2 && currentGame.getGameMode().equals(GameMode.NORMAL)){
+        } else if (currentGame.getGameStatus() == GameStatus.Move2 && currentGame.getGameMode().equals(GameMode.NORMAL)) {
             currentGame.setGameStatus(GameStatus.Build2);
         }
         // below youll find the conditions for the moving of Artemis
-        if(currentGame.getGameMode().equals(GameMode.GOD) && workerNormalRepository.findById(workerId).getGodCard().equals(GodCards.Artemis)) {
+        if (currentGame.getGameMode().equals(GameMode.GOD) && workerNormalRepository.findById(workerId).getGodCard().equals(GodCards.Artemis)) {
             int i = 0;
-             if (currentGame.getGameStatus() == GameStatus.Move1) {
+            if (currentGame.getGameStatus() == GameStatus.Move1) {
+                while (i < 2) {
+                    currentGame.setGameStatus(GameStatus.Move1);
+                    i++;
+                }
+            } else if (currentGame.getGameStatus().equals(GameStatus.Move2)) {
                 while (i < 2) {
                     currentGame.setGameStatus(GameStatus.Move1);
                     i++;
                 }
             }
-            else if(currentGame.getGameStatus().equals(GameStatus.Move2)){
-                 while (i < 2) {
-                     currentGame.setGameStatus(GameStatus.Move1);
-                     i++;
-                 }
-             }
             movingWorker.setGodCard(GodCards.None);
             currentGame.setGameStatus(GameStatus.Build2);
         }
@@ -194,25 +197,25 @@ public class WorkerService {
         return new ResponseEntity<Integer>(destination.getFieldNum(), HttpStatus.OK);
     }
 
-    public ResponseEntity<String> build(long gameId, int fieldNum){
+    public ResponseEntity<String> build(long gameId, int fieldNum) {
         Board board = boardService.getBoard(gameId);
         Field currentField = boardService.getField(fieldNum, gameId);
         Game currentGame = gameService.getGame(gameId).getBody();
         int h = currentField.getHeight();
 
-        if(currentGame.getGameStatus() == GameStatus.Build1){
+        if (currentGame.getGameStatus() == GameStatus.Build1) {
             currentGame.setGameStatus(GameStatus.Move2);
-        }
-        else if(currentGame.getGameStatus() == GameStatus.Build2){
+        } else if (currentGame.getGameStatus() == GameStatus.Build2) {
             currentGame.setGameStatus(GameStatus.Move1);
         }
 
         // DA: if godCard Atlas activated just set height to 4 //
-        if(currentField.getOccupier().getGodCard().equals(GodCards.Atlas)){
+        if (currentField.getOccupier().getGodCard().equals(GodCards.Atlas)) {
             h = 4;
             currentField.setHeight(h);
+        } else {
+            currentField.setHeight(h + 1);
         }
-        else { currentField.setHeight(h + 1); }
 
         boardService.updateBoard(board);
         return new ResponseEntity<String>(HttpStatus.OK);
@@ -222,7 +225,7 @@ public class WorkerService {
         int h1 = boardService.getField(currentFieldNum, gameId).getHeight();
         int h2 = boardService.getField(destFieldNum, gameId).getHeight();
 
-       Game  currentGame = gameRepository.getById(gameId);
+        Game currentGame = gameRepository.getById(gameId);
 
         WorkerNormal winningWorker = workerNormalRepository.findById(workerId);
 
@@ -235,11 +238,10 @@ public class WorkerService {
                     return new ResponseEntity<Boolean>(winningWorker.getIsWinner(), HttpStatus.OK);
                 }
             }
-            if(currentGame.getPlayer1().getWorker1() == winningWorker || currentGame.getPlayer1().getWorker2() == winningWorker){
+            if (currentGame.getPlayer1().getWorker1() == winningWorker || currentGame.getPlayer1().getWorker2() == winningWorker) {
                 currentGame.setGameStatus(GameStatus.Winner1);
                 gameRepository.save(currentGame);
-            }
-            else{
+            } else {
                 currentGame.setGameStatus(GameStatus.Winner2);
                 gameRepository.save(currentGame);
             }
@@ -251,9 +253,10 @@ public class WorkerService {
         }
         return new ResponseEntity<Boolean>(false, HttpStatus.OK);
     }
-    public ResponseEntity<List<Integer>> moveLikeApollo(List<Integer> highlightFields, int x, int y, long gameId){
+
+    public ResponseEntity<List<Integer>> moveLikeApolloOrMinotaur(List<Integer> highlightFields, int x, int y, long gameId) {
         //DA: check if one of the surrounding fields is occupied, if it is by the opponent --> add fieldNum to List
-        Field currentField = boardService.getField(coordsToId(x,y), gameId);
+        Field currentField = boardService.getField(coordsToId(x, y), gameId);
         Long currentPlayersId = currentField.getOccupier().getPlayerId();
         Game currentGame = gameRepository.getById(gameId);
         int possibleXCoordinates[] = {x - 1, x, x + 1};
@@ -263,11 +266,21 @@ public class WorkerService {
                 int xToCheck = possibleXCoordinates[i];
                 int yToCheck = possibleYCoordinates[j];
                 Field isFieldOccupied = boardService.getField(coordsToId(xToCheck, yToCheck), gameId);
-                if(isFieldOccupied.getOccupier() != null && currentPlayersId != isFieldOccupied.getOccupier().getPlayerId()){
-                    highlightFields.add(isFieldOccupied.getFieldNum());
-                } } }
+                if (isFieldOccupied.getOccupier() != null && currentPlayersId != isFieldOccupied.getOccupier().getPlayerId()) {
+                    // DA: if minotaur, additionally check if occupied field is no border field +
+                    // check if field to which opponents worker is pushed to is neither occupied nor has a dome //
+                    if (currentField.getOccupier().getGodCard().equals(GodCards.Minotaur) &&
+                            xToCheck <= 3 && xToCheck >= 1 && yToCheck >= 3 && yToCheck >= 1) {
+                        int pushToXCoordinate = xToCheck + (xToCheck - x);
+                        int pushToYCoordinate = yToCheck + (yToCheck - y);
+                        Field fieldToPush = boardService.getField(coordsToId(pushToXCoordinate, pushToYCoordinate), gameId);
+                        if (fieldToPush.getOccupier() == null && fieldToPush.getHeight() != 4) {
+                            highlightFields.add(isFieldOccupied.getFieldNum());
+                        } }
+                    // DA: if apollo, all condition already check --> add field to list
+                    else if (currentField.getOccupier().getGodCard().equals(GodCards.Apollo)) {
+                        highlightFields.add(isFieldOccupied.getFieldNum());
+                    } } } }
         return new ResponseEntity<List<Integer>>(highlightFields, HttpStatus.OK);
     }
-
-
 }
