@@ -117,26 +117,6 @@ public class WorkerService {
         }
         return new ResponseEntity<List<Integer>>(highlightedFields, HttpStatus.OK);
     }
-    public ResponseEntity<List<Integer>> moveLikeApollo(List<Integer> highlightFields, int x, int y, long gameId){
-        //DA: check if one of the surrounding fields is occupied, if it is by the opponent --> add fieldNum to List
-        Field currentField = boardService.getField(coordsToId(x,y), gameId);
-        Long currentPlayersId = currentField.getOccupier().getPlayerId();
-        Game currentGame = gameRepository.getById(gameId);
-            int possibleXCoordinates[] = {x - 1, x, x + 1};
-            int possibleYCoordinates[] = {y - 1, y, y + 1};
-            for (int i = 0; i <= 2; i++) {
-                for (int j = 0; j <= 2; j++) {
-                    int xToCheck = possibleXCoordinates[i];
-                    int yToCheck = possibleYCoordinates[j];
-                    Field isFieldOccupied = boardService.getField(coordsToId(xToCheck, yToCheck), gameId);
-                    if(isFieldOccupied.getOccupier() != null && currentPlayersId != isFieldOccupied.getOccupier().getPlayerId()){
-                        highlightFields.add(isFieldOccupied.getFieldNum());
-                    }
-                }
-            }
-        return new ResponseEntity<List<Integer>>(highlightFields, HttpStatus.OK);
-    }
-
     public ResponseEntity<List<Integer>> highlightFieldBuild(int fieldNum, long gameId){
         Field currentField = boardService.getField(fieldNum, gameId);
         Board board = boardService.getBoard(gameId);
@@ -211,7 +191,6 @@ public class WorkerService {
         WinningCondition(gameId, currentField.getFieldNum(), dest, workerId);
 
         boardService.updateBoard(board);
-
         return new ResponseEntity<Integer>(destination.getFieldNum(), HttpStatus.OK);
     }
 
@@ -219,6 +198,7 @@ public class WorkerService {
         Board board = boardService.getBoard(gameId);
         Field currentField = boardService.getField(fieldNum, gameId);
         Game currentGame = gameService.getGame(gameId).getBody();
+        int h = currentField.getHeight();
 
         if(currentGame.getGameStatus() == GameStatus.Build1){
             currentGame.setGameStatus(GameStatus.Move2);
@@ -227,13 +207,17 @@ public class WorkerService {
             currentGame.setGameStatus(GameStatus.Move1);
         }
 
-        int h = currentField.getHeight();
-        currentField.setHeight(h + 1);
+        // DA: if godCard Atlas activated just set height to 4 //
+        if(currentField.getOccupier().getGodCard().equals(GodCards.Atlas)){
+            h = 4;
+            currentField.setHeight(h);
+        }
+        else { currentField.setHeight(h + 1); }
 
         boardService.updateBoard(board);
-
         return new ResponseEntity<String>(HttpStatus.OK);
     }
+
     public ResponseEntity<Boolean> WinningCondition(long gameId, int currentFieldNum, int destFieldNum, int workerId) {
         int h1 = boardService.getField(currentFieldNum, gameId).getHeight();
         int h2 = boardService.getField(destFieldNum, gameId).getHeight();
@@ -267,4 +251,23 @@ public class WorkerService {
         }
         return new ResponseEntity<Boolean>(false, HttpStatus.OK);
     }
+    public ResponseEntity<List<Integer>> moveLikeApollo(List<Integer> highlightFields, int x, int y, long gameId){
+        //DA: check if one of the surrounding fields is occupied, if it is by the opponent --> add fieldNum to List
+        Field currentField = boardService.getField(coordsToId(x,y), gameId);
+        Long currentPlayersId = currentField.getOccupier().getPlayerId();
+        Game currentGame = gameRepository.getById(gameId);
+        int possibleXCoordinates[] = {x - 1, x, x + 1};
+        int possibleYCoordinates[] = {y - 1, y, y + 1};
+        for (int i = 0; i <= 2; i++) {
+            for (int j = 0; j <= 2; j++) {
+                int xToCheck = possibleXCoordinates[i];
+                int yToCheck = possibleYCoordinates[j];
+                Field isFieldOccupied = boardService.getField(coordsToId(xToCheck, yToCheck), gameId);
+                if(isFieldOccupied.getOccupier() != null && currentPlayersId != isFieldOccupied.getOccupier().getPlayerId()){
+                    highlightFields.add(isFieldOccupied.getFieldNum());
+                } } }
+        return new ResponseEntity<List<Integer>>(highlightFields, HttpStatus.OK);
+    }
+
+
 }
