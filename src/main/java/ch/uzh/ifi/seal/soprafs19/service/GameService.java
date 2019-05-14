@@ -253,7 +253,9 @@ public class GameService {
         if(gameRepository.getById(gameId)== null){
             throw new NonExistentGameException("The game you want to delete couldn't be found in the repository!");
         }
-        gameRepository.deleteById(gameId);
+
+        Game toDelete = gameRepository.getById(gameId);
+        gameRepository.delete(toDelete);
         return new ResponseEntity<String>(HttpStatus.OK); // response code: 204
     }
 
