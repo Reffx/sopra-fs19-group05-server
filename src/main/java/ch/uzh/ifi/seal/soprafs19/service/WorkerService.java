@@ -91,6 +91,7 @@ public class WorkerService {
         Field currentField = boardService.getField(fieldNum, gameId);
         Board board = boardService.getBoard(gameId);
         List<Integer> highlightedFields = new ArrayList<Integer>();
+        WorkerNormal movingWorker = currentField.getOccupier();
         int x = currentField.getX_coordinate();
         int y = currentField.getY_coordinate();
         int possibleXCoordinates[] = {x-1, x, x+1};
@@ -111,7 +112,29 @@ public class WorkerService {
                 //DA: returns out of bounds error with this statement, somehow initial field does not include itself on its own
                 // highlightedFields.remove(fieldNum);
             } }
+        if(movingWorker.getGodCard().equals(GodCards.Apollo)){
+            moveLikeApollo(highlightedFields, x, y, gameId);
+        }
         return new ResponseEntity<List<Integer>>(highlightedFields, HttpStatus.OK);
+    }
+    public ResponseEntity<List<Integer>> moveLikeApollo(List<Integer> highlightFields, int x, int y, long gameId){
+        //DA: check if one of the surrounding fields is occupied, if it is by the opponent --> add fieldNum to List
+        Field currentField = boardService.getField(coordsToId(x,y), gameId);
+        Long currentPlayersId = currentField.getOccupier().getPlayerId();
+        Game currentGame = gameRepository.getById(gameId);
+            int possibleXCoordinates[] = {x - 1, x, x + 1};
+            int possibleYCoordinates[] = {y - 1, y, y + 1};
+            for (int i = 0; i <= 2; i++) {
+                for (int j = 0; j <= 2; j++) {
+                    int xToCheck = possibleXCoordinates[i];
+                    int yToCheck = possibleYCoordinates[j];
+                    Field isFieldOccupied = boardService.getField(coordsToId(xToCheck, yToCheck), gameId);
+                    if(isFieldOccupied.getOccupier() != null && currentPlayersId != isFieldOccupied.getOccupier().getPlayerId()){
+                        highlightFields.add(isFieldOccupied.getFieldNum());
+                    }
+                }
+            }
+        return new ResponseEntity<List<Integer>>(highlightFields, HttpStatus.OK);
     }
 
     public ResponseEntity<List<Integer>> highlightFieldBuild(int fieldNum, long gameId){
@@ -143,10 +166,20 @@ public class WorkerService {
         Field currentField = boardService.getField(movingWorker.getPosition(), gameId);
         Field destination = boardService.getField(dest, gameId);
         Game currentGame = gameService.getGame(gameId).getBody();
-
-        destination.setOccupier(movingWorker);
-        movingWorker.setPosition(destination.getFieldNum());
-        currentField.setOccupier(null);
+        // DA: if condition for all god cards which enable to move to an occupied field //
+        if(destination.getOccupier() != null){
+            if(movingWorker.getGodCard().equals(GodCards.Apollo)){
+                WorkerNormal tempWorker = destination.getOccupier();
+                destination.setOccupier(movingWorker);
+                currentField.setOccupier(tempWorker);
+            }
+        }
+        // DA: else, when field to move to is not occupied //
+        else {
+            destination.setOccupier(movingWorker);
+            movingWorker.setPosition(destination.getFieldNum());
+            currentField.setOccupier(null);
+        }
         if(currentGame.getGameStatus()==GameStatus.Move1 && currentGame.getGameMode().equals(GameMode.NORMAL)){
             currentGame.setGameStatus(GameStatus.Build1);
         }
@@ -157,15 +190,12 @@ public class WorkerService {
         if(currentGame.getGameMode().equals(GameMode.GOD) && workerNormalRepository.findById(workerId).getGodCard().equals(GodCards.Artemis)) {
             int i = 0;
              if (currentGame.getGameStatus() == GameStatus.Move1) {
-
                 while (i < 2) {
                     currentGame.setGameStatus(GameStatus.Move1);
                     i++;
                 }
-
             }
             else if(currentGame.getGameStatus().equals(GameStatus.Move2)){
-
                  while (i < 2) {
                      currentGame.setGameStatus(GameStatus.Move1);
                      i++;
