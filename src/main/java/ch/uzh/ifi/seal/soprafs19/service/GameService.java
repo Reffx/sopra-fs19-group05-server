@@ -257,13 +257,7 @@ public class GameService {
         if(gameRepository.getById(gameId)== null){
             throw new NonExistentGameException("The game you want to delete couldn't be found in the repository!");
         }
-        workerNormalRepository.deleteById(currentGame.getPlayer1().getWorker1().getWorkerId());
-        workerNormalRepository.deleteById(currentGame.getPlayer1().getWorker2().getWorkerId());
-        workerNormalRepository.deleteById(currentGame.getPlayer2().getWorker1().getWorkerId());
-        workerNormalRepository.deleteById(currentGame.getPlayer2().getWorker2().getWorkerId());
-        playerRepository.deleteById(currentGame.getPlayer1().getId());
-        playerRepository.deleteById(currentGame.getPlayer2().getId());
-        boardRepository.deleteById(gameId);
+
         gameRepository.deleteById(gameId);
         return new ResponseEntity<String>(HttpStatus.OK); // response code: 204
     }
