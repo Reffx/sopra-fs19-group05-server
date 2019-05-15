@@ -10,10 +10,7 @@ import ch.uzh.ifi.seal.soprafs19.constant.GodCards;
 import ch.uzh.ifi.seal.soprafs19.entity.Game;
 import ch.uzh.ifi.seal.soprafs19.entity.Player;
 import ch.uzh.ifi.seal.soprafs19.entity.WorkerNormal;
-import ch.uzh.ifi.seal.soprafs19.repository.GameRepository;
-import ch.uzh.ifi.seal.soprafs19.repository.PlayerRepository;
-import ch.uzh.ifi.seal.soprafs19.repository.UserRepository;
-import ch.uzh.ifi.seal.soprafs19.repository.WorkerNormalRepository;
+import ch.uzh.ifi.seal.soprafs19.repository.*;
 import org.apache.catalina.util.ResourceSet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -31,13 +28,15 @@ public class GameService {
     private final PlayerService playerService;
     private final WorkerNormalRepository workerNormalRepository;
     private final PlayerRepository playerRepository;
+    private final BoardRepository boardRepository;
 
     @Autowired
-    public GameService(GameRepository gameRepository, PlayerService playerService, WorkerNormalRepository workerNormalRepository, PlayerRepository playerRepository) {
+    public GameService(GameRepository gameRepository, PlayerService playerService, WorkerNormalRepository workerNormalRepository, PlayerRepository playerRepository, BoardRepository boardRepository) {
         this.gameRepository = gameRepository;
         this.playerService = playerService;
         this.workerNormalRepository = workerNormalRepository;
         this.playerRepository = playerRepository;
+        this.boardRepository = boardRepository;
     }
 
     //public ResponseEntity<>
@@ -260,6 +259,7 @@ public class GameService {
         workerNormalRepository.deleteById(currentGame.getPlayer2().getWorker2().getWorkerId());
         playerRepository.deleteById(currentGame.getPlayer1().getId());
         playerRepository.deleteById(currentGame.getPlayer2().getId());
+        boardRepository.deleteById(gameId);
         gameRepository.deleteById(gameId);
         return new ResponseEntity<String>(HttpStatus.OK); // response code: 204
     }
