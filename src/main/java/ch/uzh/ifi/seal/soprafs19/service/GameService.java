@@ -274,20 +274,32 @@ public class GameService {
             workerNormalRepository.save(worker2);
         }
         if(godCard.equals("Apollo")) {
-            worker1.setGodCard(GodCards.Artemis);
-            worker2.setGodCard(GodCards.Artemis);
+            worker1.setGodCard(GodCards.Apollo);
+            worker2.setGodCard(GodCards.Apollo);
             workerNormalRepository.save(worker1);
             workerNormalRepository.save(worker2);
         }
         if(godCard.equals("Atlas")) {
-            worker1.setGodCard(GodCards.Artemis);
-            worker2.setGodCard(GodCards.Artemis);
+            worker1.setGodCard(GodCards.Atlas);
+            worker2.setGodCard(GodCards.Atlas);
             workerNormalRepository.save(worker1);
             workerNormalRepository.save(worker2);
         }
         if(godCard.equals("Minotaur")){
             worker1.setGodCard(GodCards.Minotaur);
             worker2.setGodCard(GodCards.Minotaur);
+            workerNormalRepository.save(worker1);
+            workerNormalRepository.save(worker2);
+        }
+        if(godCard.equals("Demeter")){
+            worker1.setGodCard(GodCards.Demeter);
+            worker2.setGodCard(GodCards.Demeter);
+            workerNormalRepository.save(worker1);
+            workerNormalRepository.save(worker2);
+        }
+        if(godCard.equals("Athena")){
+            worker1.setGodCard(GodCards.Athena);
+            worker2.setGodCard(GodCards.Athena);
             workerNormalRepository.save(worker1);
             workerNormalRepository.save(worker2);
         }
