@@ -76,9 +76,11 @@ public class GameService {
         //  save first to get gameId
         //game.setPlayer1(player1);
         WorkerNormal worker1 = new WorkerNormal();
+        worker1.setGodCard(GodCards.None);
         //System.out.println(worker1.getWorkerId());
         workerNormalRepository.save(worker1);
         WorkerNormal worker2 = new WorkerNormal();
+        worker2.setGodCard(GodCards.None);
         workerNormalRepository.save(worker2);
         //System.out.println(worker2.getWorkerId());
        // worker1 = workerNormalRepository.findById(0).get();
@@ -117,7 +119,9 @@ public class GameService {
         player.setId(userId);
 
         WorkerNormal worker1 = new WorkerNormal();
+        worker1.setGodCard(GodCards.None);
         WorkerNormal worker2 = new WorkerNormal();
+        worker2.setGodCard(GodCards.None);
         player.setWorker1(worker1);
         player.setWorker2(worker2);
         worker1.setPlayerId(player.getId());

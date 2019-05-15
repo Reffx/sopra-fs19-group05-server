@@ -234,27 +234,38 @@ public class WorkerService {
         return new ResponseEntity<Integer>(destination.getFieldNum(), HttpStatus.OK);
     }
 
-    public ResponseEntity<String> build(long gameId, int fieldNum) {
+    public ResponseEntity<String> build(long gameId, int fieldNum, int workerId) {
         Board board = boardService.getBoard(gameId);
         Field currentField = boardService.getField(fieldNum, gameId);
         Game currentGame = gameService.getGame(gameId).getBody();
+        WorkerNormal buildingWorker = workerNormalRepository.findById(workerId);
+        System.out.println("TEst: "+buildingWorker.getWorkerId());
         int h = currentField.getHeight();
+        System.out.println("Checkpoint 1");
 
         if (currentGame.getGameStatus() == GameStatus.Build1) {
             currentGame.setGameStatus(GameStatus.Move2);
         } else if (currentGame.getGameStatus() == GameStatus.Build2) {
             currentGame.setGameStatus(GameStatus.Move1);
         }
-
+        System.out.println("Checkpoint 2");
         // DA: if godCard Atlas activated just set height to 4 //
        if(currentGame.getGameMode().equals(GameMode.GOD)){
-           if (currentField.getOccupier().getGodCard().equals(GodCards.Atlas)) {
+           System.out.println("Checkpoint if god ");
+           if (buildingWorker.getGodCard().equals(GodCards.Atlas)) {
                currentField.setHeight(4);
+               System.out.println("Checkpoint3");
+           }
+           else {
+               System.out.println("checkpoint 4");
+               currentField.setHeight(h + 1);
            }
        }
         else {
+           System.out.println("Checkpoint 5");
             currentField.setHeight(h + 1);
         }
+        System.out.println("Checkpoitn6");
         boardService.updateBoard(board);
         return new ResponseEntity<String>(HttpStatus.OK);
     }
