@@ -116,8 +116,27 @@ public class WorkerService {
         if (movingWorker.getGodCard().equals(GodCards.Apollo) || movingWorker.getGodCard().equals(GodCards.Minotaur)) {
             moveLikeApolloOrMinotaur(highlightedFields, x, y, gameId);
         }
+        Player player1 = gameRepository.getById(gameId).getPlayer1();
+        Player player2 = gameRepository.getById(gameId).getPlayer2();
+        if(movingWorker.getPlayerId() == player1.getId()){
+            restrictLikeAthena(highlightedFields, player2, gameId, initialHeight);
+            if(movingWorker.getPlayerId() == player2.getId()){
+                restrictLikeAthena(highlightedFields, player1, gameId, initialHeight);
+            }
+        }
         return new ResponseEntity<List<Integer>>(highlightedFields, HttpStatus.OK);
     }
+    public ResponseEntity<List<Integer>> restrictLikeAthena(List<Integer> highlightedFields, Player player, long gameId, int initialHeight){
+        if(player.getWorker1().getGodCard().equals(GodCards.Athena)){
+            int n = highlightedFields.size();
+            for(int i = 0; i <= n; i++){
+                int h = boardService.getField(highlightedFields.get(i), gameId).getHeight();
+                if(h - initialHeight > 0){
+                    highlightedFields.remove(i);
+                } } }
+        return new ResponseEntity<List<Integer>>(highlightedFields, HttpStatus.OK);
+    }
+
 
     public ResponseEntity<List<Integer>> highlightFieldBuild(int fieldNum, long gameId) {
         Field currentField = boardService.getField(fieldNum, gameId);
