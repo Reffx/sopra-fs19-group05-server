@@ -285,6 +285,12 @@ public class GameService {
             workerNormalRepository.save(worker1);
             workerNormalRepository.save(worker2);
         }
+        if(godCard.equals("Minotaur")){
+            worker1.setGodCard(GodCards.Minotaur);
+            worker2.setGodCard(GodCards.Minotaur);
+            workerNormalRepository.save(worker1);
+            workerNormalRepository.save(worker2);
+        }
         return new ResponseEntity<String>(HttpStatus.OK);
     }
 

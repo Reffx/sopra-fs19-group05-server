@@ -158,6 +158,15 @@ public class WorkerService {
                 destination.setOccupier(movingWorker);
                 currentField.setOccupier(tempWorker);
             }
+            if(movingWorker.getGodCard().equals(GodCards.Minotaur)){
+                int x = destination.getX_coordinate() + (destination.getX_coordinate() - currentField.getX_coordinate());
+                int y = destination.getY_coordinate() + (destination.getY_coordinate() - currentField.getY_coordinate());
+                Field pushField = boardService.getField(coordsToId(x,y), gameId);
+                WorkerNormal pushWorker = pushField.getOccupier();
+
+                pushField.setOccupier(pushWorker);
+                destination.setOccupier(movingWorker);
+            }
         }
         // DA: else, when field to move to is not occupied //
         else {
