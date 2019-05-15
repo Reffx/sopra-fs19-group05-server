@@ -181,9 +181,10 @@ public class WorkerService {
                 int x = destination.getX_coordinate() + (destination.getX_coordinate() - currentField.getX_coordinate());
                 int y = destination.getY_coordinate() + (destination.getY_coordinate() - currentField.getY_coordinate());
                 Field pushField = boardService.getField(coordsToId(x,y), gameId);
-                WorkerNormal pushWorker = pushField.getOccupier();
+                WorkerNormal pushWorker = destination.getOccupier();
 
                 pushField.setOccupier(pushWorker);
+                currentField.setOccupier(null);
                 destination.setOccupier(movingWorker);
             }
         }
@@ -298,7 +299,7 @@ public class WorkerService {
                     // DA: if minotaur, additionally check if occupied field is no border field +
                     // check if field to which opponents worker is pushed to is neither occupied nor has a dome //
                     if (currentField.getOccupier().getGodCard().equals(GodCards.Minotaur) &&
-                            xToCheck <= 3 && xToCheck >= 1 && yToCheck >= 3 && yToCheck >= 1) {
+                            xToCheck <= 3 && xToCheck >= 1 && yToCheck <= 3 && yToCheck >= 1) {
                         int pushToXCoordinate = xToCheck + (xToCheck - x);
                         int pushToYCoordinate = yToCheck + (yToCheck - y);
                         Field fieldToPush = boardService.getField(coordsToId(pushToXCoordinate, pushToYCoordinate), gameId);
