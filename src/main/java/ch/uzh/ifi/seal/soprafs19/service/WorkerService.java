@@ -91,6 +91,7 @@ public class WorkerService {
         Board board = boardService.getBoard(gameId);
         List<Integer> highlightedFields = new ArrayList<Integer>();
         WorkerNormal movingWorker = currentField.getOccupier();
+        Game game = gameRepository.getById(gameId);
         int x = currentField.getX_coordinate();
         int y = currentField.getY_coordinate();
         int possibleXCoordinates[] = {x - 1, x, x + 1};
@@ -113,14 +114,16 @@ public class WorkerService {
                 // highlightedFields.remove(fieldNum);
             }
         }
-        if (movingWorker.getGodCard().equals(GodCards.Apollo) || movingWorker.getGodCard().equals(GodCards.Minotaur)) {
-            moveLikeApolloOrMinotaur(highlightedFields, x, y, gameId);
-        }
-        Player player1 = gameRepository.getById(gameId).getPlayer1();
-        Player player2 = gameRepository.getById(gameId).getPlayer2();
-        if(movingWorker.getPlayerId() == player1.getId()){
-            restrictLikeAthena(highlightedFields, player2, gameId, initialHeight);
-            if(movingWorker.getPlayerId() == player2.getId()){
+        if(game.getGameMode().equals(GameMode.GOD)) {
+            if (movingWorker.getGodCard().equals(GodCards.Apollo) || movingWorker.getGodCard().equals(GodCards.Minotaur)) {
+                moveLikeApolloOrMinotaur(highlightedFields, x, y, gameId);
+            }
+            Player player1 = game.getPlayer1();
+            Player player2 = game.getPlayer2();
+
+            if (movingWorker.getPlayerId() == player1.getId()) {
+                restrictLikeAthena(highlightedFields, player2, gameId, initialHeight);
+            } else if (movingWorker.getPlayerId() == player2.getId()) {
                 restrictLikeAthena(highlightedFields, player1, gameId, initialHeight);
             }
         }
@@ -239,13 +242,14 @@ public class WorkerService {
         }
 
         // DA: if godCard Atlas activated just set height to 4 //
-        if (currentField.getOccupier().getGodCard().equals(GodCards.Atlas)) {
-            h = 4;
-            currentField.setHeight(h);
-        } else {
+       if(currentGame.getGameMode().equals(GameMode.GOD)){
+           if (currentField.getOccupier().getGodCard().equals(GodCards.Atlas)) {
+               currentField.setHeight(4);
+           }
+       }
+        else {
             currentField.setHeight(h + 1);
         }
-
         boardService.updateBoard(board);
         return new ResponseEntity<String>(HttpStatus.OK);
     }
