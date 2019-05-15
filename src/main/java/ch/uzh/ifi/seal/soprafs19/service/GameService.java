@@ -309,8 +309,8 @@ public class GameService {
             workerNormalRepository.save(worker2);
         }
         if(godCard.equals("Athena")){
-            worker1.setGodCard(GodCards.Athena);
-            worker2.setGodCard(GodCards.Athena);
+            worker1.setGodCard(GodCards.InactiveAthena);
+            worker2.setGodCard(GodCards.InactiveAthena);
             workerNormalRepository.save(worker1);
             workerNormalRepository.save(worker2);
         }
