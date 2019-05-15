@@ -250,9 +250,16 @@ public class GameService {
 
     //  delete a game. when player1 exit
     public ResponseEntity<String> deleteGame(Long gameId) {
+        Game currentGame = gameRepository.getById(gameId);
         if(gameRepository.getById(gameId)== null){
             throw new NonExistentGameException("The game you want to delete couldn't be found in the repository!");
         }
+        workerNormalRepository.deleteById(currentGame.getPlayer1().getWorker1().getWorkerId());
+        workerNormalRepository.deleteById(currentGame.getPlayer1().getWorker2().getWorkerId());
+        workerNormalRepository.deleteById(currentGame.getPlayer2().getWorker1().getWorkerId());
+        workerNormalRepository.deleteById(currentGame.getPlayer2().getWorker2().getWorkerId());
+        playerRepository.deleteById(currentGame.getPlayer1().getId());
+        playerRepository.deleteById(currentGame.getPlayer2().getId());
         gameRepository.deleteById(gameId);
         return new ResponseEntity<String>(HttpStatus.OK); // response code: 204
     }
