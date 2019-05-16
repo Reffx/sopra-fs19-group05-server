@@ -7,13 +7,8 @@ import ch.uzh.ifi.seal.soprafs19.controller.DuplicateException;
 import ch.uzh.ifi.seal.soprafs19.controller.FullLobbyException;
 import ch.uzh.ifi.seal.soprafs19.controller.NonExistentGameException;
 import ch.uzh.ifi.seal.soprafs19.constant.GodCards;
-import ch.uzh.ifi.seal.soprafs19.entity.Game;
-import ch.uzh.ifi.seal.soprafs19.entity.Player;
-import ch.uzh.ifi.seal.soprafs19.entity.WorkerNormal;
-import ch.uzh.ifi.seal.soprafs19.repository.GameRepository;
-import ch.uzh.ifi.seal.soprafs19.repository.PlayerRepository;
-import ch.uzh.ifi.seal.soprafs19.repository.UserRepository;
-import ch.uzh.ifi.seal.soprafs19.repository.WorkerNormalRepository;
+import ch.uzh.ifi.seal.soprafs19.entity.*;
+import ch.uzh.ifi.seal.soprafs19.repository.*;
 import org.apache.catalina.util.ResourceSet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.management.InstanceAlreadyExistsException;
+import java.util.List;
 import java.util.Random;
 
 @Service
@@ -31,13 +27,15 @@ public class GameService {
     private final PlayerService playerService;
     private final WorkerNormalRepository workerNormalRepository;
     private final PlayerRepository playerRepository;
+    private final BoardRepository boardRepository;
 
     @Autowired
-    public GameService(GameRepository gameRepository, PlayerService playerService, WorkerNormalRepository workerNormalRepository, PlayerRepository playerRepository) {
+    public GameService(GameRepository gameRepository, PlayerService playerService, WorkerNormalRepository workerNormalRepository, PlayerRepository playerRepository, BoardRepository boardRepository) {
         this.gameRepository = gameRepository;
         this.playerService = playerService;
         this.workerNormalRepository = workerNormalRepository;
         this.playerRepository = playerRepository;
+        this.boardRepository = boardRepository;
     }
 
     //public ResponseEntity<>
@@ -69,7 +67,7 @@ public class GameService {
     //  create a game
     public Game createGame(Game game) {
         //added if statement to check if the same user wants to create multiple games
-        if(playerRepository.findByUsername(game.getPlayer1().getUsername())!= null && game.getPlayer1() !=null){
+        if(playerRepository.findByUsername(game.getPlayer1().getUsername())!= null){
             throw new DuplicateException("You have already created a game!");
         }
         Player player1 = game.getPlayer1();   //  set the player1 as the creator
@@ -77,12 +75,14 @@ public class GameService {
         //  save first to get gameId
         //game.setPlayer1(player1);
         WorkerNormal worker1 = new WorkerNormal();
+        worker1.setGodCard(GodCards.None);
         //System.out.println(worker1.getWorkerId());
         workerNormalRepository.save(worker1);
         WorkerNormal worker2 = new WorkerNormal();
+        worker2.setGodCard(GodCards.None);
         workerNormalRepository.save(worker2);
         //System.out.println(worker2.getWorkerId());
-       // worker1 = workerNormalRepository.findById(0).get();
+        // worker1 = workerNormalRepository.findById(0).get();
         //System.out.println(worker1.getWorkerId());
         player1.setWorker1(worker1);
         player1.setWorker2(worker2);
@@ -118,7 +118,9 @@ public class GameService {
         player.setId(userId);
 
         WorkerNormal worker1 = new WorkerNormal();
+        worker1.setGodCard(GodCards.None);
         WorkerNormal worker2 = new WorkerNormal();
+        worker2.setGodCard(GodCards.None);
         player.setWorker1(worker1);
         player.setWorker2(worker2);
         worker1.setPlayerId(player.getId());
@@ -250,12 +252,35 @@ public class GameService {
 
     //  delete a game. when player1 exit
     public ResponseEntity<String> deleteGame(Long gameId) {
+        Game currentGame = gameRepository.getById(gameId);
+
         if(gameRepository.getById(gameId)== null){
             throw new NonExistentGameException("The game you want to delete couldn't be found in the repository!");
         }
+        //check if players are actually in game and not in lobby
+        if(currentGame.getGameStatus() != GameStatus.Start){
+            Board currentBoard = boardRepository.getById(gameId);
+            List<Field> allFields = currentBoard.getAllFields();
+            //iterate over field objects to set the occupiers null if there is one
+            for( int i = 0; i <= 24; ++i){
+                if(allFields.get(i).getOccupier() != null){
+                    allFields.get(i).setOccupier(null);
+                }
+            }
+            //delete the board
+            boardRepository.deleteById(gameId);
+            //delete workers from repo
+            workerNormalRepository.deleteById(currentGame.getPlayer1().getWorker1().getWorkerId());
+            workerNormalRepository.deleteById(currentGame.getPlayer1().getWorker2().getWorkerId());
+            workerNormalRepository.deleteById(currentGame.getPlayer2().getWorker1().getWorkerId());
+            workerNormalRepository.deleteById(currentGame.getPlayer2().getWorker2().getWorkerId());
 
-        Game toDelete = gameRepository.getById(gameId);
-        gameRepository.delete(toDelete);
+            //delete players from player repo
+            playerRepository.deleteById(currentGame.getPlayer1().getId());
+            playerRepository.deleteById(currentGame.getPlayer2().getId());
+
+        }
+        gameRepository.deleteById(gameId);
         return new ResponseEntity<String>(HttpStatus.OK); // response code: 204
     }
 
@@ -274,9 +299,33 @@ public class GameService {
             workerNormalRepository.save(worker1);
             workerNormalRepository.save(worker2);
         }
+        if(godCard.equals("Apollo")) {
+            worker1.setGodCard(GodCards.Apollo);
+            worker2.setGodCard(GodCards.Apollo);
+            workerNormalRepository.save(worker1);
+            workerNormalRepository.save(worker2);
+        }
+        if(godCard.equals("Atlas")) {
+            worker1.setGodCard(GodCards.Atlas);
+            worker2.setGodCard(GodCards.Atlas);
+            workerNormalRepository.save(worker1);
+            workerNormalRepository.save(worker2);
+        }
+        if(godCard.equals("Minotaur")){
+            worker1.setGodCard(GodCards.Minotaur);
+            worker2.setGodCard(GodCards.Minotaur);
+            workerNormalRepository.save(worker1);
+            workerNormalRepository.save(worker2);
+        }
         if(godCard.equals("Demeter")){
             worker1.setGodCard(GodCards.Demeter);
             worker2.setGodCard(GodCards.Demeter);
+            workerNormalRepository.save(worker1);
+            workerNormalRepository.save(worker2);
+        }
+        if(godCard.equals("Athena")){
+            worker1.setGodCard(GodCards.InactiveAthena);
+            worker2.setGodCard(GodCards.InactiveAthena);
             workerNormalRepository.save(worker1);
             workerNormalRepository.save(worker2);
         }
@@ -296,6 +345,4 @@ public class GameService {
 
         return new ResponseEntity<String>(HttpStatus.OK);
     }
-
-
 }

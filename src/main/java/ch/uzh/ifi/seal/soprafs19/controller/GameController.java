@@ -87,7 +87,7 @@ public class GameController {
     }
 
     //  delete a game
-    @DeleteMapping("/games/{gameId}")
+    @PutMapping("/games/{gameId}")
     ResponseEntity<String> deleteGame(@PathVariable Long gameId) {
         return gameService.deleteGame(gameId);
     }

@@ -8,4 +8,5 @@ package ch.uzh.ifi.seal.soprafs19.repository;
 @Repository("boardRepository")
 public interface BoardRepository extends CrudRepository<Board, Long> {
     Board findById(long boardId);
+    Board getById(long boardId);
 }
