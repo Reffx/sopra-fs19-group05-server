@@ -139,7 +139,7 @@ public class WorkerService {
         int n = highlightedFields.size();
         int initialHeight = currentField.getHeight();
         for(int i = 0; i <= n; i++){
-            int h = boardService.getField(i, gameId).getHeight();
+            int h = boardService.getField(highlightedFields.get(i), gameId).getHeight();
             if(h - initialHeight > 0){
                 highlightedFields.remove(i);
             } }
