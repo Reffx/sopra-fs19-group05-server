@@ -356,6 +356,7 @@ public class WorkerService {
         Field currentField = boardService.getField(coordsToId(x, y), gameId);
         Long currentPlayersId = currentField.getOccupier().getPlayerId();
         Game currentGame = gameRepository.getById(gameId);
+        Field initialField = boardService.getField(coordsToId(x, y), gameId);
         int possibleXCoordinates[] = {x - 1, x, x + 1};
         int possibleYCoordinates[] = {y - 1, y, y + 1};
         for (int i = 0; i <= 2; i++) {
@@ -375,6 +376,7 @@ public class WorkerService {
                         Field fieldToPush = boardService.getField(coordsToId(pushToXCoordinate, pushToYCoordinate), gameId);
                         if (fieldToPush.getOccupier() == null && fieldToPush.getHeight() != 4) {
                             highlightFields.add(isFieldOccupied.getFieldNum());
+                            highlightFields.remove(initialField.getFieldNum());
                         } }}}
                     // DA: if apollo, all condition already check --> add field to list
                     else if (currentField.getOccupier().getGodCard().equals(GodCards.Apollo)) {
