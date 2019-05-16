@@ -122,29 +122,41 @@ public class WorkerService {
             Player player2 = game.getPlayer2();
 
             if(movingWorker.getPlayerId() != player1.getId()){
-                if(player1.getWorker1().getGodCard().equals(GodCards.Athena) || player1.getWorker2().equals(GodCards.Athena)){
-                    restrictLikeAthena(highlightedFields, gameId, currentField);
+                if(player1.getWorker1().getGodCard().equals(GodCards.Athena)){
+                    restrictLikeAthena(highlightedFields, gameId, boardService.getField(player1.getWorker1().getPosition(), gameId));
+                }
+                else if (player1.getWorker2().equals(GodCards.Athena)){
+                    restrictLikeAthena(highlightedFields, gameId, boardService.getField(player1.getWorker2().getPosition(), gameId));
                 }
             }
             if(movingWorker.getPlayerId() != player2.getId()) {
-                if (player2.getWorker1().getGodCard().equals(GodCards.Athena) || player2.getWorker2().equals(GodCards.Athena)) {
-                    restrictLikeAthena(highlightedFields, gameId, currentField);
+                System.out.println("Check for Athena 1");
+                if(player2.getWorker1().getGodCard().equals(GodCards.Athena)){
+                    System.out.println("Check for Athena 2");
+                    restrictLikeAthena(highlightedFields, gameId, boardService.getField(player2.getWorker1().getPosition(), gameId));
+                }
+                else if (player2.getWorker2().getGodCard().equals(GodCards.Athena)){
+                    System.out.println("Check for Athena 3");
+                    restrictLikeAthena(highlightedFields, gameId, boardService.getField(player2.getWorker2().getPosition(), gameId));
                 }
             }
         }
         return new ResponseEntity<List<Integer>>(highlightedFields, HttpStatus.OK);
     }
     public ResponseEntity<List<Integer>> restrictLikeAthena(List<Integer> highlightedFields, long gameId, Field currentField){
-
+        System.out.println("Checkout 1");
         int n = highlightedFields.size();
         int initialHeight = currentField.getHeight();
         for(int i = 0; i <= n; i++){
-            int h = boardService.getField(highlightedFields.get(i), gameId).getHeight();
+            int h = boardService.getField(i, gameId).getHeight();
             if(h - initialHeight > 0){
                 highlightedFields.remove(i);
+                System.out.println("Highlightedfields: "+highlightedFields.size());
             } }
         long playerId = currentField.getOccupier().getPlayerId();
-        gameService.assignGodCard("InactiveAthena", playerId);
+        currentField.getOccupier().setGodCard(GodCards.InactiveAthena);
+        System.out.println("Checkpoint3");
+
         return new ResponseEntity<List<Integer>>(highlightedFields, HttpStatus.OK);
     }
 
@@ -213,6 +225,16 @@ public class WorkerService {
                 if (destination.getHeight() - currentField.getHeight() > 0) {
                     movingWorker.setGodCard(GodCards.Athena);
                 }
+                destination.setOccupier(movingWorker);
+                movingWorker.setPosition(destination.getFieldNum());
+                currentField.setOccupier(null);
+            }
+            if(movingWorker.getGodCard().equals(GodCards.Pan)){
+                destination.setOccupier(movingWorker);
+                movingWorker.setPosition(destination.getFieldNum());
+                currentField.setOccupier(null);
+            }
+            if (movingWorker.getGodCard().equals(GodCards.Atlas)){
                 destination.setOccupier(movingWorker);
                 movingWorker.setPosition(destination.getFieldNum());
                 currentField.setOccupier(null);
