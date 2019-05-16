@@ -253,23 +253,7 @@ public class WorkerService {
                 movingWorker.setPosition(destination.getFieldNum());
                 currentField.setOccupier(null);
             }
-            // below youll find the conditions for the moving of Artemis
-            if (movingWorker.getGodCard().equals(GodCards.Artemis)) {
-                int i = 0;
-                if (currentGame.getGameStatus() == GameStatus.Move1) {
-                    while (i < 2) {
-                        currentGame.setGameStatus(GameStatus.Move1);
-                        i++;
-                    }
-                } else if (currentGame.getGameStatus().equals(GameStatus.Move2)) {
-                    while (i < 2) {
-                        currentGame.setGameStatus(GameStatus.Move1);
-                        i++;
-                    }
-                }
-                movingWorker.setGodCard(GodCards.None);
-                currentGame.setGameStatus(GameStatus.Build2);
-            }
+
             if (currentGame.getGameStatus() == GameStatus.Move1 && currentGame.getGameMode().equals(GameMode.GOD)) {
                 currentGame.setGameStatus(GameStatus.Build1);
             } else if (currentGame.getGameStatus() == GameStatus.Move2 && currentGame.getGameMode().equals(GameMode.GOD)) {
@@ -341,14 +325,7 @@ public class WorkerService {
         WorkerNormal winningWorker = workerNormalRepository.findById(workerId);
 
         if (h1 == 2 && h2 == 3) {
-            if (winningWorker.getGodCard() == GodCards.Pan) {
-                if (h1 - h2 >= 2) {
-                    winningWorker.setIsWinner(true);
-                    //  DO RECORDING
-                    recordService.findById(gameId).setIsDone(true);
-                    return new ResponseEntity<Boolean>(winningWorker.getIsWinner(), HttpStatus.OK);
-                }
-            }
+
             if (currentGame.getPlayer1().getWorker1() == winningWorker || currentGame.getPlayer1().getWorker2() == winningWorker) {
                 currentGame.setGameStatus(GameStatus.Winner1);
                 gameRepository.save(currentGame);
@@ -361,6 +338,15 @@ public class WorkerService {
             //  DO RECORDING
             recordService.findById(gameId).setIsDone(true);
             return new ResponseEntity<Boolean>(winningWorker.getIsWinner(), HttpStatus.OK);
+        }
+        if(currentGame.getGameMode().equals(GameMode.GOD)) {
+            if (winningWorker.getGodCard() == GodCards.Pan) {
+                if (h1 - h2 >= 2) {
+                    winningWorker.setIsWinner(true);
+
+                    return new ResponseEntity<Boolean>(winningWorker.getIsWinner(), HttpStatus.OK);
+                }
+            }
         }
         return new ResponseEntity<Boolean>(false, HttpStatus.OK);
     }
@@ -376,18 +362,20 @@ public class WorkerService {
             for (int j = 0; j <= 2; j++) {
                 int xToCheck = possibleXCoordinates[i];
                 int yToCheck = possibleYCoordinates[j];
-                Field isFieldOccupied = boardService.getField(coordsToId(xToCheck, yToCheck), gameId);
+                if(xToCheck <= 4 && yToCheck <= 4 && xToCheck >= 0 && yToCheck >= 0) {
+                    Field isFieldOccupied = boardService.getField(coordsToId(xToCheck, yToCheck), gameId);
+
                 if (isFieldOccupied.getOccupier() != null && currentPlayersId != isFieldOccupied.getOccupier().getPlayerId()) {
                     // DA: if minotaur, additionally check if occupied field is no border field +
                     // check if field to which opponents worker is pushed to is neither occupied nor has a dome //
-                    if (currentField.getOccupier().getGodCard().equals(GodCards.Minotaur) &&
-                            xToCheck <= 3 && xToCheck >= 1 && yToCheck <= 3 && yToCheck >= 1) {
+                    if (currentField.getOccupier().getGodCard().equals(GodCards.Minotaur)) {
                         int pushToXCoordinate = xToCheck + (xToCheck - x);
                         int pushToYCoordinate = yToCheck + (yToCheck - y);
+                        if(pushToXCoordinate <= 4 && pushToYCoordinate <= 4 && pushToXCoordinate >= 0 && pushToYCoordinate >= 0){
                         Field fieldToPush = boardService.getField(coordsToId(pushToXCoordinate, pushToYCoordinate), gameId);
                         if (fieldToPush.getOccupier() == null && fieldToPush.getHeight() != 4) {
                             highlightFields.add(isFieldOccupied.getFieldNum());
-                        } }
+                        } }}}
                     // DA: if apollo, all condition already check --> add field to list
                     else if (currentField.getOccupier().getGodCard().equals(GodCards.Apollo)) {
                         highlightFields.add(isFieldOccupied.getFieldNum());
