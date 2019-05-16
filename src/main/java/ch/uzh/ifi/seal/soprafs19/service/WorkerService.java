@@ -122,39 +122,53 @@ public class WorkerService {
             Player player2 = game.getPlayer2();
 
             if(movingWorker.getPlayerId() != player1.getId()){
+                System.out.println("Checkpoint if player 2 is moving");
                 if(player1.getWorker1().getGodCard().equals(GodCards.Athena)){
-                    restrictLikeAthena(highlightedFields, gameId, boardService.getField(player1.getWorker1().getPosition(), gameId));
+                    System.out.println("worker 1 player 1has athena");
+                    restrictLikeAthena(highlightedFields, gameId, currentField, boardService.getField(player1.getWorker1().getPosition(), gameId));
+                    System.out.println("resctriciton enabled");
                 }
-                else if (player1.getWorker2().equals(GodCards.Athena)){
-                    restrictLikeAthena(highlightedFields, gameId, boardService.getField(player1.getWorker2().getPosition(), gameId));
+                else if (player1.getWorker2().getGodCard().equals(GodCards.Athena)){
+                    restrictLikeAthena(highlightedFields, gameId, currentField, boardService.getField(player1.getWorker2().getPosition(), gameId));
                 }
             }
             if(movingWorker.getPlayerId() != player2.getId()) {
                 System.out.println("Check for Athena 1");
                 if(player2.getWorker1().getGodCard().equals(GodCards.Athena)){
                     System.out.println("Check for Athena 2");
-                    restrictLikeAthena(highlightedFields, gameId, boardService.getField(player2.getWorker1().getPosition(), gameId));
+                    restrictLikeAthena(highlightedFields, gameId, currentField, boardService.getField(player2.getWorker1().getPosition(), gameId));
                 }
                 else if (player2.getWorker2().getGodCard().equals(GodCards.Athena)){
                     System.out.println("Check for Athena 3");
-                    restrictLikeAthena(highlightedFields, gameId, boardService.getField(player2.getWorker2().getPosition(), gameId));
+                    restrictLikeAthena(highlightedFields, gameId, currentField, boardService.getField(player2.getWorker2().getPosition(), gameId));
                 }
             }
         }
         return new ResponseEntity<List<Integer>>(highlightedFields, HttpStatus.OK);
     }
-    public ResponseEntity<List<Integer>> restrictLikeAthena(List<Integer> highlightedFields, long gameId, Field currentField){
+    public ResponseEntity<List<Integer>> restrictLikeAthena(List<Integer> highlightedFields, long gameId, Field currentField, Field currentFieldAthena){
         System.out.println("Checkout 1");
         int n = highlightedFields.size();
         int initialHeight = currentField.getHeight();
-        for(int i = 0; i <= n; i++){
-            int h = boardService.getField(i, gameId).getHeight();
-            if(h - initialHeight > 0){
+        for(int i = 0; i <= highlightedFields.size(); i++) {
+            System.out.println("Iterator: " + highlightedFields.size() + "  " + i);
+            if (i == highlightedFields.size()) {
+                int h1 = boardService.getField(highlightedFields.get(i - 1), gameId).getHeight();
+                if (h1 - initialHeight > 0) {
+                    highlightedFields.remove(i-1);
+                    System.out.println("Highlightedfields: " + highlightedFields.size());
+                }
+            }
+            else{
+            int h = boardService.getField(highlightedFields.get(i), gameId).getHeight();
+            if (h - initialHeight > 0) {
                 highlightedFields.remove(i);
-                System.out.println("Highlightedfields: "+highlightedFields.size());
-            } }
-        long playerId = currentField.getOccupier().getPlayerId();
-        currentField.getOccupier().setGodCard(GodCards.InactiveAthena);
+                System.out.println("Highlightedfields: " + highlightedFields.size());
+            }
+            }
+        }
+
+        currentFieldAthena.getOccupier().setGodCard(GodCards.InactiveAthena);
         System.out.println("Checkpoint3");
 
         return new ResponseEntity<List<Integer>>(highlightedFields, HttpStatus.OK);
