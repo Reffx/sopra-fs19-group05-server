@@ -7,9 +7,7 @@ import ch.uzh.ifi.seal.soprafs19.controller.DuplicateException;
 import ch.uzh.ifi.seal.soprafs19.controller.FullLobbyException;
 import ch.uzh.ifi.seal.soprafs19.controller.NonExistentGameException;
 import ch.uzh.ifi.seal.soprafs19.constant.GodCards;
-import ch.uzh.ifi.seal.soprafs19.entity.Game;
-import ch.uzh.ifi.seal.soprafs19.entity.Player;
-import ch.uzh.ifi.seal.soprafs19.entity.WorkerNormal;
+import ch.uzh.ifi.seal.soprafs19.entity.*;
 import ch.uzh.ifi.seal.soprafs19.repository.*;
 import org.apache.catalina.util.ResourceSet;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.management.InstanceAlreadyExistsException;
+import java.util.List;
 import java.util.Random;
 
 @Service
@@ -254,10 +253,33 @@ public class GameService {
     //  delete a game. when player1 exit
     public ResponseEntity<String> deleteGame(Long gameId) {
         Game currentGame = gameRepository.getById(gameId);
+
         if(gameRepository.getById(gameId)== null){
             throw new NonExistentGameException("The game you want to delete couldn't be found in the repository!");
         }
+        //check if players are actually in game and not in lobby
+        if(currentGame.getGameStatus() != GameStatus.Start){
+          Board currentBoard = boardRepository.getById(gameId);
+          List<Field> allFields = currentBoard.getAllFields();
+          //iterate over field objects to set the occupiers null if there is one
+          for( int i = 0; i <= 24; ++i){
+              if(allFields.get(i).getOccupier() != null){
+                  allFields.get(i).setOccupier(null);
+              }
+          }
+          //delete the board
+          boardRepository.deleteById(gameId);
+          //delete workers from repo
+          workerNormalRepository.deleteById(currentGame.getPlayer1().getWorker1().getWorkerId());
+          workerNormalRepository.deleteById(currentGame.getPlayer1().getWorker2().getWorkerId());
+          workerNormalRepository.deleteById(currentGame.getPlayer2().getWorker1().getWorkerId());
+          workerNormalRepository.deleteById(currentGame.getPlayer2().getWorker2().getWorkerId());
 
+          //delete players from player repo
+            playerRepository.deleteById(currentGame.getPlayer1().getId());
+            playerRepository.deleteById(currentGame.getPlayer2().getId());
+
+        }
         gameRepository.deleteById(gameId);
         return new ResponseEntity<String>(HttpStatus.OK); // response code: 204
     }
@@ -265,7 +287,6 @@ public class GameService {
     public ResponseEntity<String> assignGodCard(String godCard, long playerId){
         WorkerNormal worker1 = playerService.getPlayer(playerId).getWorker1();
         WorkerNormal worker2 = playerService.getPlayer(playerId).getWorker2();
-        //TODO: godCard == "Pan" didn't work, isequal or equals solved this problem
         if(godCard.equals("Pan")){
             worker1.setGodCard(GodCards.Pan);
             worker2.setGodCard(GodCards.Pan);
