@@ -143,6 +143,9 @@ public class WorkerService {
                     restrictLikeAthena(highlightedFields, gameId, currentField, boardService.getField(player2.getWorker2().getPosition(), gameId));
                 }
             }
+            if(movingWorker.getGodCard().equals(GodCards.None) && movingWorker.getOldPosition() != -1){
+                highlightedFields.remove(new Integer(movingWorker.getOldPosition()));
+                }
         }
         return new ResponseEntity<List<Integer>>(highlightedFields, HttpStatus.OK);
     }
@@ -243,6 +246,11 @@ public class WorkerService {
                 movingWorker.setPosition(destination.getFieldNum());
                 currentField.setOccupier(null);
             }
+            if(movingWorker.getGodCard().equals(GodCards.None)){
+                destination.setOccupier(movingWorker);
+                movingWorker.setPosition(destination.getFieldNum());
+                currentField.setOccupier(null);
+            }
             if(movingWorker.getGodCard().equals(GodCards.Pan)){
                 destination.setOccupier(movingWorker);
                 movingWorker.setPosition(destination.getFieldNum());
@@ -253,11 +261,32 @@ public class WorkerService {
                 movingWorker.setPosition(destination.getFieldNum());
                 currentField.setOccupier(null);
             }
-
+            if(movingWorker.getGodCard().equals(GodCards.Artemis)){
+                destination.setOccupier(movingWorker);
+                movingWorker.setPosition(destination.getFieldNum());
+                currentField.setOccupier(null);
+            }
+            //check for game status and GodMode --> differentiation between GodCards afterwards
             if (currentGame.getGameStatus() == GameStatus.Move1 && currentGame.getGameMode().equals(GameMode.GOD)) {
+
+                if(!movingWorker.getGodCard().equals(GodCards.Artemis))
                 currentGame.setGameStatus(GameStatus.Build1);
-            } else if (currentGame.getGameStatus() == GameStatus.Move2 && currentGame.getGameMode().equals(GameMode.GOD)) {
-                currentGame.setGameStatus(GameStatus.Build2);
+                //if Artemis is activated, set GameStatus to Move1 again because Artemis enables double movement
+                else{
+                    currentGame.setGameStatus(GameStatus.Move1);
+                    movingWorker.setGodCard(GodCards.None);
+                }
+            }
+            else if (currentGame.getGameStatus() == GameStatus.Move2 && currentGame.getGameMode().equals(GameMode.GOD)) {
+
+                if(!movingWorker.getGodCard().equals(GodCards.Artemis))
+                    currentGame.setGameStatus(GameStatus.Build2);
+                //if Artemis is activated, set GameStatus to Move1 again because Artemis enables double movement
+                else{
+                    currentGame.setGameStatus(GameStatus.Move2);
+                    movingWorker.setOldPosition(currentField.getFieldNum());
+                    movingWorker.setGodCard(GodCards.None);
+                }
             }
         }
         else {
