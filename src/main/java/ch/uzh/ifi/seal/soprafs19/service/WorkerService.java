@@ -337,35 +337,32 @@ public class WorkerService {
             currentGame.setGameStatus(GameStatus.Move1);
         }
         // check for god mode and current game status, update it accordingly
-        if (currentGame.getGameStatus() == GameStatus.Build1 && currentGame.getGameMode().equals(GameMode.GOD) && !buildingWorker.getGodCard().equals(GodCards.Demeter)) {
+        if(currentGame.getGameMode().equals(GameMode.GOD)){
+        if (currentGame.getGameStatus() == GameStatus.Build1 && !buildingWorker.getGodCard().equals(GodCards.Demeter)) {
             currentGame.setGameStatus(GameStatus.Move2);
         }
-        else if (currentGame.getGameStatus() == GameStatus.Build2  && currentGame.getGameMode().equals(GameMode.GOD)  && !buildingWorker.getGodCard().equals(GodCards.Demeter)) {
+        else if (currentGame.getGameStatus() == GameStatus.Build2  && !buildingWorker.getGodCard().equals(GodCards.Demeter)) {
             currentGame.setGameStatus(GameStatus.Move1);
         }
         System.out.println("Checkpoint 2");
         // DA: if godCard Atlas activated just set height to 4 //
-        if(currentGame.getGameMode().equals(GameMode.GOD)){
             System.out.println("Checkpoint if god ");
             if (buildingWorker.getGodCard().equals(GodCards.Atlas)) {
                 currentField.setHeight(4);
+                buildingWorker.setGodCard(GodCards.InactiveAtlas);
                 System.out.println("Checkpoint3");
             }
             //check for Demeter --> change to second building phase
-            if(buildingWorker.getGodCard().equals(GodCards.Demeter) && currentGame.getGameStatus().equals(GameStatus.Build1)){
+            if (buildingWorker.getGodCard().equals(GodCards.Demeter) && currentGame.getGameStatus().equals(GameStatus.Build1)) {
                 currentGame.setGameStatus(GameStatus.Build1);
                 buildingWorker.setBuildingPosition(fieldNum);
                 buildingWorker.setGodCard(GodCards.InactiveDemeter);
-                currentField.setHeight(h+1);
+                currentField.setHeight(h + 1);
             }
-            if(buildingWorker.getGodCard().equals(GodCards.Demeter) && currentGame.getGameStatus().equals(GameStatus.Build2)){
+            if (buildingWorker.getGodCard().equals(GodCards.Demeter) && currentGame.getGameStatus().equals(GameStatus.Build2)) {
                 currentGame.setGameStatus(GameStatus.Build2);
                 buildingWorker.setBuildingPosition(fieldNum);
                 buildingWorker.setGodCard(GodCards.InactiveDemeter);
-                currentField.setHeight(h+1);
-            }
-            else {
-                System.out.println("checkpoint 4");
                 currentField.setHeight(h + 1);
             }
         }
@@ -439,11 +436,11 @@ public class WorkerService {
                                 if (fieldToPush.getOccupier() == null && fieldToPush.getHeight() != 4) {
                                     highlightFields.add(isFieldOccupied.getFieldNum());
                                     highlightFields.remove(initialField.getFieldNum());
-                                } }}}
+                                } }}
                     // DA: if apollo, all condition already check --> add field to list
-                    else if (currentField.getOccupier().getGodCard().equals(GodCards.Apollo)) {
-                        highlightFields.add(isFieldOccupied.getFieldNum());
-                    } } } }
+                            else if (currentField.getOccupier().getGodCard().equals(GodCards.Apollo)) {
+                                highlightFields.add(isFieldOccupied.getFieldNum());
+                    } } } }}
         return new ResponseEntity<List<Integer>>(highlightFields, HttpStatus.OK);
     }
 }

@@ -299,6 +299,12 @@ public class GameService {
             workerNormalRepository.save(worker1);
             workerNormalRepository.save(worker2);
         }
+        if(godCard.equals("InactiveArtemis")){
+            worker1.setGodCard(GodCards.InactiveArtemis);
+            worker2.setGodCard(GodCards.InactiveArtemis);
+            workerNormalRepository.save(worker1);
+            workerNormalRepository.save(worker2);
+        }
         if(godCard.equals("Apollo")) {
             worker1.setGodCard(GodCards.Apollo);
             worker2.setGodCard(GodCards.Apollo);
@@ -308,6 +314,12 @@ public class GameService {
         if(godCard.equals("Atlas")) {
             worker1.setGodCard(GodCards.Atlas);
             worker2.setGodCard(GodCards.Atlas);
+            workerNormalRepository.save(worker1);
+            workerNormalRepository.save(worker2);
+        }
+        if(godCard.equals("InactiveAtlas")) {
+            worker1.setGodCard(GodCards.InactiveAtlas);
+            worker2.setGodCard(GodCards.InactiveAtlas);
             workerNormalRepository.save(worker1);
             workerNormalRepository.save(worker2);
         }
@@ -326,6 +338,42 @@ public class GameService {
         if(godCard.equals("Athena")){
             worker1.setGodCard(GodCards.InactiveAthena);
             worker2.setGodCard(GodCards.InactiveAthena);
+            workerNormalRepository.save(worker1);
+            workerNormalRepository.save(worker2);
+        }
+        if(godCard.equals("Hephaestus")) {
+            worker1.setGodCard(GodCards.Hephaestus);
+            worker2.setGodCard(GodCards.Hephaestus);
+            workerNormalRepository.save(worker1);
+            workerNormalRepository.save(worker2);
+        }
+        if(godCard.equals("InactiveHephaestus")) {
+            worker1.setGodCard(GodCards.InactiveHephaestus);
+            worker2.setGodCard(GodCards.InactiveHephaestus);
+            workerNormalRepository.save(worker1);
+            workerNormalRepository.save(worker2);
+        }
+        if(godCard.equals("Hermes")) {
+            worker1.setGodCard(GodCards.Hermes);
+            worker2.setGodCard(GodCards.Hermes);
+            workerNormalRepository.save(worker1);
+            workerNormalRepository.save(worker2);
+        }
+        if(godCard.equals("InactiveHermes")) {
+            worker1.setGodCard(GodCards.InactiveHermes);
+            worker2.setGodCard(GodCards.InactiveHermes);
+            workerNormalRepository.save(worker1);
+            workerNormalRepository.save(worker2);
+        }
+        if(godCard.equals("Prometheus")) {
+            worker1.setGodCard(GodCards.Prometheus);
+            worker2.setGodCard(GodCards.Prometheus);
+            workerNormalRepository.save(worker1);
+            workerNormalRepository.save(worker2);
+        }
+        if(godCard.equals("InactivePrometheus")) {
+            worker1.setGodCard(GodCards.InactivePrometheus);
+            worker2.setGodCard(GodCards.InactivePrometheus);
             workerNormalRepository.save(worker1);
             workerNormalRepository.save(worker2);
         }
