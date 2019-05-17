@@ -10,7 +10,6 @@ import ch.uzh.ifi.seal.soprafs19.constant.GodCards;
 import ch.uzh.ifi.seal.soprafs19.entity.*;
 import ch.uzh.ifi.seal.soprafs19.repository.*;
 import org.apache.catalina.util.ResourceSet;
-import org.aspectj.apache.bcel.util.Play;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -288,7 +287,6 @@ public class GameService {
     public ResponseEntity<String> assignGodCard(String godCard, long playerId){
         WorkerNormal worker1 = playerService.getPlayer(playerId).getWorker1();
         WorkerNormal worker2 = playerService.getPlayer(playerId).getWorker2();
-
         if(godCard.equals("Pan")){
             worker1.setGodCard(GodCards.Pan);
             worker2.setGodCard(GodCards.Pan);
@@ -370,17 +368,8 @@ public class GameService {
         if(godCard.equals("Prometheus")) {
             worker1.setGodCard(GodCards.Prometheus);
             worker2.setGodCard(GodCards.Prometheus);
-            Long gameId = playerService.getPlayer(playerId).getGameId();
-            Game currentGame = gameRepository.getById(gameId);
-            if(currentGame.getGameStatus().equals(GameStatus.Move1)){
-                currentGame.setGameStatus(GameStatus.Build1);
-            }
-            else if(currentGame.getGameStatus().equals(GameStatus.Move2)){
-                currentGame.setGameStatus(GameStatus.Build2);
-            }
             workerNormalRepository.save(worker1);
             workerNormalRepository.save(worker2);
-            gameRepository.save(currentGame);
         }
         if(godCard.equals("InactivePrometheus")) {
             worker1.setGodCard(GodCards.InactivePrometheus);
