@@ -382,11 +382,11 @@ public class WorkerService {
                 currentGame.setGameStatus(GameStatus.Move2);
             }
             //Hephaestus if condition cannot be entered because the status gets changed here to move2 //
-            if (currentGame.getGameStatus() == GameStatus.Build1 && !buildingWorker.getGodCard().equals(GodCards.Demeter)) {
+            if (currentGame.getGameStatus() == GameStatus.Build1 && !buildingWorker.getGodCard().equals(GodCards.Demeter) && !buildingWorker.getGodCard().equals(GodCards.Hephaestus)) {
                 currentGame.setGameStatus(GameStatus.Move2);
                 System.out.println("Check if condition is triggered"+currentGame.getGameStatus());
             }
-            else if (currentGame.getGameStatus() == GameStatus.Build2  && !buildingWorker.getGodCard().equals(GodCards.Demeter)) {
+            else if (currentGame.getGameStatus() == GameStatus.Build2  && !buildingWorker.getGodCard().equals(GodCards.Demeter) && !buildingWorker.getGodCard().equals(GodCards.Hephaestus)) {
                 currentGame.setGameStatus(GameStatus.Move1);
             }
 
