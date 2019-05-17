@@ -365,6 +365,10 @@ public class WorkerService {
                 buildingWorker.setGodCard(GodCards.InactiveDemeter);
                 currentField.setHeight(h + 1);
             }
+            else{
+                System.out.println("Checkpoint 5");
+                currentField.setHeight(h + 1);
+            }
         }
         else {
             System.out.println("Checkpoint 5");
