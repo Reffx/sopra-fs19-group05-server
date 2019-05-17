@@ -19,7 +19,6 @@ public class WorkerNormal{
     private boolean isWinner = false;
     private int oldPosition = -1;
     private int buildingPosition = -1;
-    private int oldbuildingPosition = -1;
 
 
     public void setIsWinner(boolean isWinner) {
@@ -62,14 +61,6 @@ public class WorkerNormal{
 
     public int getBuildingPosition() {
         return buildingPosition;
-    }
-
-    public void setOldbuildingPosition(int oldbuildingPosition) {
-        this.oldbuildingPosition = oldbuildingPosition;
-    }
-
-    public int getOldbuildingPosition() {
-        return oldbuildingPosition;
     }
 
     public void setBuildingPosition(int buildingPosition) {
