@@ -18,6 +18,7 @@ public class WorkerNormal{
     private GodCards godCard;
     private boolean isWinner = false;
     private int oldPosition = -1;
+    private int buildingPosition = -1;
 
 
     public void setIsWinner(boolean isWinner) {
@@ -56,6 +57,14 @@ public class WorkerNormal{
 
     public void setOldPosition(int oldPosition) {
         this.oldPosition = oldPosition;
+    }
+
+    public int getBuildingPosition() {
+        return buildingPosition;
+    }
+
+    public void setBuildingPosition(int buildingPosition) {
+        this.buildingPosition = buildingPosition;
     }
 
     public GodCards getGodCard() { return godCard;
