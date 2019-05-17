@@ -376,13 +376,12 @@ public class WorkerService {
         int h = currentField.getHeight();
         System.out.println("Checkpoint 1");
         // check for normal mode and current game status
-        if(currentGame.getGameStatus().equals(GameMode.NORMAL)){
-            if (currentGame.getGameStatus() == GameStatus.Build1) {
-
+        if(currentGame.getGameMode().equals(GameMode.NORMAL)){
+            if (currentGame.getGameStatus().equals(GameStatus.Build1)) {
                 currentGame.setGameStatus(GameStatus.Move2);
             }
         // check for normal mode and current game status
-            else if (currentGame.getGameStatus() == GameStatus.Build2 ) {
+            else if (currentGame.getGameStatus().equals(GameStatus.Build2 )) {
                 currentGame.setGameStatus(GameStatus.Move1);
             }
             currentField.setHeight(h + 1);
@@ -465,7 +464,7 @@ public class WorkerService {
                 currentField.setHeight(h+1);
             }
             }
-
+        gameRepository.save(currentGame);
         boardService.updateBoard(board);
         return new ResponseEntity<String>(HttpStatus.OK);
     }
