@@ -58,23 +58,13 @@ public class WorkerService {
             Game currentGame = gameService.getGame(gameId).getBody();
             workerNormalRepository.save(placingWorker);
             gameRepository.save(currentGame);
-            if (currentGame.getPlayer1().getWorker1() == placingWorker && currentGame.getPlayer1().getWorker2().getPosition() == -1) {
-                currentGame.setGameStatus(GameStatus.Move1);
-            } else if (currentGame.getPlayer1().getWorker2() == placingWorker && currentGame.getPlayer1().getWorker1().getPosition() == -1) {
-                currentGame.setGameStatus(GameStatus.Move1);
-            } else if (currentGame.getPlayer1().getWorker1().getPosition() != -1 && currentGame.getPlayer1().getWorker2().getPosition() != -1
-                    && currentGame.getPlayer2().getWorker1().getPosition() == -1 && currentGame.getPlayer2().getWorker2().getPosition() == -1) {
+            if(currentGame.getGameStatus().equals(GameStatus.Move1) && currentGame.getPlayer1().getWorker1().getPosition() != -1
+            && currentGame.getPlayer1().getWorker2().getPosition() != -1){
                 currentGame.setGameStatus(GameStatus.Move2);
-            } else if (currentGame.getPlayer2().getWorker1() == placingWorker && currentGame.getPlayer2().getWorker2().getPosition() == -1) {
-                currentGame.setGameStatus(GameStatus.Move2);
-            } else if (currentGame.getPlayer2().getWorker2() == placingWorker && currentGame.getPlayer2().getWorker1().getPosition() == -1) {
-                currentGame.setGameStatus(GameStatus.Move2);
-            } else if (currentGame.getPlayer2().getWorker1().getPosition() != -1 && currentGame.getPlayer2().getWorker2().getPosition() != -1
-                    && currentGame.getPlayer1().getWorker1().getPosition() == -1 && currentGame.getPlayer1().getWorker2().getPosition() == -1) {
-                currentGame.setGameStatus(GameStatus.Move1);
             }
-            else{
-                currentGame.setGameStatus(GameStatus.Move2);
+            else if(currentGame.getGameStatus().equals(GameStatus.Move2) && currentGame.getPlayer2().getWorker1().getPosition() !=-1
+            && currentGame.getPlayer2().getWorker2().getPosition() != -1){
+                currentGame.setGameStatus(GameStatus.Move1);
             }
             boardService.updateBoard(board);
             playerRepository.save(currentGame.getPlayer1());
