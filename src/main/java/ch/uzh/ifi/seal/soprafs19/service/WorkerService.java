@@ -193,7 +193,7 @@ public class WorkerService {
                     } } } }
         if(gameService.getGame(gameId).equals(GameMode.GOD)) {
 
-            if (buildingWorker.getGodCard().equals(GodCards.InactiveDemeter) && buildingWorker.getBuildingPosition() != -1) {
+            if (buildingWorker.getGodCard().equals(GodCards.Demeter) && buildingWorker.getBuildingPosition() != -1) {
                 highlightedFields.remove(new Integer(buildingWorker.getBuildingPosition()));
             } }
         return new ResponseEntity<List<Integer>>(highlightedFields, HttpStatus.OK);
@@ -362,12 +362,16 @@ public class WorkerService {
         int h = currentField.getHeight();
         System.out.println("Checkpoint 1");
         // check for normal mode and current game status
-        if (currentGame.getGameStatus() == GameStatus.Build1 && currentGame.getGameMode().equals(GameMode.NORMAL)) {
-            currentGame.setGameStatus(GameStatus.Move2);
-        }
+        if(currentGame.getGameStatus().equals(GameMode.NORMAL)){
+            if (currentGame.getGameStatus() == GameStatus.Build1) {
+
+                currentGame.setGameStatus(GameStatus.Move2);
+            }
         // check for normal mode and current game status
-        else if (currentGame.getGameStatus() == GameStatus.Build2  && currentGame.getGameMode().equals(GameMode.NORMAL)) {
-            currentGame.setGameStatus(GameStatus.Move1);
+            else if (currentGame.getGameStatus() == GameStatus.Build2 ) {
+                currentGame.setGameStatus(GameStatus.Move1);
+            }
+            currentField.setHeight(h + 1);
         }
         // check for god mode and current game status, update it accordingly
         if(currentGame.getGameMode().equals(GameMode.GOD)){
@@ -392,7 +396,9 @@ public class WorkerService {
 
             // DA: if godCard Atlas activated just set height to 4 //
             if (buildingWorker.getGodCard().equals(GodCards.Atlas)) {
-                currentField.setHeight(4);
+                System.out.println("Atlas here, got triggered");
+                currentField.setHeight(h=3);
+                System.out.println(currentField.getHeight());
                 buildingWorker.setGodCard(GodCards.InactiveAtlas);
                 System.out.println("Checkpoint3");
             }
@@ -422,29 +428,24 @@ public class WorkerService {
                     buildingWorker.setGodCard(GodCards.InactiveHephaestus);
                     currentGame.setGameStatus(GameStatus.Move2);
                 } }
-            if(buildingWorker.getGodCard().equals(GodCards.Hephaestus) && currentGame.getGameStatus().equals(GameStatus.Build2)){
+            if(buildingWorker.getGodCard().equals(GodCards.Hephaestus) && currentGame.getGameStatus().equals(GameStatus.Build2)) {
                 System.out.println("Hephaestus 2 check");
-                if(currentField.getHeight() < 2){
+                if (currentField.getHeight() < 2) {
                     currentField.setHeight(h + 2);
                     buildingWorker.setGodCard(GodCards.InactiveHephaestus);
                     currentGame.setGameStatus(GameStatus.Move1);
-                }
-                else {
+                } else {
                     System.out.println("Hephaestus 3 check");
                     currentField.setHeight(h + 1);
                     buildingWorker.setGodCard(GodCards.InactiveHephaestus);
                     currentGame.setGameStatus(GameStatus.Move1);
-                } }
+                }
+            }
             else{
-                System.out.println("Hephaestus 4 check"+buildingWorker.getGodCard());
-                System.out.println("Checkpoint 5");
-                currentField.setHeight(h + 1);
-            }}
-        else {
-            System.out.println("Checkpoint 5");
-            currentField.setHeight(h + 1);
-        }
-        System.out.println("Checkpoitn6");
+                currentField.setHeight(h+1);
+            }
+            }
+
         boardService.updateBoard(board);
         return new ResponseEntity<String>(HttpStatus.OK);
     }
@@ -475,7 +476,13 @@ public class WorkerService {
         if(currentGame.getGameMode().equals(GameMode.GOD)) {
             if (winningWorker.getGodCard() == GodCards.Pan) {
                 if (h1 - h2 >= 2) {
-                    winningWorker.setIsWinner(true);
+                    if(currentGame.getPlayer1().getId() == winningWorker.getPlayerId()){
+                        currentGame.setGameStatus(GameStatus.Winner1);
+                    }
+                    else if(currentGame.getPlayer2().getId() == winningWorker.getPlayerId()){
+                        currentGame.setGameStatus(GameStatus.Winner2);
+                    }
+
 
                     return new ResponseEntity<Boolean>(winningWorker.getIsWinner(), HttpStatus.OK);
                 }
