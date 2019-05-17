@@ -428,6 +428,7 @@ public class WorkerService {
                 if(xToCheck <= 4 && yToCheck <= 4 && xToCheck >= 0 && yToCheck >= 0) {
                     Field isFieldOccupied = boardService.getField(coordsToId(xToCheck, yToCheck), gameId);
 
+
                     if (isFieldOccupied.getOccupier() != null && currentPlayersId != isFieldOccupied.getOccupier().getPlayerId()) {
                         // DA: if minotaur, additionally check if occupied field is no border field +
                         // check if field to which opponents worker is pushed to is neither occupied nor has a dome //
@@ -439,11 +440,13 @@ public class WorkerService {
                                 if (fieldToPush.getOccupier() == null && fieldToPush.getHeight() != 4) {
                                     highlightFields.add(isFieldOccupied.getFieldNum());
                                     highlightFields.remove(initialField.getFieldNum());
-                                } }}}
+                                } }}
+
                     // DA: if apollo, all condition already check --> add field to list
                     else if (currentField.getOccupier().getGodCard().equals(GodCards.Apollo)) {
                         highlightFields.add(isFieldOccupied.getFieldNum());
-                    } } } }
+
+                    } } }} }
         return new ResponseEntity<List<Integer>>(highlightFields, HttpStatus.OK);
     }
 }
