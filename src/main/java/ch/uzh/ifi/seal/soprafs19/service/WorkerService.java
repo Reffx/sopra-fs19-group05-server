@@ -165,7 +165,7 @@ public class WorkerService {
                     System.out.println("Highlightedfields: " + highlightedFields.size());
                 } } }
         if(currentFieldAthena != null) {
-            currentFieldAthena.getOccupier().setGodCard(GodCards.InactiveAthena);
+            gameService.assignGodCard("InactiveAthena", currentFieldAthena.getOccupier().getPlayerId());
             System.out.println("Checkpoint3");
         }
         return new ResponseEntity<List<Integer>>(highlightedFields, HttpStatus.OK);
@@ -262,7 +262,7 @@ public class WorkerService {
             // if worker moved up set inactive to active //
             if (movingWorker.getGodCard().equals(GodCards.InactiveAthena)) {
                 if (destination.getHeight() - currentField.getHeight() > 0) {
-                    movingWorker.setGodCard(GodCards.Athena);
+                    gameService.assignGodCard("Athena", movingWorker.getPlayerId());
                 }
                 destination.setOccupier(movingWorker);
                 movingWorker.setPosition(destination.getFieldNum());
@@ -415,7 +415,7 @@ public class WorkerService {
                 System.out.println("Atlas here, got triggered");
                 currentField.setHeight(h=3);
                 System.out.println(currentField.getHeight());
-                buildingWorker.setGodCard(GodCards.InactiveAtlas);
+                gameService.assignGodCard("InactiveAtlas", buildingWorker.getPlayerId());
                 System.out.println("Checkpoint3");
             }
             //check for Demeter Build1 --> change to second building phase, set old and current building position to fieldnum
@@ -438,25 +438,25 @@ public class WorkerService {
                 System.out.println("Hephaestus check");
                 if(currentField.getHeight() < 2){
                     currentField.setHeight(h + 2);
-                    buildingWorker.setGodCard(GodCards.InactiveHephaestus);
+                    gameService.assignGodCard("InactiveHephaestus", buildingWorker.getPlayerId());
                     currentGame.setGameStatus(GameStatus.Move2);
                 }
                 else {
                     System.out.println("Hephaestus 1 check");
                     currentField.setHeight(h + 1);
-                    buildingWorker.setGodCard(GodCards.InactiveHephaestus);
+                    gameService.assignGodCard("InactiveHephaestus", buildingWorker.getPlayerId());
                     currentGame.setGameStatus(GameStatus.Move2);
                 } }
             if(buildingWorker.getGodCard().equals(GodCards.Hephaestus) && currentGame.getGameStatus().equals(GameStatus.Build2)) {
                 System.out.println("Hephaestus 2 check");
                 if (currentField.getHeight() < 2) {
                     currentField.setHeight(h + 2);
-                    buildingWorker.setGodCard(GodCards.InactiveHephaestus);
+                    gameService.assignGodCard("InactiveHephaestus", buildingWorker.getPlayerId());
                     currentGame.setGameStatus(GameStatus.Move1);
                 } else {
                     System.out.println("Hephaestus 3 check");
                     currentField.setHeight(h + 1);
-                    buildingWorker.setGodCard(GodCards.InactiveHephaestus);
+                    gameService.assignGodCard("InactiveHephaestus", buildingWorker.getPlayerId());
                     currentGame.setGameStatus(GameStatus.Move1);
                 }
             }
