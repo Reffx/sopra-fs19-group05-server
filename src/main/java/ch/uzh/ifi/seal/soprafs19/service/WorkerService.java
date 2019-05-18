@@ -207,35 +207,47 @@ public class WorkerService {
         Field destination = boardService.getField(dest, gameId);
         Game currentGame = gameService.getGame(gameId).getBody();
         // DA: if condition for all god cards which enable to move to an occupied field //
-        if(currentGame.getGameMode().equals(GameMode.GOD)) {
-            if(movingWorker.getGodCard().equals(GodCards.Hermes)){
-                destination.setOccupier(movingWorker);
-                movingWorker.setPosition(destination.getFieldNum());
-                currentField.setOccupier(null);
-                if(destination.getHeight() - currentField.getHeight() == 0){
-                    if(currentGame.getGameStatus().equals(GameStatus.Move1)){
+        //moving for normal mode
+        if(currentGame.getGameMode().equals(GameMode.NORMAL)) {
+            destination.setOccupier(movingWorker);
+            movingWorker.setPosition(destination.getFieldNum());
+            currentField.setOccupier(null);
+            if (currentGame.getGameStatus() == GameStatus.Move1 && currentGame.getGameMode().equals(GameMode.NORMAL)) {
+                currentGame.setGameStatus(GameStatus.Build1);
+            } else if (currentGame.getGameStatus() == GameStatus.Move2 && currentGame.getGameMode().equals(GameMode.NORMAL)) {
+                currentGame.setGameStatus(GameStatus.Build2);
+            }
+        }
+            //moving for god mode, difference between god cards considered
+        else if(currentGame.getGameMode().equals(GameMode.GOD)) {
+            destination.setOccupier(movingWorker);
+            movingWorker.setPosition(destination.getFieldNum());
+            currentField.setOccupier(null);
+            //HERMES:
+            if (movingWorker.getGodCard().equals(GodCards.Hermes)) {
+                if (destination.getHeight() - currentField.getHeight() == 0) {
+                    if (currentGame.getGameStatus().equals(GameStatus.Move1)) {
                         currentGame.setGameStatus(GameStatus.Move1);
-                    }
-                    else if(currentGame.getGameStatus().equals(GameStatus.Move2)){
+                    } else if (currentGame.getGameStatus().equals(GameStatus.Move2)) {
                         currentGame.setGameStatus(GameStatus.Move2);
-                    } }
-                else {
-                    if(currentGame.getGameStatus().equals(GameStatus.Move1)){
-                        currentGame.setGameStatus(GameStatus.Build1);
                     }
-                    else if(currentGame.getGameStatus().equals(GameStatus.Move2)){
+                } else {
+                    if (currentGame.getGameStatus().equals(GameStatus.Move1)) {
+                        currentGame.setGameStatus(GameStatus.Build1);
+                    } else if (currentGame.getGameStatus().equals(GameStatus.Move2)) {
                         currentGame.setGameStatus(GameStatus.Build2);
-                    } } }
-            else if (movingWorker.getGodCard().equals(GodCards.InactiveHermes)){
-                destination.setOccupier(movingWorker);
-                movingWorker.setPosition(destination.getFieldNum());
-                currentField.setOccupier(null);
-                if(currentGame.getGameStatus().equals(GameStatus.Move1)){
-                    currentGame.setGameStatus(GameStatus.Build1);
+                    }
                 }
-                else if(currentGame.getGameStatus().equals(GameStatus.Move2)){
+            }
+            //INACTIVE HERMES:
+            else if (movingWorker.getGodCard().equals(GodCards.InactiveHermes)) {
+                if (currentGame.getGameStatus().equals(GameStatus.Move1)) {
+                    currentGame.setGameStatus(GameStatus.Build1);
+                } else if (currentGame.getGameStatus().equals(GameStatus.Move2)) {
                     currentGame.setGameStatus(GameStatus.Build2);
-                } }
+                }
+            }
+            // APOLLO / MINOTAUR
             if (movingWorker.getGodCard().equals(GodCards.Apollo) || movingWorker.getGodCard().equals(GodCards.Minotaur)) {
                 if (destination.getOccupier() != null) {
                     if (movingWorker.getGodCard().equals(GodCards.Apollo)) {
@@ -252,111 +264,62 @@ public class WorkerService {
                         pushField.setOccupier(pushWorker);
                         currentField.setOccupier(null);
                         destination.setOccupier(movingWorker);
-                    } }
+                    }
+                }
                 // DA: else, when field to move to is not occupied //
-                else {
-                    destination.setOccupier(movingWorker);
-                    movingWorker.setPosition(destination.getFieldNum());
-                    currentField.setOccupier(null);
-                } }
+            }
             // if worker moved up set inactive to active //
+            // INACTIVE ATHENA:
             if (movingWorker.getGodCard().equals(GodCards.InactiveAthena)) {
                 if (destination.getHeight() - currentField.getHeight() > 0) {
                     gameService.assignGodCard("Athena", movingWorker.getPlayerId());
                 }
+            }
+            if (movingWorker.getGodCard().equals(GodCards.Prometheus)) {
                 destination.setOccupier(movingWorker);
                 movingWorker.setPosition(destination.getFieldNum());
                 currentField.setOccupier(null);
+                gameService.assignGodCard("InactivePrometheus", movingWorker.getPlayerId());
+                if (currentGame.getGameStatus().equals(GameStatus.Build1)) {
+                    currentGame.setGameStatus(GameStatus.Move1);
+                } else if (currentGame.getGameStatus().equals(GameStatus.Build2)) {
+                    currentGame.setGameStatus(GameStatus.Move2);
+                }
             }
-            if(movingWorker.getGodCard().equals(GodCards.InactiveArtemis) || movingWorker.getGodCard().equals(GodCards.Artemis)){
-                destination.setOccupier(movingWorker);
-                movingWorker.setPosition(destination.getFieldNum());
-                currentField.setOccupier(null);
-            }
-            if(movingWorker.getGodCard().equals(GodCards.Pan)){
-                destination.setOccupier(movingWorker);
-                movingWorker.setPosition(destination.getFieldNum());
-                currentField.setOccupier(null);
-            }
-            if (movingWorker.getGodCard().equals(GodCards.Atlas) || movingWorker.getGodCard().equals(GodCards.InactiveAtlas)){
-                destination.setOccupier(movingWorker);
-                movingWorker.setPosition(destination.getFieldNum());
-                currentField.setOccupier(null);
-            }
+            if (currentGame.getGameStatus().equals(GameStatus.Move1)) {
+                //SPECIAL CONDITIONS FOR ARTEMIS AND PROMETHEUS
+                if (!movingWorker.getGodCard().equals(GodCards.Artemis) && !movingWorker.getGodCard().equals(GodCards.Prometheus)) {
+                    currentGame.setGameStatus(GameStatus.Build1);
+                    movingWorker.setPosition(dest);
+                    movingWorker.setOldPosition(dest);
+                    System.out.println("Current Position/OldPosition " + movingWorker.getPosition() + "  " + movingWorker.getOldPosition());
+                }
+                //if Artemis is activated, set GameStatus to Move1 again because Artemis enables double movement
+                else {
+                    currentGame.setGameStatus(GameStatus.Move1);
+                    movingWorker.setOldPosition(currentField.getFieldNum());
+                    gameService.assignGodCard("InactiveArtemis", movingWorker.getPlayerId());
+                    System.out.println("Current Position/OldPosition " + movingWorker.getPosition() + "  " + movingWorker.getOldPosition());
+                }
+            } else if (currentGame.getGameStatus().equals(GameStatus.Move2)) {
 
-            // setting destination for demeter active
-            if(movingWorker.getGodCard().equals(GodCards.Demeter) || movingWorker.getGodCard().equals(GodCards.InactiveDemeter)){
-                destination.setOccupier(movingWorker);
-                movingWorker.setPosition(destination.getFieldNum());
-                currentField.setOccupier(null);
-            } }
-        if(movingWorker.getGodCard().equals(GodCards.Hephaestus) || movingWorker.getGodCard().equals(GodCards.InactiveHephaestus)){
-            destination.setOccupier(movingWorker);
-            movingWorker.setPosition(destination.getFieldNum());
-            currentField.setOccupier(null);
-        }
-        if(movingWorker.getGodCard().equals(GodCards.Prometheus)){
-            destination.setOccupier(movingWorker);
-            movingWorker.setPosition(destination.getFieldNum());
-            currentField.setOccupier(null);
-            gameService.assignGodCard("InactivePrometheus", movingWorker.getPlayerId());
-            if(currentGame.getGameStatus().equals(GameStatus.Build1)){
-                currentGame.setGameStatus(GameStatus.Move1);
-            }
-            else if(currentGame.getGameStatus().equals(GameStatus.Build2)){
-                currentGame.setGameStatus(GameStatus.Move2);
+                if (!movingWorker.getGodCard().equals(GodCards.Artemis) && !movingWorker.getGodCard().equals(GodCards.Prometheus)) {
+                    //if inactive artemis set old position = destination and current position = destination
+                    currentGame.setGameStatus(GameStatus.Build2);
+                    movingWorker.setPosition(dest);
+                    movingWorker.setOldPosition(dest);
+                }
+                //if Artemis is activated, set GameStatus to Move1 again because Artemis enables double movement
+                else {
+                    //if artemis active, set old position = current position to check later for highlight fields if current and old postion
+                    //are different
+                    currentGame.setGameStatus(GameStatus.Move2);
+                    movingWorker.setOldPosition(currentField.getFieldNum());
+                    gameService.assignGodCard("InactiveArtemis", movingWorker.getPlayerId());
+                }
             }
         }
-        if(movingWorker.getGodCard().equals(GodCards.InactivePrometheus)){
-            destination.setOccupier(movingWorker);
-            movingWorker.setPosition(destination.getFieldNum());
-            currentField.setOccupier(null);
-        }
-        //check for game status and GodMode --> differentiation between GodCards afterwards
-        if (currentGame.getGameStatus().equals(GameStatus.Move1) && currentGame.getGameMode().equals(GameMode.GOD)) {
 
-            if(!movingWorker.getGodCard().equals(GodCards.Artemis) && !movingWorker.getGodCard().equals(GodCards.Prometheus)) {
-                currentGame.setGameStatus(GameStatus.Build1);
-                movingWorker.setPosition(dest);
-                movingWorker.setOldPosition(dest);
-                System.out.println("Current Position/OldPosition "+movingWorker.getPosition()+"  "+movingWorker.getOldPosition());
-            }
-            //if Artemis is activated, set GameStatus to Move1 again because Artemis enables double movement
-            else{
-                currentGame.setGameStatus(GameStatus.Move1);
-                movingWorker.setOldPosition(currentField.getFieldNum());
-                gameService.assignGodCard("InactiveArtemis",movingWorker.getPlayerId());
-                System.out.println("Current Position/OldPosition "+movingWorker.getPosition()+"  "+movingWorker.getOldPosition());
-            }
-
-        }
-        else if (currentGame.getGameStatus().equals(GameStatus.Move2) && currentGame.getGameMode().equals(GameMode.GOD)) {
-
-            if(!movingWorker.getGodCard().equals(GodCards.Artemis) && !movingWorker.getGodCard().equals(GodCards.Prometheus)) {
-                //if inactive artemis set old position = destination and current position = destination
-                currentGame.setGameStatus(GameStatus.Build2);
-                movingWorker.setPosition(dest);
-                movingWorker.setOldPosition(dest);
-            }
-            //if Artemis is activated, set GameStatus to Move1 again because Artemis enables double movement
-            else {
-                //if artemis active, set old position = current position to check later for highlight fields if current and old postion
-                //are different
-                currentGame.setGameStatus(GameStatus.Move2);
-                movingWorker.setOldPosition(currentField.getFieldNum());
-                gameService.assignGodCard("InactiveArtemis",movingWorker.getPlayerId());
-            }
-        }
-        else {
-            destination.setOccupier(movingWorker);
-            movingWorker.setPosition(destination.getFieldNum());
-            currentField.setOccupier(null);
-            if (currentGame.getGameStatus() == GameStatus.Move1 && currentGame.getGameMode().equals(GameMode.NORMAL)) {
-                currentGame.setGameStatus(GameStatus.Build1);
-            } else if (currentGame.getGameStatus() == GameStatus.Move2 && currentGame.getGameMode().equals(GameMode.NORMAL)) {
-                currentGame.setGameStatus(GameStatus.Build2);
-            }
-        }
 
         gameRepository.save(currentGame);
         workerNormalRepository.save(movingWorker);
