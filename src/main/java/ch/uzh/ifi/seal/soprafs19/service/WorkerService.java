@@ -315,14 +315,14 @@ public class WorkerService {
         //check for game status and GodMode --> differentiation between GodCards afterwards
         if (currentGame.getGameStatus().equals(GameStatus.Move1) && currentGame.getGameMode().equals(GameMode.GOD)) {
 
-            if(!movingWorker.getGodCard().equals(GodCards.Artemis) && !movingWorker.getGodCard().equals(GodCards.Prometheus)) {
+            if(movingWorker.getGodCard().equals(GodCards.InactiveArtemis) || movingWorker.getGodCard().equals(GodCards.InactivePrometheus)  || !movingWorker.getGodCard().equals(GodCards.Hermes) && !movingWorker.getGodCard().equals(GodCards.Artemis)) {
                 currentGame.setGameStatus(GameStatus.Build1);
                 movingWorker.setPosition(dest);
                 movingWorker.setOldPosition(dest);
                 System.out.println("Current Position/OldPosition "+movingWorker.getPosition()+"  "+movingWorker.getOldPosition());
             }
             //if Artemis is activated, set GameStatus to Move1 again because Artemis enables double movement
-            else{
+            else if(movingWorker.getGodCard().equals(GodCards.Artemis) || movingWorker.getGodCard().equals(GodCards.Prometheus) ){
                 currentGame.setGameStatus(GameStatus.Move1);
                 movingWorker.setOldPosition(currentField.getFieldNum());
                 gameService.assignGodCard("InactiveArtemis",movingWorker.getPlayerId());
@@ -332,14 +332,14 @@ public class WorkerService {
         }
         else if (currentGame.getGameStatus().equals(GameStatus.Move2) && currentGame.getGameMode().equals(GameMode.GOD)) {
 
-            if(!movingWorker.getGodCard().equals(GodCards.Artemis) && !movingWorker.getGodCard().equals(GodCards.Prometheus)) {
+            if(movingWorker.getGodCard().equals(GodCards.InactiveArtemis) || movingWorker.getGodCard().equals(GodCards.InactivePrometheus)  || !movingWorker.getGodCard().equals(GodCards.Hermes) && !movingWorker.getGodCard().equals(GodCards.Artemis)) {
                 //if inactive artemis set old position = destination and current position = destination
                 currentGame.setGameStatus(GameStatus.Build2);
                 movingWorker.setPosition(dest);
                 movingWorker.setOldPosition(dest);
             }
             //if Artemis is activated, set GameStatus to Move1 again because Artemis enables double movement
-            else {
+            else if(movingWorker.getGodCard().equals(GodCards.Artemis) || movingWorker.getGodCard().equals(GodCards.Prometheus) ){
                 //if artemis active, set old position = current position to check later for highlight fields if current and old postion
                 //are different
                 currentGame.setGameStatus(GameStatus.Move2);
@@ -388,7 +388,7 @@ public class WorkerService {
         }
         // check for god mode and current game status, update it accordingly
         if(currentGame.getGameMode().equals(GameMode.GOD)){
-
+            currentField.setHeight(h+1);
             //Prometheus moving condition//
             if(buildingWorker.getGodCard().equals(GodCards.Prometheus) && currentGame.getGameStatus().equals(GameStatus.Build1)){
                 currentField.setHeight(h + 1);
@@ -413,7 +413,7 @@ public class WorkerService {
             // DA: if godCard Atlas activated just set height to 4 //
             if (buildingWorker.getGodCard().equals(GodCards.Atlas)) {
                 System.out.println("Atlas here, got triggered");
-                currentField.setHeight(h=3);
+                currentField.setHeight(h=4);
                 System.out.println(currentField.getHeight());
                 gameService.assignGodCard("InactiveAtlas", buildingWorker.getPlayerId());
                 System.out.println("Checkpoint3");
@@ -460,10 +460,9 @@ public class WorkerService {
                     currentGame.setGameStatus(GameStatus.Move1);
                 }
             }
-            else{
-                currentField.setHeight(h+1);
-            }
+
         }
+
         gameRepository.save(currentGame);
         boardService.updateBoard(board);
         return new ResponseEntity<String>(HttpStatus.OK);
