@@ -165,7 +165,7 @@ public class WorkerService {
                     System.out.println("Highlightedfields: " + highlightedFields.size());
                 } } }
         if(currentFieldAthena != null) {
-            gameService.assignGodCard("InactiveAthena", currentFieldAthena.getOccupier().getPlayerId());
+            gameService.assignGodCard("Athena", currentFieldAthena.getOccupier().getPlayerId());
             System.out.println("Checkpoint3");
         }
         return new ResponseEntity<List<Integer>>(highlightedFields, HttpStatus.OK);
@@ -271,8 +271,9 @@ public class WorkerService {
             // if worker moved up set inactive to active //
             // INACTIVE ATHENA:
             if (movingWorker.getGodCard().equals(GodCards.InactiveAthena)) {
+                System.out.println("Checkpoint InactiveAthena triggered!!!!!!!!!!!!!!!!!!!!!!!!!");
                 if (destination.getHeight() - currentField.getHeight() > 0) {
-                    gameService.assignGodCard("Athena", movingWorker.getPlayerId());
+                    gameService.assignGodCard("InactiveAthena", movingWorker.getPlayerId());
                 }
             }
             if (movingWorker.getGodCard().equals(GodCards.Prometheus)) {

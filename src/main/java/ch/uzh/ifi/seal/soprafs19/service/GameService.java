@@ -349,6 +349,12 @@ public class GameService {
             workerNormalRepository.save(worker1);
             workerNormalRepository.save(worker2);
         }
+        if(godCard.equals("InactiveAthena")){
+            worker1.setGodCard(GodCards.Athena);
+            worker2.setGodCard(GodCards.Athena);
+            workerNormalRepository.save(worker1);
+            workerNormalRepository.save(worker2);
+        }
         if(godCard.equals("Hephaestus")) {
             worker1.setGodCard(GodCards.Hephaestus);
             worker2.setGodCard(GodCards.Hephaestus);
