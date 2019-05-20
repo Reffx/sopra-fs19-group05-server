@@ -95,7 +95,7 @@ public class WorkerServiceTest {
         Assert.assertEquals(playerRepository.getById(player1ID).getWorker1().getPosition(), 6);
         Assert.assertEquals(boardService.getField(playerRepository.findByUsername("testPlayer91").getWorker1().getPosition(), gameTest.getId()).getOccupier().getWorkerId(), player1.getWorker1().getWorkerId());
 
-        Assert.assertEquals(gameRepository.getById(gameTest.getId()).getGameStatus(), GameStatus.Move1);
+        Assert.assertEquals(gameRepository.getById(gameTest.getId()).getGameStatus(), GameStatus.Start);
         Assert.assertNotEquals(gameRepository.getById(gameTest.getId()).getGameStatus(), GameStatus.Move2);
 
         gameRepository.deleteAll();
@@ -203,7 +203,7 @@ public class WorkerServiceTest {
         workerService.highlightFieldMove(5,tempGame1.getId());
         Assert.assertNotNull(workerService.highlightFieldMove(5,tempGame1.getId()));
 
-        workerService.build(tempGame1.getId(), 5);
+        workerService.build(tempGame1.getId(), 5, playerOne.getWorker1().getWorkerId() );
         Assert.assertEquals(boardService.getField(5,tempGame1.getId()).getHeight(), 1);
     }
 
