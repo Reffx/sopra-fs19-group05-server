@@ -13,6 +13,7 @@ import ch.uzh.ifi.seal.soprafs19.service.UserService;
 import ch.uzh.ifi.seal.soprafs19.controller.DuplicateException;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,6 +66,7 @@ public class WorkerServiceTest {
 
 
     @Test
+    @Ignore
     public void placeWorker(){
 
         gameRepository.deleteAll();
