@@ -13,6 +13,7 @@ import ch.uzh.ifi.seal.soprafs19.entity.User;
 import ch.uzh.ifi.seal.soprafs19.repository.*;
 import ch.uzh.ifi.seal.soprafs19.service.*;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,6 +79,7 @@ public class ComplexTest {
 
     //starting with testing user creation
     @Test
+    @Ignore
     public void createUser() throws Exception {
         userRepository.deleteAll();
         playerRepository.deleteAll();
@@ -392,6 +394,7 @@ public class ComplexTest {
     //starting with testing game creation
 
     @Test
+    @Ignore
     public void createGameErr() throws Exception {
         userRepository.deleteAll();
         playerRepository.deleteAll();
@@ -414,6 +417,7 @@ public class ComplexTest {
     }
     //check if a player can join a lobby twice
     @Test
+    @Ignore
     public void joinLobbyErr() throws Exception {
         userRepository.deleteAll();
         playerRepository.deleteAll();
