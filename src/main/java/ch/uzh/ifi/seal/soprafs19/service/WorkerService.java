@@ -14,6 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.persistence.criteria.CriteriaBuilder;
 import java.math.*;
 
 import java.util.ArrayList;
@@ -150,20 +152,18 @@ public class WorkerService {
     public ResponseEntity<List<Integer>> restrictLikeAthenaOrPrometheus(List<Integer> highlightedFields, long gameId, Field currentField, Field currentFieldAthena){
         System.out.println("Checkout 1");
         int initialHeight = currentField.getHeight();
-        for(int i = 0; i <= highlightedFields.size(); i++) {
-            System.out.println("Iterator: " + highlightedFields.size() + "  " + i);
-            if (i == highlightedFields.size()) {
-                int h1 = boardService.getField(highlightedFields.get(i - 1), gameId).getHeight();
-                if (h1 - initialHeight > 0) {
-                    highlightedFields.remove(i-1);
-                    System.out.println("Highlightedfields: " + highlightedFields.size());
-                } }
-            else{
-                int h = boardService.getField(highlightedFields.get(i), gameId).getHeight();
-                if (h - initialHeight > 0) {
-                    highlightedFields.remove(i);
-                    System.out.println("Highlightedfields: " + highlightedFields.size());
-                } } }
+        List<Integer> copyHighlightedFields = new ArrayList<Integer>(highlightedFields);
+
+
+        for(int i = 0; i < copyHighlightedFields.size(); i++){
+            System.out.println(copyHighlightedFields.size());
+            Field toRemove = boardService.getField(copyHighlightedFields.get(i), gameId);
+            int h = toRemove.getHeight();
+
+            if(h - initialHeight > 0){
+                highlightedFields.remove(new Integer(toRemove.getFieldNum()));
+            }
+        }
         if(currentFieldAthena != null) {
             gameService.assignGodCard("Athena", currentFieldAthena.getOccupier().getPlayerId());
             System.out.println("Checkpoint3");
