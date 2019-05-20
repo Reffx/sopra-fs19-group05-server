@@ -613,8 +613,38 @@ public class GameServiceTest {
         Assert.assertEquals(workerNormalRepository.findById(player1.getWorker1().getWorkerId()).getGodCard(), GodCards.Pan);
         gameService.assignGodCard("Artemis", player1.getId());
         Assert.assertEquals(workerNormalRepository.findById(player1.getWorker1().getWorkerId()).getGodCard(), GodCards.Artemis);
+        gameService.assignGodCard("InactiveArtemis", player1.getId());
+        Assert.assertEquals(workerNormalRepository.findById(player1.getWorker1().getWorkerId()).getGodCard(), GodCards.InactiveArtemis);
         gameService.assignGodCard("Demeter", player1.getId());
         Assert.assertEquals(workerNormalRepository.findById(player1.getWorker1().getWorkerId()).getGodCard(), GodCards.Demeter);
+        gameService.assignGodCard("InactiveDemeter", player1.getId());
+        Assert.assertEquals(workerNormalRepository.findById(player1.getWorker1().getWorkerId()).getGodCard(), GodCards.InactiveDemeter);
+        gameService.assignGodCard("Hermes", player1.getId());
+        Assert.assertEquals(workerNormalRepository.findById(player1.getWorker1().getWorkerId()).getGodCard(), GodCards.Hermes);
+        gameService.assignGodCard("InactiveHermes", player1.getId());
+        Assert.assertEquals(workerNormalRepository.findById(player1.getWorker1().getWorkerId()).getGodCard(), GodCards.InactiveHermes);
+        gameService.assignGodCard("Apollo", player1.getId());
+        Assert.assertEquals(workerNormalRepository.findById(player1.getWorker1().getWorkerId()).getGodCard(), GodCards.Apollo);
+        gameService.assignGodCard("Athena", player1.getId());
+        Assert.assertEquals(workerNormalRepository.findById(player1.getWorker1().getWorkerId()).getGodCard(), GodCards.InactiveAthena);
+        gameService.assignGodCard("InactiveAthena", player1.getId());
+        Assert.assertEquals(workerNormalRepository.findById(player1.getWorker1().getWorkerId()).getGodCard(), GodCards.Athena);
+        gameService.assignGodCard("Hephaestus", player1.getId());
+        Assert.assertEquals(workerNormalRepository.findById(player1.getWorker1().getWorkerId()).getGodCard(), GodCards.Hephaestus);
+        gameService.assignGodCard("InactiveHephaestus", player1.getId());
+        Assert.assertEquals(workerNormalRepository.findById(player1.getWorker1().getWorkerId()).getGodCard(), GodCards.InactiveHephaestus);
+        gameService.assignGodCard("Atlas", player1.getId());
+        Assert.assertEquals(workerNormalRepository.findById(player1.getWorker1().getWorkerId()).getGodCard(), GodCards.Atlas);
+        gameService.assignGodCard("InactiveAtlas", player1.getId());
+        Assert.assertEquals(workerNormalRepository.findById(player1.getWorker1().getWorkerId()).getGodCard(), GodCards.InactiveAtlas);
+        gameService.assignGodCard("Minotaur", player1.getId());
+        Assert.assertEquals(workerNormalRepository.findById(player1.getWorker1().getWorkerId()).getGodCard(), GodCards.Minotaur);
+        gameService.assignGodCard("Prometheus", player1.getId());
+        Assert.assertEquals(workerNormalRepository.findById(player1.getWorker1().getWorkerId()).getGodCard(), GodCards.Prometheus);
+        gameService.assignGodCard("InactivePrometheus", player1.getId());
+        Assert.assertEquals(workerNormalRepository.findById(player1.getWorker1().getWorkerId()).getGodCard(), GodCards.InactivePrometheus);
+
+
         Assert.assertEquals(player1.getWorker1().getPosition(), -1);
         Assert.assertEquals(player1.getWorker2().getPosition(), -1);
 
@@ -648,5 +678,6 @@ public class GameServiceTest {
         Assert.assertEquals(gameTest.getGameStatus(), GameStatus.Winner2);
         Assert.assertEquals(gameRepository.getById(createdGame.getId()).getId(), createdGame.getId());
     }
+
 
 }
