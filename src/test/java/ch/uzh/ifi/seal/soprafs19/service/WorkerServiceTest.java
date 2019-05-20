@@ -66,7 +66,6 @@ public class WorkerServiceTest {
 
 
     @Test
-    @Ignore
     public void placeWorker(){
 
         gameRepository.deleteAll();

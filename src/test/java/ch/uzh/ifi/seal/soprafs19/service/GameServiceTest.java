@@ -327,7 +327,6 @@ public class GameServiceTest {
     }
 
     @Test(expected = FullLobbyException.class)
-    @Ignore
     public void joinLobbyErr(){
         Assert.assertNull(gameRepository.getById(1));
         Game testGame = new Game();
