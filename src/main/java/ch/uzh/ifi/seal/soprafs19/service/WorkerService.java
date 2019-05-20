@@ -220,9 +220,11 @@ public class WorkerService {
         }
         //moving for god mode, difference between god cards considered
         else if(currentGame.getGameMode().equals(GameMode.GOD)) {
-            destination.setOccupier(movingWorker);
-            movingWorker.setPosition(destination.getFieldNum());
-            currentField.setOccupier(null);
+            if(!movingWorker.getGodCard().equals(GodCards.Minotaur) && !movingWorker.getGodCard().equals(GodCards.Apollo)) {
+                destination.setOccupier(movingWorker);
+                movingWorker.setPosition(destination.getFieldNum());
+                currentField.setOccupier(null);
+            }
             //HERMES:
             if (movingWorker.getGodCard().equals(GodCards.Hermes)) {
                 if (destination.getHeight() - currentField.getHeight() == 0) {
@@ -251,9 +253,17 @@ public class WorkerService {
             if (movingWorker.getGodCard().equals(GodCards.Apollo) || movingWorker.getGodCard().equals(GodCards.Minotaur)) {
                 if (destination.getOccupier() != null) {
                     if (movingWorker.getGodCard().equals(GodCards.Apollo)) {
+                        System.out.println("Check for Apollo: "+movingWorker.getPosition());
                         WorkerNormal tempWorker = destination.getOccupier();
                         destination.setOccupier(movingWorker);
                         currentField.setOccupier(tempWorker);
+                        if(currentGame.getGameStatus().equals(GameStatus.Move1)){
+                            currentGame.setGameStatus(GameStatus.Build1);
+                        }
+                        else if(currentGame.getGameStatus().equals(GameStatus.Move2)){
+                            currentGame.setGameStatus(GameStatus.Build2);
+                        }
+                        System.out.println("Check for Apollo 2  "+movingWorker.getPosition() + " "+ tempWorker.getPosition());
                     }
                     if (movingWorker.getGodCard().equals(GodCards.Minotaur)) {
                         int x = destination.getX_coordinate() + (destination.getX_coordinate() - currentField.getX_coordinate());
@@ -261,12 +271,31 @@ public class WorkerService {
                         Field pushField = boardService.getField(coordsToId(x, y), gameId);
                         WorkerNormal pushWorker = destination.getOccupier();
 
+                        System.out.println("Check for Minotaur: "+movingWorker.getPosition());
+
                         pushField.setOccupier(pushWorker);
                         currentField.setOccupier(null);
                         destination.setOccupier(movingWorker);
+                        System.out.println("Check for Minotaur 2"+movingWorker.getPosition() + " "+ pushWorker.getPosition());
+                        if(currentGame.getGameStatus().equals(GameStatus.Move1)){
+                            currentGame.setGameStatus(GameStatus.Build1);
+                        }
+                        else if(currentGame.getGameStatus().equals(GameStatus.Move2)){
+                            currentGame.setGameStatus(GameStatus.Build2);
+                        }
                     }
                 }
-                // DA: else, when field to move to is not occupied //
+                else if(destination.getOccupier() == null){
+                    destination.setOccupier(movingWorker);
+                    movingWorker.setPosition(destination.getFieldNum());
+                    currentField.setOccupier(null);
+                    if(currentGame.getGameStatus().equals(GameStatus.Move1)){
+                        currentGame.setGameStatus(GameStatus.Build1);
+                    }
+                    else if(currentGame.getGameStatus().equals(GameStatus.Move2)){
+                        currentGame.setGameStatus(GameStatus.Build2);
+                    }
+                }
             }
             // if worker moved up set inactive to active //
             // INACTIVE ATHENA:
@@ -289,7 +318,7 @@ public class WorkerService {
             }
             if (currentGame.getGameStatus().equals(GameStatus.Move1)) {
                 //SPECIAL CONDITIONS FOR ARTEMIS AND PROMETHEUS
-                if(movingWorker.getGodCard().equals(GodCards.InactiveArtemis) || movingWorker.getGodCard().equals(GodCards.InactivePrometheus)  || !movingWorker.getGodCard().equals(GodCards.Hermes) && !movingWorker.getGodCard().equals(GodCards.Artemis)) {
+                if(movingWorker.getGodCard().equals(GodCards.InactiveArtemis) || movingWorker.getGodCard().equals(GodCards.InactivePrometheus)  || (!movingWorker.getGodCard().equals(GodCards.Hermes) && !movingWorker.getGodCard().equals(GodCards.Artemis)) && !movingWorker.getGodCard().equals(GodCards.Apollo) && !movingWorker.getGodCard().equals(GodCards.Minotaur)) {
                     currentGame.setGameStatus(GameStatus.Build1);
                     movingWorker.setPosition(dest);
                     movingWorker.setOldPosition(dest);
@@ -304,7 +333,7 @@ public class WorkerService {
                 }
             } else if (currentGame.getGameStatus().equals(GameStatus.Move2)) {
 
-                if(movingWorker.getGodCard().equals(GodCards.InactiveArtemis) || movingWorker.getGodCard().equals(GodCards.InactivePrometheus)  || !movingWorker.getGodCard().equals(GodCards.Hermes) && !movingWorker.getGodCard().equals(GodCards.Artemis)) {
+                if(movingWorker.getGodCard().equals(GodCards.InactiveArtemis) || movingWorker.getGodCard().equals(GodCards.InactivePrometheus)  || (!movingWorker.getGodCard().equals(GodCards.Hermes) && !movingWorker.getGodCard().equals(GodCards.Artemis)) && !movingWorker.getGodCard().equals(GodCards.Apollo) && !movingWorker.getGodCard().equals(GodCards.Minotaur)) {
                     //if inactive artemis set old position = destination and current position = destination
                     currentGame.setGameStatus(GameStatus.Build2);
                     movingWorker.setPosition(dest);
@@ -323,7 +352,7 @@ public class WorkerService {
 
 
         gameRepository.save(currentGame);
-        workerNormalRepository.save(movingWorker);
+
 
         WinningCondition(gameId, currentField.getFieldNum(), dest, workerId);
 
@@ -499,7 +528,7 @@ public class WorkerService {
                                 Field fieldToPush = boardService.getField(coordsToId(pushToXCoordinate, pushToYCoordinate), gameId);
                                 if (fieldToPush.getOccupier() == null && fieldToPush.getHeight() != 4) {
                                     highlightFields.add(isFieldOccupied.getFieldNum());
-                                    highlightFields.remove(initialField.getFieldNum());
+                                    highlightFields.remove(new Integer(initialField.getFieldNum()));
                                 } }}
 
                         // DA: if apollo, all condition already check --> add field to list
