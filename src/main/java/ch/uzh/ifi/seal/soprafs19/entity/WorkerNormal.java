@@ -2,7 +2,6 @@ package ch.uzh.ifi.seal.soprafs19.entity;
 
 import ch.uzh.ifi.seal.soprafs19.constant.GodCards;
 
-import javax.persistence.Embeddable;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -11,7 +10,7 @@ import javax.persistence.Id;
 public class WorkerNormal{
     @Id
     @GeneratedValue
-    private int workerId ;  // worker1 or worker2 --> DA: better to just have workers 1 - 4, we can check which belongs to who with the attribute playerId //
+    private int workerId ;
     private long playerId;
     private int position = -1;
     private boolean isNext = false;
@@ -19,7 +18,7 @@ public class WorkerNormal{
     private boolean isWinner = false;
     private int oldPosition = -1;
     private int buildingPosition = -1;
-    private int oldbuildingPosition = -1;
+    private int oldBuildingPosition = -1;
 
 
     public void setIsWinner(boolean isWinner) {
@@ -64,12 +63,12 @@ public class WorkerNormal{
         return buildingPosition;
     }
 
-    public void setOldbuildingPosition(int oldbuildingPosition) {
-        this.oldbuildingPosition = oldbuildingPosition;
+    public void setOldBuildingPosition(int oldBuildingPosition) {
+        this.oldBuildingPosition = oldBuildingPosition;
     }
 
-    public int getOldbuildingPosition() {
-        return oldbuildingPosition;
+    public int getOldBuildingPosition() {
+        return oldBuildingPosition;
     }
 
     public void setBuildingPosition(int buildingPosition) {
@@ -83,11 +82,4 @@ public class WorkerNormal{
         this.godCard = godCard;
     }
 
-    public boolean isNext() {
-        return isNext;
-    }
-
-    public void setNext(boolean next) {
-        isNext = next;
-    }
 }

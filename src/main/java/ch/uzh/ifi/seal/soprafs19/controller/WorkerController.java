@@ -1,9 +1,6 @@
 package ch.uzh.ifi.seal.soprafs19.controller;
 
-import ch.uzh.ifi.seal.soprafs19.entity.Game;
-import ch.uzh.ifi.seal.soprafs19.entity.Player;
-import ch.uzh.ifi.seal.soprafs19.entity.Field;
-import ch.uzh.ifi.seal.soprafs19.entity.WorkerNormal;
+
 import ch.uzh.ifi.seal.soprafs19.service.WorkerService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
