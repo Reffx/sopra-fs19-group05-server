@@ -4,7 +4,7 @@ import ch.uzh.ifi.seal.soprafs19.Application;
 import ch.uzh.ifi.seal.soprafs19.constant.UserStatus;
 import ch.uzh.ifi.seal.soprafs19.entity.User;
 import ch.uzh.ifi.seal.soprafs19.repository.UserRepository;
-import ch.uzh.ifi.seal.soprafs19.controller.NonExistentUserException;
+
 import ch.uzh.ifi.seal.soprafs19.controller.DuplicateException;
 import org.junit.Assert;
 import org.junit.Test;
