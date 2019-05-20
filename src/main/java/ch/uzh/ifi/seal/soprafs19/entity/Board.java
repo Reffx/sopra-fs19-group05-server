@@ -1,8 +1,5 @@
 package ch.uzh.ifi.seal.soprafs19.entity;
 
-
-import ch.uzh.ifi.seal.soprafs19.repository.GameRepository;
-
 import java.io.Serializable;
 import java.util.List;
 import javax.persistence.*;

@@ -1,11 +1,9 @@
 package ch.uzh.ifi.seal.soprafs19.entity;
 
-import net.bytebuddy.dynamic.loading.InjectionClassLoader;
-import org.hibernate.annotations.Target;
 
 import java.io.Serializable;
 import javax.persistence.*;
-import java.util.List;
+
 
 
 

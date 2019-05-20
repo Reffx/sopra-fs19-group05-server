@@ -31,17 +31,16 @@ public class WorkerService {
     private final WorkerNormalRepository workerNormalRepository;
     private final GameRepository gameRepository;
     private final PlayerRepository playerRepository;
-    private final RecordService recordService;
+
 
     @Autowired
-    public WorkerService(WorkerNormalRepository workerNormalRepository, PlayerService playerService, BoardService boardService, GameService gameService, GameRepository gameRepository, PlayerRepository playerRepository, RecordService recordService) {
+    public WorkerService(WorkerNormalRepository workerNormalRepository, PlayerService playerService, BoardService boardService, GameService gameService, GameRepository gameRepository, PlayerRepository playerRepository) {
         this.playerService = playerService;
         this.boardService = boardService;
         this.gameService = gameService;
         this.workerNormalRepository = workerNormalRepository;
         this.gameRepository = gameRepository;
         this.playerRepository = playerRepository;
-        this.recordService = recordService;
     }
 
 
@@ -73,8 +72,6 @@ public class WorkerService {
             workerNormalRepository.save(placingWorker);
             gameRepository.save(currentGame);
 
-            //  do recording
-            recordService.addState(gameId, board);
 
             return new ResponseEntity<Integer>(dest, HttpStatus.OK);
         } else {
@@ -194,7 +191,7 @@ public class WorkerService {
         if(gameRepository.getById(gameId).getGameMode().equals(GameMode.GOD)) {
             //check if demeter is inactive and if old building position is equal to current buidling position
             //if true remove the current building position from the highlight list
-            if (buildingWorker.getGodCard().equals(GodCards.InactiveDemeter) && buildingWorker.getBuildingPosition() == buildingWorker.getOldbuildingPosition()) {
+            if (buildingWorker.getGodCard().equals(GodCards.InactiveDemeter) && buildingWorker.getBuildingPosition() == buildingWorker.getOldBuildingPosition()) {
                 highlightedFields.remove(new Integer(buildingWorker.getBuildingPosition()));
             } }
         return new ResponseEntity<List<Integer>>(highlightedFields, HttpStatus.OK);
@@ -421,7 +418,7 @@ public class WorkerService {
             if (buildingWorker.getGodCard().equals(GodCards.Demeter) && currentGame.getGameStatus().equals(GameStatus.Build1)) {
                 currentGame.setGameStatus(GameStatus.Build1);
                 buildingWorker.setBuildingPosition(fieldNum);
-                buildingWorker.setOldbuildingPosition(fieldNum);
+                buildingWorker.setOldBuildingPosition(fieldNum);
                 gameService.assignGodCard("InactiveDemeter", buildingWorker.getPlayerId());
                 currentField.setHeight(h + 1);
             }
@@ -429,7 +426,7 @@ public class WorkerService {
             if (buildingWorker.getGodCard().equals(GodCards.Demeter) && currentGame.getGameStatus().equals(GameStatus.Build2)) {
                 currentGame.setGameStatus(GameStatus.Build2);
                 buildingWorker.setBuildingPosition(fieldNum);
-                buildingWorker.setOldbuildingPosition(fieldNum);
+                buildingWorker.setOldBuildingPosition(fieldNum);
                 gameService.assignGodCard("InactiveDemeter", buildingWorker.getPlayerId());
                 currentField.setHeight(h + 1);
             }
@@ -486,8 +483,6 @@ public class WorkerService {
             }
             winningWorker.setIsWinner(true);
 
-            //  DO RECORDING
-            recordService.findById(gameId).setIsDone(true);
             return new ResponseEntity<Boolean>(winningWorker.getIsWinner(), HttpStatus.OK);
         }
         if(currentGame.getGameMode().equals(GameMode.GOD)) {
@@ -499,12 +494,8 @@ public class WorkerService {
                     else if(currentGame.getPlayer2().getId() == winningWorker.getPlayerId()){
                         currentGame.setGameStatus(GameStatus.Winner2);
                     }
-
-
                     return new ResponseEntity<Boolean>(winningWorker.getIsWinner(), HttpStatus.OK);
-                }
-            }
-        }
+                } } }
         return new ResponseEntity<Boolean>(false, HttpStatus.OK);
     }
 

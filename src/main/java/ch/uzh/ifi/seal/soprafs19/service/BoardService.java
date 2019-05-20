@@ -4,7 +4,6 @@ import ch.uzh.ifi.seal.soprafs19.controller.NonExistentGameException;
 import ch.uzh.ifi.seal.soprafs19.repository.BoardRepository;
 import ch.uzh.ifi.seal.soprafs19.repository.GameRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ch.uzh.ifi.seal.soprafs19.entity.Field;
@@ -17,17 +16,15 @@ import java.util.List;
 @Transactional
 public class BoardService {
     private final BoardRepository boardRepository;
-    private final FieldService fieldService;
     private final GameRepository gameRepository;
-    private final RecordService recordService;
+
 
     @Autowired
-    public BoardService(BoardRepository boardRepository, FieldService fieldService, GameRepository gameRepository, RecordService recordService) {
+    public BoardService(BoardRepository boardRepository, GameRepository gameRepository) {
 
         this.boardRepository = boardRepository;
-        this.fieldService = fieldService;
         this.gameRepository = gameRepository;
-        this.recordService = recordService;
+
     }
 
     public Board initBoard(Long gameId) {
@@ -61,10 +58,6 @@ public class BoardService {
         }
 
         boardRepository.save(tempBoard);
-
-        // do recording
-        recordService.addState(newBoard.getId(), newBoard);
-
         return newBoard;
     }
 
@@ -79,7 +72,6 @@ public class BoardService {
         else{
             //  do recording
             Board newBoard = initBoard(gameId);
-            recordService.addState(gameId, newBoard);
             return newBoard;
         }
     }

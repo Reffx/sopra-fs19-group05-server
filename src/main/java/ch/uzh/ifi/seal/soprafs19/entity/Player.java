@@ -1,11 +1,9 @@
 package ch.uzh.ifi.seal.soprafs19.entity;
 
 import ch.uzh.ifi.seal.soprafs19.constant.Color;
-import org.hibernate.annotations.Target;
-import org.hibernate.sql.Insert;
+
 
 import java.io.Serializable;
-import java.util.List;
 import javax.persistence.*;
 
 @Entity
@@ -29,47 +27,12 @@ public class Player implements Serializable {
     @Column
     private String username;
 
-    //TODO: create attribute myTurn: true or false for Frontend, otherwise they dont know which player's turn it is
 
-    //  add worker1 and worker2 for player
-   /* @Embedded
-    @AttributeOverrides({
-            @AttributeOverride(name = "id", column = @Column(name = "workerId_1")),
-            @AttributeOverride(name = "playerId", column = @Column(name = "playerId_1")),
-            @AttributeOverride(name = "position", column = @Column(name = "position_1"))
-    }) */
-    //TODO: change @ value to one to one and
     @OneToOne(targetEntity = WorkerNormal.class, cascade = CascadeType.ALL)
     private WorkerNormal worker1;
 
-   /* @Embedded
-    @AttributeOverrides({
-            @AttributeOverride(name = "id", column = @Column(name = "workerId_2")),
-            @AttributeOverride(name = "playerId", column = @Column(name = "playerId_2")),
-            @AttributeOverride(name = "position", column = @Column(name = "position_2"))
-    }) */
     @OneToOne(targetEntity = WorkerNormal.class, cascade = CascadeType.MERGE)
     private WorkerNormal worker2;
-
-    /*//  constructor1
-    public Player(Worker worker) {
-        this.worker1 = worker;
-        this.worker2 = worker;
-    } */
-
-      //constructor2 : set default as normal mode
-    public Player() {
-        /*
-        this.worker1 = new WorkerNormal();
-        //JUWE: set initial id value for worker 1 to 1
-        this.worker1.setId(1);
-        System.out.println(worker1.getId());
-        this.worker2 = new WorkerNormal();
-        //JUWE: set initial id value for worker 2 to 2
-        this.worker2.setId(2);
-        System.out.println(worker2.getId());*/
-    }
-
 
 
     public Long getId() {
