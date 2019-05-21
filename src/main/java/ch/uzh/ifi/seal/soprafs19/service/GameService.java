@@ -215,14 +215,25 @@ public class GameService {
 
     //  set player2 status
     public ResponseEntity<String> setStatus(Long gameId, Long playerId) {
+        Game currentGame = gameRepository.getById(gameId);
         if(playerRepository.getById(playerId) == null){
             return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
         }
-        Player player = playerService.getPlayer(playerId);
-        boolean status = player.getStatus();
-        player.setStatus(!status);  //  negation of the original status
+        if(currentGame.getGameStatus().equals(GameStatus.Move1)){
+        currentGame.setGameStatus(GameStatus.Build1);
+        }
+        if(currentGame.getGameStatus().equals(GameStatus.Move2)){
+            currentGame.setGameStatus(GameStatus.Build2);
+        }
+        if(currentGame.getGameStatus().equals(GameStatus.Build1)){
+            currentGame.setGameStatus(GameStatus.Move2);
+        }
+        if(currentGame.getGameStatus().equals(GameStatus.Build2)){
+            currentGame.setGameStatus(GameStatus.Move1);
+        }
 
-        playerService.savePlayer(player);
+        playerRepository.save(playerService.getPlayer(playerId));
+        gameRepository.save(gameRepository.getById(gameId));
         return new ResponseEntity<String>(HttpStatus.OK);
     }
 
