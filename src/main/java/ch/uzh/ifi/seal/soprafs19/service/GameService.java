@@ -232,12 +232,6 @@ public class GameService {
             if(currentGame.getGameStatus().equals(GameStatus.Move2)){
                 currentGame.setGameStatus(GameStatus.Build2);
             }
-            if(currentGame.getGameStatus().equals(GameStatus.Build1)){
-                currentGame.setGameStatus(GameStatus.Move2);
-            }
-            if(currentGame.getGameStatus().equals(GameStatus.Build2)){
-                currentGame.setGameStatus(GameStatus.Move1);
-            }
             gameRepository.save(currentGame);
         }
         return new ResponseEntity<String>(HttpStatus.OK);
