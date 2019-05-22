@@ -299,6 +299,8 @@ public class GameService {
     public ResponseEntity<String> assignGodCard(String godCard, long playerId){
         WorkerNormal worker1 = playerService.getPlayer(playerId).getWorker1();
         WorkerNormal worker2 = playerService.getPlayer(playerId).getWorker2();
+        Long gameId = playerService.getPlayer(playerId).getGameId();
+        Game currentGame = gameRepository.getById(gameId);
 
         if(godCard.equals("Pan")){
             worker1.setGodCard(GodCards.Pan);
@@ -387,14 +389,19 @@ public class GameService {
         if(godCard.equals("InactiveHermes")) {
             worker1.setGodCard(GodCards.InactiveHermes);
             worker2.setGodCard(GodCards.InactiveHermes);
+            if(currentGame.getGameStatus().equals(GameStatus.Move1)){
+                currentGame.setGameStatus(GameStatus.Build1);
+            }
+            else if(currentGame.getGameStatus().equals(GameStatus.Move2)){
+                currentGame.setGameStatus(GameStatus.Build2);
+            }
+            currentGame.setGameStatus(GameStatus.Build2);
             workerNormalRepository.save(worker1);
             workerNormalRepository.save(worker2);
         }
         if(godCard.equals("Prometheus")) {
             worker1.setGodCard(GodCards.Prometheus);
             worker2.setGodCard(GodCards.Prometheus);
-            Long gameId = playerService.getPlayer(playerId).getGameId();
-            Game currentGame = gameRepository.getById(gameId);
             if(currentGame.getGameStatus().equals(GameStatus.Move1)){
                 currentGame.setGameStatus(GameStatus.Build1);
             }
