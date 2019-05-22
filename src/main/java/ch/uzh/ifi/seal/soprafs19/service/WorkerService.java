@@ -7,6 +7,7 @@ import ch.uzh.ifi.seal.soprafs19.entity.*;
 import ch.uzh.ifi.seal.soprafs19.repository.GameRepository;
 import ch.uzh.ifi.seal.soprafs19.repository.PlayerRepository;
 import ch.uzh.ifi.seal.soprafs19.repository.WorkerNormalRepository;
+import org.hibernate.jdbc.Work;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -470,6 +471,14 @@ public class WorkerService {
         Game currentGame = gameRepository.getById(gameId);
 
         WorkerNormal winningWorker = workerNormalRepository.findById(workerId);
+        Player winningPlayer = playerRepository.getById(winningWorker.getPlayerId());
+        WorkerNormal winningWorker2;
+        if(winningWorker == winningPlayer.getWorker1()){
+            winningWorker2 = winningPlayer.getWorker2();
+        }
+        else {
+            winningWorker2 = winningPlayer.getWorker1();
+        }
 
         if (h1 == 2 && h2 == 3) {
 
@@ -495,11 +504,11 @@ public class WorkerService {
                     }
                     return new ResponseEntity<Boolean>(winningWorker.getIsWinner(), HttpStatus.OK);
                 } } }
-        if(highlightFieldMove(currentFieldNum, gameId).getBody().size() == 0){
-            if(currentGame.getPlayer1().getWorker1().getWorkerId() == workerId || currentGame.getPlayer1().getWorker2().getWorkerId() == workerId){
+        if(highlightFieldMove(winningWorker.getPosition(), gameId).getBody().size() == 0 && highlightFieldMove(winningWorker2.getPosition(), gameId).getBody().size() == 0){
+            if(currentGame.getGameStatus().equals(GameStatus.Move1)) {
                 currentGame.setGameStatus(GameStatus.Winner2);
             }
-            else {
+            else if(currentGame.getGameStatus().equals(GameStatus.Move2)){
                 currentGame.setGameStatus(GameStatus.Winner1);
             }
         }
