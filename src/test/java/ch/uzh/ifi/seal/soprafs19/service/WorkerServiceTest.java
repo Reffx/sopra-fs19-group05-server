@@ -213,6 +213,11 @@ public class WorkerServiceTest {
 
     @Test
     public void highlightMove(){
+        gameRepository.deleteAll();
+        userRepository.deleteAll();
+        boardRepository.deleteAll();
+        playerRepository.deleteAll();
+        workerNormalRepository.deleteAll();
         //setting up the a normal game without god cards
         Game testGame = setUpTestNormalGame();
 
@@ -241,8 +246,39 @@ public class WorkerServiceTest {
         checkList.add(12);
 
         Assert.assertEquals(workerService.highlightFieldMove(6, testGame.getId()).getBody(), checkList);
+    }
 
+    @Test
+    public void highlightBuild(){
+        gameRepository.deleteAll();
+        userRepository.deleteAll();
+        boardRepository.deleteAll();
+        playerRepository.deleteAll();
+        workerNormalRepository.deleteAll();
+        //setting up the a normal game without god cards
+        Game testGame = setUpTestNormalGame();
 
+        //checking the highlight function from different positions
+        ArrayList<Integer> checkList = new ArrayList<Integer>();
+
+        workerService.placeWorker(testGame.getId(), testGame.getPlayer1().getWorker1().getWorkerId(),1);
+
+        workerService.moveTo(testGame.getId(), testGame.getPlayer1().getWorker1().getWorkerId(),0);
+
+        checkList.add(1);
+        checkList.add(5);
+        checkList.add(6);
+
+        Assert.assertEquals(workerService.highlightFieldBuild(0, testGame.getId()).getBody(), checkList);
+
+        //building on field 1 to level 4 --> not possible to build further
+        workerService.build(testGame.getId(),1, testGame.getPlayer1().getWorker1().getWorkerId());
+        workerService.build(testGame.getId(),1, testGame.getPlayer1().getWorker1().getWorkerId());
+        workerService.build(testGame.getId(),1, testGame.getPlayer1().getWorker1().getWorkerId());
+        workerService.build(testGame.getId(),1, testGame.getPlayer1().getWorker1().getWorkerId());
+        // removing field 1 from check list
+        checkList.remove(0);
+        Assert.assertEquals(workerService.highlightFieldBuild(0, testGame.getId()).getBody(), checkList);
 
     }
 
