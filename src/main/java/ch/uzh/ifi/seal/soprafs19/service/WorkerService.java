@@ -134,7 +134,7 @@ public class WorkerService {
             if(movingWorker.getGodCard().equals(GodCards.InactiveArtemis) && movingWorker.getOldPosition() != movingWorker.getPosition()){
                 highlightedFields.remove(new Integer(movingWorker.getOldPosition()));
             }
-            if(movingWorker.getGodCard().equals(GodCards.Prometheus)){
+            if(movingWorker.getGodCard().equals(GodCards.Prometheus) || movingWorker.getGodCard().equals(GodCards.Hermes)){
                 restrictLikeAthenaOrPrometheus(highlightedFields, gameId, currentField, null);
             }
         }
@@ -495,6 +495,14 @@ public class WorkerService {
                     }
                     return new ResponseEntity<Boolean>(winningWorker.getIsWinner(), HttpStatus.OK);
                 } } }
+        if(highlightFieldMove(currentFieldNum, gameId).getBody().size() == 0){
+            if(currentGame.getPlayer1().getWorker1().getWorkerId() == workerId || currentGame.getPlayer1().getWorker2().getWorkerId() == workerId){
+                currentGame.setGameStatus(GameStatus.Winner2);
+            }
+            else {
+                currentGame.setGameStatus(GameStatus.Winner1);
+            }
+        }
         return new ResponseEntity<Boolean>(false, HttpStatus.OK);
     }
 
