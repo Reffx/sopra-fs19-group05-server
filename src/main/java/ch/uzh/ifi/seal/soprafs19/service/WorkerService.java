@@ -512,7 +512,7 @@ public class WorkerService {
                     }
                     return new ResponseEntity<Boolean>(winningWorker.getIsWinner(), HttpStatus.OK);
                 } } }
-        if(highlightFieldMove(winningWorker.getPosition(), gameId).getBody().size() == 0 && highlightFieldMove(winningWorker2.getPosition(), gameId).getBody().size() == 0){
+        if(highlightFieldMove(winningWorker.getPosition(), gameId).getBody().isEmpty() && highlightFieldMove(winningWorker2.getPosition(), gameId).getBody().isEmpty()){
             if(currentGame.getGameStatus().equals(GameStatus.Move1)) {
                 currentGame.setGameStatus(GameStatus.Winner2);
             }
