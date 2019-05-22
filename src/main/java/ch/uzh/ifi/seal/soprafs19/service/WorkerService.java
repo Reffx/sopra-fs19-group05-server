@@ -116,12 +116,12 @@ public class WorkerService {
                     Field currentFieldAthena = boardService.getField(player1.getWorker1().getPosition(), gameId);
                     System.out.println("worker 1 player 1has athena");
                     restrictLikeAthenaOrPrometheus(highlightedFields, gameId, currentField, currentFieldAthena);
-                    //gameService.assignGodCard("Athena", currentFieldAthena.getOccupier().getPlayerId());
+
                 }
                 else if (player1.getWorker2().getGodCard().equals(GodCards.Athena)){
                     Field currentFieldAthena = boardService.getField(player1.getWorker2().getPosition(), gameId);
                     restrictLikeAthenaOrPrometheus(highlightedFields, gameId, currentField, boardService.getField(player1.getWorker2().getPosition(), gameId));
-                    //gameService.assignGodCard("Athena", currentFieldAthena.getOccupier().getPlayerId());
+
                 }
                 gameRepository.save(game);
             }
@@ -131,13 +131,12 @@ public class WorkerService {
                     System.out.println("Check for Athena 2");
                     Field currentFieldAthena = boardService.getField(player2.getWorker1().getPosition(), gameId);
                     restrictLikeAthenaOrPrometheus(highlightedFields, gameId, currentField, currentFieldAthena);
-                    //gameService.assignGodCard("Athena", currentFieldAthena.getOccupier().getPlayerId());
+
                 }
                 else if (player2.getWorker2().getGodCard().equals(GodCards.Athena)){
                     System.out.println("Check for Athena 3");
                     Field currentFieldAthena = boardService.getField(player2.getWorker2().getPosition(), gameId);
                     restrictLikeAthenaOrPrometheus(highlightedFields, gameId, currentField, currentFieldAthena);
-                    //gameService.assignGodCard("Athena", currentFieldAthena.getOccupier().getPlayerId());
                 }
                 gameRepository.save(game);
             }
