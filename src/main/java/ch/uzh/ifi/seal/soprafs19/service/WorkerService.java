@@ -113,24 +113,33 @@ public class WorkerService {
             if(movingWorker.getPlayerId() != player1.getId()){
                 System.out.println("Checkpoint if player 2 is moving");
                 if(player1.getWorker1().getGodCard().equals(GodCards.Athena)){
+                    Field currentFieldAthena = boardService.getField(player1.getWorker1().getPosition(), gameId);
                     System.out.println("worker 1 player 1has athena");
-                    restrictLikeAthenaOrPrometheus(highlightedFields, gameId, currentField, boardService.getField(player1.getWorker1().getPosition(), gameId));
-                    System.out.println("resctriciton enabled");
+                    restrictLikeAthenaOrPrometheus(highlightedFields, gameId, currentField, currentFieldAthena);
+                    gameService.assignGodCard("Athena", currentFieldAthena.getOccupier().getPlayerId());
                 }
                 else if (player1.getWorker2().getGodCard().equals(GodCards.Athena)){
+                    Field currentFieldAthena = boardService.getField(player1.getWorker2().getPosition(), gameId);
                     restrictLikeAthenaOrPrometheus(highlightedFields, gameId, currentField, boardService.getField(player1.getWorker2().getPosition(), gameId));
+                    gameService.assignGodCard("Athena", currentFieldAthena.getOccupier().getPlayerId());
                 }
+                gameRepository.save(game);
             }
             if(movingWorker.getPlayerId() != player2.getId()) {
                 System.out.println("Check for Athena 1");
                 if(player2.getWorker1().getGodCard().equals(GodCards.Athena)){
                     System.out.println("Check for Athena 2");
-                    restrictLikeAthenaOrPrometheus(highlightedFields, gameId, currentField, boardService.getField(player2.getWorker1().getPosition(), gameId));
+                    Field currentFieldAthena = boardService.getField(player2.getWorker1().getPosition(), gameId);
+                    restrictLikeAthenaOrPrometheus(highlightedFields, gameId, currentField, currentFieldAthena);
+                    gameService.assignGodCard("Athena", currentFieldAthena.getOccupier().getPlayerId());
                 }
                 else if (player2.getWorker2().getGodCard().equals(GodCards.Athena)){
                     System.out.println("Check for Athena 3");
-                    restrictLikeAthenaOrPrometheus(highlightedFields, gameId, currentField, boardService.getField(player2.getWorker2().getPosition(), gameId));
+                    Field currentFieldAthena = boardService.getField(player2.getWorker2().getPosition(), gameId);
+                    restrictLikeAthenaOrPrometheus(highlightedFields, gameId, currentField, currentFieldAthena);
+                    gameService.assignGodCard("Athena", currentFieldAthena.getOccupier().getPlayerId());
                 }
+                gameRepository.save(game);
             }
             if(movingWorker.getGodCard().equals(GodCards.InactiveArtemis) && movingWorker.getOldPosition() != movingWorker.getPosition()){
                 highlightedFields.remove(new Integer(movingWorker.getOldPosition()));
@@ -158,7 +167,6 @@ public class WorkerService {
             }
         }
         if(currentFieldAthena != null) {
-            gameService.assignGodCard("Athena", currentFieldAthena.getOccupier().getPlayerId());
             System.out.println("Checkpoint3");
         }
         return new ResponseEntity<List<Integer>>(highlightedFields, HttpStatus.OK);
