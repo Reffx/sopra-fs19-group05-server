@@ -3,6 +3,7 @@ package ch.uzh.ifi.seal.soprafs19.service;
 import ch.uzh.ifi.seal.soprafs19.Application;
 import ch.uzh.ifi.seal.soprafs19.constant.GameMode;
 import ch.uzh.ifi.seal.soprafs19.constant.GameStatus;
+import ch.uzh.ifi.seal.soprafs19.constant.GodCards;
 import ch.uzh.ifi.seal.soprafs19.constant.UserStatus;
 import ch.uzh.ifi.seal.soprafs19.entity.Board;
 import ch.uzh.ifi.seal.soprafs19.entity.Game;
@@ -92,6 +93,56 @@ public class WorkerServiceTest {
         Player playerOne = new Player();
         testGame1.setPlayer1(playerOne);
         testGame1.setGameMode(GameMode.NORMAL);
+        testGame1.setIsPlaying(false);
+
+        playerOne.setId(createdUser1.getId());
+        playerOne.setUsername(createdUser1.getUsername());
+        Game createdGame1 = gameService.createGame(testGame1);
+
+
+        //Join the created game with createdUser2 (Player2)
+        Game tempGame1 = gameService.joinLobby(createdUser3.getId(), createdGame1.getId()).getBody();
+
+        Player playerTwo = tempGame1.getPlayer2();
+
+        Board tempBoard = boardService.getBoard(tempGame1.getId());
+
+        return tempGame1;
+    }
+
+    public Game setUpTestGodGame(){
+        userRepository.deleteAll();
+        gameRepository.deleteAll();
+
+
+        //create 2 Users
+
+        //User1
+        User testUser1 = new User();
+        testUser1.setUsername("testUsername1");
+        testUser1.setPassword("test");
+        testUser1.setBirthday("16.03.1994");
+
+        User createdUser1 = userService.createUser(testUser1);
+        User onlineUser1 = userService.checkUser(createdUser1);
+
+
+        //User2
+        User testUser3 = new User();
+        testUser3.setUsername("testUsername3");
+        testUser3.setPassword("test");
+        testUser3.setBirthday("16.03.1994");
+
+        User createdUser3 = userService.createUser(testUser3);
+
+        User onlineUser3 = userService.checkUser(createdUser3);
+
+        //create a Game with User 1
+
+        Game testGame1 = new Game();
+        Player playerOne = new Player();
+        testGame1.setPlayer1(playerOne);
+        testGame1.setGameMode(GameMode.GOD);
         testGame1.setIsPlaying(false);
 
         playerOne.setId(createdUser1.getId());
@@ -263,7 +314,6 @@ public class WorkerServiceTest {
 
         //checking the highlight function from different positions
         ArrayList<Integer> checkList = new ArrayList<Integer>();
-
         workerService.placeWorker(testGame.getId(), testGame.getPlayer1().getWorker1().getWorkerId(),1);
         workerService.placeWorker(testGame.getId(), testGame.getPlayer2().getWorker1().getWorkerId(),2);
         workerService.moveTo(testGame.getId(), testGame.getPlayer1().getWorker1().getWorkerId(),0);
@@ -282,6 +332,53 @@ public class WorkerServiceTest {
         // removing field 1 from check list
         checkList.remove(0);
         Assert.assertEquals(workerService.highlightFieldBuild(0, testGame.getId()).getBody(), checkList);
+
+    }
+    @Test
+    public void highlightPrometheusAthena(){
+        gameRepository.deleteAll();
+        userRepository.deleteAll();
+        boardRepository.deleteAll();
+        playerRepository.deleteAll();
+        workerNormalRepository.deleteAll();
+
+        Game currentGame = setUpTestGodGame();
+
+        //assign god card prometheus and athena
+        gameService.assignGodCard("Prometheus", currentGame.getPlayer1().getId());
+
+        System.out.println("GodCard Player1: "+currentGame.getPlayer1().getWorker1().getGodCard());
+        gameService.assignGodCard("InactiveAthena", currentGame.getPlayer2().getId());
+
+
+        ArrayList<Integer> checkList = new ArrayList<Integer>();
+        currentGame.setGameStatus(GameStatus.Move1);
+        gameRepository.save(currentGame);
+        workerService.placeWorker(currentGame.getId(), currentGame.getPlayer1().getWorker1().getWorkerId(),1);
+        workerService.placeWorker(currentGame.getId(), currentGame.getPlayer1().getWorker2().getWorkerId(),10);
+        workerService.placeWorker(currentGame.getId(), currentGame.getPlayer2().getWorker1().getWorkerId(),2);
+        workerService.placeWorker(currentGame.getId(), currentGame.getPlayer2().getWorker2().getWorkerId(),13);
+        workerService.moveTo(currentGame.getId(), currentGame.getPlayer1().getWorker1().getWorkerId(),0);
+        workerService.build(currentGame.getId(),1, currentGame.getPlayer1().getWorker1().getWorkerId());
+        workerService.moveTo(currentGame.getId(), currentGame.getPlayer2().getWorker1().getWorkerId(),1);
+
+        Assert.assertEquals(boardService.getField(1, currentGame.getId()).getHeight(), 1);
+
+        workerService.moveTo(currentGame.getId(), currentGame.getPlayer2().getWorker1().getWorkerId(),2);
+
+        checkList.add(5);
+        checkList.add(6);
+        //manually activate athena
+        gameService.assignGodCard("InactiveAthena", currentGame.getPlayer2().getId());
+        gameService.assignGodCard("Prometheus", currentGame.getPlayer1().getId());
+        Assert.assertEquals(workerService.highlightFieldMove(0,  gameRepository.getById(currentGame.getId()).getId()).getBody(), checkList);
+        checkList.clear();
+        checkList.add(1);
+        checkList.add(5);
+        checkList.add(6);
+        Assert.assertEquals(workerService.highlightFieldBuild(0, currentGame.getId()).getBody(), checkList);
+        workerService.moveTo( gameRepository.getById(currentGame.getId()).getId(),  gameRepository.getById(currentGame.getId()).getPlayer1().getWorker1().getWorkerId(),5);
+
 
     }
 
