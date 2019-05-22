@@ -95,12 +95,12 @@ public class User implements Serializable {
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (o == this) return true;
-		if (!(o instanceof User)) {
-			return false;
-		}
-		User user = (User) o;
-		return this.getId().equals(user.getId());
+		public boolean equals(Object o) {
+			if (o == this) return true;
+			if (!(o instanceof User)) {
+				return false;
+			}
+			User user = (User) o;
+			return this.getId().equals(user.getId());
 	}
 }
