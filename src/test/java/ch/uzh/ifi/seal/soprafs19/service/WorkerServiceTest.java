@@ -382,6 +382,53 @@ public class WorkerServiceTest {
 
     }
 
+    @Test
+    public void movingMinotaurApollo(){
+        gameRepository.deleteAll();
+        userRepository.deleteAll();
+        boardRepository.deleteAll();
+        playerRepository.deleteAll();
+        workerNormalRepository.deleteAll();
+
+        Game currentGame = setUpTestGodGame();
+
+
+        //assign god card minotaurus and apollo
+        currentGame.getPlayer1().getWorker1().setGodCard(GodCards.Minotaur);
+        currentGame.getPlayer1().getWorker2().setGodCard(GodCards.Minotaur);
+        System.out.println("GodCard Player1: "+currentGame.getPlayer1().getWorker1().getGodCard());
+        currentGame.getPlayer2().getWorker1().setGodCard(GodCards.Apollo);
+        currentGame.getPlayer2().getWorker2().setGodCard(GodCards.Apollo);
+        currentGame.setGameStatus(GameStatus.Move1);
+        gameRepository.save(currentGame);
+
+        workerService.placeWorker(currentGame.getId(), currentGame.getPlayer1().getWorker1().getWorkerId(),0);
+        workerService.placeWorker(currentGame.getId(), currentGame.getPlayer1().getWorker2().getWorkerId(),11);
+        workerService.placeWorker(currentGame.getId(), currentGame.getPlayer2().getWorker1().getWorkerId(),5);
+        workerService.placeWorker(currentGame.getId(), currentGame.getPlayer2().getWorker2().getWorkerId(),13);
+        System.out.println("P1W1 repo: "+ workerNormalRepository.findById(currentGame.getPlayer1().getWorker1().getWorkerId()).getPosition());
+        workerService.moveTo(currentGame.getId(), currentGame.getPlayer1().getWorker1().getWorkerId(),5);
+        System.out.println("P1W1 repo: "+ workerNormalRepository.findById(currentGame.getPlayer1().getWorker1().getWorkerId()).getPosition());
+        System.out.println("Position P1W1: "+ currentGame.getPlayer1().getWorker1().getPosition());
+        //push enemy with Minotaur
+        // check if positions are updated correctly
+        Assert.assertEquals(workerNormalRepository.findById(currentGame.getPlayer1().getWorker1().getWorkerId()).getPosition(), 5);
+
+        Assert.assertEquals(workerNormalRepository.findById(currentGame.getPlayer2().getWorker1().getWorkerId()).getPosition(), 10);
+
+        //switch positions using apollo's godpower
+        workerService.moveTo(currentGame.getId(), currentGame.getPlayer2().getWorker1().getWorkerId(),11);
+
+        Assert.assertEquals(workerNormalRepository.findById(currentGame.getPlayer1().getWorker2().getWorkerId()).getPosition(), 10);
+        Assert.assertEquals(workerNormalRepository.findById(currentGame.getPlayer2().getWorker1().getWorkerId()).getPosition(), 11);
+
+
+
+
+
+
+
+    }
 
 
 }
