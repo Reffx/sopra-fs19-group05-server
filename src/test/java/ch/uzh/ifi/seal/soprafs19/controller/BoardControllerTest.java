@@ -83,6 +83,5 @@ public class BoardControllerTest {
         ObjectMapper mapper = new ObjectMapper();
         Board newBoard = mapper.readValue(content, Board.class);
         assert(newBoard.equals(testBoard));
-
     }
 }

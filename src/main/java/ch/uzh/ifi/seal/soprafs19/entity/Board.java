@@ -29,6 +29,7 @@ public class Board implements Serializable {
         if (!(o instanceof Board)) {
             return false;
         }
+
         Board board = (Board) o;
         return this.getId() == (board.getId());
     }
