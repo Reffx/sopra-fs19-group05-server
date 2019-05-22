@@ -148,6 +148,7 @@ public class WorkerService {
                 restrictLikeAthenaOrPrometheus(highlightedFields, gameId, currentField, null);
             }
         }
+
         return new ResponseEntity<List<Integer>>(highlightedFields, HttpStatus.OK);
     }
 
@@ -466,7 +467,13 @@ public class WorkerService {
             }
 
         }
-
+        //opponent worker position
+        if(buildingWorker.getPlayerId() != currentGame.getPlayer1().getId()){
+            WinningCondition(gameId, currentGame.getPlayer1().getWorker1().getPosition(), currentGame.getPlayer1().getWorker1().getPosition(), currentGame.getPlayer1().getWorker1().getWorkerId());
+        }
+        else{
+            WinningCondition(gameId, currentGame.getPlayer2().getWorker1().getPosition(), currentGame.getPlayer2().getWorker1().getPosition(), currentGame.getPlayer2().getWorker1().getWorkerId());
+        }
         gameRepository.save(currentGame);
         boardService.updateBoard(board);
         return new ResponseEntity<String>(HttpStatus.OK);
@@ -479,14 +486,7 @@ public class WorkerService {
         Game currentGame = gameRepository.getById(gameId);
 
         WorkerNormal winningWorker = workerNormalRepository.findById(workerId);
-        Player winningPlayer = playerRepository.getById(winningWorker.getPlayerId());
-        WorkerNormal winningWorker2;
-        if(winningWorker == winningPlayer.getWorker1()){
-            winningWorker2 = winningPlayer.getWorker2();
-        }
-        else {
-            winningWorker2 = winningPlayer.getWorker1();
-        }
+
 
         if (h1 == 2 && h2 == 3) {
 
@@ -512,16 +512,29 @@ public class WorkerService {
                     }
                     return new ResponseEntity<Boolean>(winningWorker.getIsWinner(), HttpStatus.OK);
                 } } }
-        if(highlightFieldMove(winningWorker.getPosition(), gameId).getBody().isEmpty() && highlightFieldMove(winningWorker2.getPosition(), gameId).getBody().isEmpty()){
+        Player winningPlayer = playerRepository.getById(winningWorker.getPlayerId());
+        WorkerNormal winningWorker2;
+        if(winningWorker == winningPlayer.getWorker1()){
+            winningWorker2 = winningPlayer.getWorker2();
+        }
+        else {
+            winningWorker2 = winningPlayer.getWorker1();
+        }
+
+        //highlight fields is empty for both workers then set winner status
+        if(highlightFieldMove(winningWorker.getPosition(),gameId).getBody().isEmpty() && highlightFieldMove(winningWorker2.getPosition(),gameId).getBody().isEmpty()){
             if(currentGame.getGameStatus().equals(GameStatus.Move1)) {
                 currentGame.setGameStatus(GameStatus.Winner2);
             }
             else if(currentGame.getGameStatus().equals(GameStatus.Move2)){
                 currentGame.setGameStatus(GameStatus.Winner1);
             }
+
         }
+
         return new ResponseEntity<Boolean>(false, HttpStatus.OK);
     }
+
 
     public ResponseEntity<List<Integer>> moveLikeApolloOrMinotaur(List<Integer> highlightFields, int x, int y, long gameId) {
         //DA: check if one of the surrounding fields is occupied, if it is by the opponent --> add fieldNum to List

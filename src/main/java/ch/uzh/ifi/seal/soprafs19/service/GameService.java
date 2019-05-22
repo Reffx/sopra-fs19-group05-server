@@ -389,13 +389,6 @@ public class GameService {
         if(godCard.equals("InactiveHermes")) {
             worker1.setGodCard(GodCards.InactiveHermes);
             worker2.setGodCard(GodCards.InactiveHermes);
-            if(currentGame.getGameStatus().equals(GameStatus.Move1)){
-                currentGame.setGameStatus(GameStatus.Build1);
-            }
-            else if(currentGame.getGameStatus().equals(GameStatus.Move2)){
-                currentGame.setGameStatus(GameStatus.Build2);
-            }
-            currentGame.setGameStatus(GameStatus.Build2);
             workerNormalRepository.save(worker1);
             workerNormalRepository.save(worker2);
         }
