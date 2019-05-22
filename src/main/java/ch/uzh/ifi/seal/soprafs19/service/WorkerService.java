@@ -465,6 +465,9 @@ public class WorkerService {
                     currentGame.setGameStatus(GameStatus.Move1);
                 }
             }
+            if(buildingWorker.getGodCard().equals(GodCards.Hermes)){
+                gameService.assignGodCard("InactiveHermes", gameId);
+            }
 
         }
         //opponent worker position
@@ -501,6 +504,7 @@ public class WorkerService {
 
             return new ResponseEntity<Boolean>(winningWorker.getIsWinner(), HttpStatus.OK);
         }
+
         if(currentGame.getGameMode().equals(GameMode.GOD)) {
             if (winningWorker.getGodCard() == GodCards.Pan) {
                 if (h1 - h2 >= 2) {
