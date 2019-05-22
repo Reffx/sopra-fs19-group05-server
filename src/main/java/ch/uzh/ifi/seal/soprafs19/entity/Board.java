@@ -23,5 +23,14 @@ public class Board implements Serializable {
     public List<Field> getAllFields() {return this.allFields;}
     public void setAllFields(List<Field> allFields) {this.allFields = allFields;}
 
+    @Override
+    public boolean equals(Object o) {
+        if (o == this) return true;
+        if (!(o instanceof Board)) {
+            return false;
+        }
+        Board board = (Board) o;
+        return this.getId() == (board.getId());
+    }
 
 }
