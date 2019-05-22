@@ -200,7 +200,10 @@ public class WorkerServiceTest {
 
         workerService.highlightFieldMove(5,tempGame1.getId());
         Assert.assertNotNull(workerService.highlightFieldMove(5,tempGame1.getId()));
-
+        workerService.placeWorker(tempGame1.getId(),playerOne.getWorker1().getWorkerId(), 5 );
+        //place worker from second player otherwise winning condition check will raise an error
+        workerService.placeWorker(tempGame1.getId(), tempGame1.getPlayer2().getWorker1().getWorkerId(),2);
+        workerService.moveTo(tempGame1.getId(),playerOne.getWorker1().getWorkerId(), 6);
         workerService.build(tempGame1.getId(), 5, playerOne.getWorker1().getWorkerId() );
         Assert.assertEquals(boardService.getField(5,tempGame1.getId()).getHeight(), 1);
 
@@ -262,7 +265,7 @@ public class WorkerServiceTest {
         ArrayList<Integer> checkList = new ArrayList<Integer>();
 
         workerService.placeWorker(testGame.getId(), testGame.getPlayer1().getWorker1().getWorkerId(),1);
-
+        workerService.placeWorker(testGame.getId(), testGame.getPlayer2().getWorker1().getWorkerId(),2);
         workerService.moveTo(testGame.getId(), testGame.getPlayer1().getWorker1().getWorkerId(),0);
 
         checkList.add(1);
@@ -281,6 +284,8 @@ public class WorkerServiceTest {
         Assert.assertEquals(workerService.highlightFieldBuild(0, testGame.getId()).getBody(), checkList);
 
     }
+
+
 
 }
 
