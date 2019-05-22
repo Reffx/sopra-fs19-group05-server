@@ -466,9 +466,16 @@ public class WorkerService {
                 }
             }
             if(buildingWorker.getGodCard().equals(GodCards.Hermes)){
-                gameService.assignGodCard("InactiveHermes", gameId);
+                //currentField.setHeight(h + 1);
+                gameService.assignGodCard("InactiveHermes", buildingWorker.getPlayerId());
+                //Achtung! Dangerous hot fix!
+                if(currentGame.getGameStatus().equals(GameStatus.Build1)) {
+                    currentGame.setGameStatus(GameStatus.Move1);
+                }
+                else if(currentGame.getGameStatus().equals(GameStatus.Build2)){
+                    currentGame.setGameStatus(GameStatus.Move2);
+                }
             }
-
         }
         //opponent worker position
         if(buildingWorker.getPlayerId() != currentGame.getPlayer1().getId()){
