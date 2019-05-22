@@ -13,7 +13,6 @@ public class WorkerNormal{
     private int workerId ;
     private long playerId;
     private int position = -1;
-    private boolean isNext = false;
     private GodCards godCard;
     private boolean isWinner = false;
     private int oldPosition = -1;

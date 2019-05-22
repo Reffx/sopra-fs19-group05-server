@@ -26,13 +26,9 @@ public class Field implements Serializable {
     private int height;
 
 
-//    @Embedded
-//    @Target(WorkerNormal.class)
+
     @OneToOne(targetEntity = WorkerNormal.class, cascade= CascadeType.MERGE)
     private WorkerNormal occupier;
-
-//    @Column
-//    private boolean reachedMaxHeight;
 
 
     public int getHeight() {return this.height;}
@@ -42,8 +38,6 @@ public class Field implements Serializable {
     //JUWE: updated setOccupier to Worker parameter, prior boolean, better set
     public void setOccupier(WorkerNormal occupier) {this.occupier = occupier;}
 
-//    public boolean getReachedMaxHeight() {return this.reachedMaxHeight;}
-//    public void setReachedMaxHeight(boolean reachedMaxHeight) {this.reachedMaxHeight = reachedMaxHeight;}
 
     public int getX_coordinate() {return this.xCoordinate;}
     public void setX_coordinate(int x_coordinate) {this.xCoordinate = x_coordinate;}

@@ -8,7 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 
 @RestController
 public class GameController {
@@ -23,7 +22,6 @@ public class GameController {
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
     Game createGame(@RequestBody Game game) {
-//        System.out.println("?" + game.getPlayer1().getWorker1());
         return gameService.createGame(game);
     }
 
@@ -44,8 +42,6 @@ public class GameController {
     @GetMapping("/games/{gameId}")
     @CrossOrigin
     ResponseEntity<Game> getGame(@PathVariable Long gameId) {
-        //TEST
-//        System.out.println(gameId);
         return gameService.getGame(gameId);
     }
 
@@ -60,7 +56,6 @@ public class GameController {
     @PutMapping("/games/{gameId}/{playerId}/color")
     @CrossOrigin
     ResponseEntity<String> setColor(@PathVariable(name = "gameId") Long gameId, @PathVariable(name = "playerId") Long playerId, @RequestBody Color color) {
-//        System.out.printf("setColor: %d %s",gameId,color);
         return gameService.setColor(gameId, playerId, color);
     }
 

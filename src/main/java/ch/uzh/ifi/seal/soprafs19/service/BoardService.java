@@ -31,7 +31,7 @@ public class BoardService {
 
         Board board = new Board();
         board.setId(gameId);
-        List<Field> allFields = new ArrayList<Field>();
+        List<Field> allFields = new ArrayList<>();
         //  initialize the coordinates
         int num = 0;
         for( int i = 0; i <= 4; ++i) {
