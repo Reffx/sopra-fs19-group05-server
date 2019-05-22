@@ -1,26 +1,24 @@
 package ch.uzh.ifi.seal.soprafs19.service;
 
 import ch.uzh.ifi.seal.soprafs19.Application;
-import ch.uzh.ifi.seal.soprafs19.constant.*;
-
+import ch.uzh.ifi.seal.soprafs19.constant.GameMode;
+import ch.uzh.ifi.seal.soprafs19.constant.GameStatus;
+import ch.uzh.ifi.seal.soprafs19.constant.UserStatus;
 import ch.uzh.ifi.seal.soprafs19.entity.Board;
 import ch.uzh.ifi.seal.soprafs19.entity.Game;
 import ch.uzh.ifi.seal.soprafs19.entity.Player;
 import ch.uzh.ifi.seal.soprafs19.entity.User;
 import ch.uzh.ifi.seal.soprafs19.repository.*;
-
-
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
-
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
+import java.util.ArrayList;
 
 
 /**
@@ -61,78 +59,7 @@ public class WorkerServiceTest {
     private BoardService boardService;
 
 
-    @Test
-    public void placeWorker(){
-
-        gameRepository.deleteAll();
-
-
-        Assert.assertNull(gameRepository.getById(1));
-        Assert.assertNull(playerRepository.findByUsername("testPlayer91"));
-        Game testGame = new Game();
-        Player player1 = new Player();
-        testGame.setPlayer1(player1);
-        testGame.setGameMode(GameMode.NORMAL);
-        testGame.setIsPlaying(false);
-        long player1ID = 91;
-        player1.setId(player1ID);
-        player1.setUsername("testPlayer91");
-        Game createdGame = gameService.createGame(testGame);
-
-        // init board
-
-
-        workerService.placeWorker(createdGame.getId(),player1.getWorker1().getWorkerId(), 6).getBody();
-
-        Game gameTest = gameRepository.getById(createdGame.getId());
-
-        Assert.assertEquals(playerRepository.findByUsername("testPlayer91").getWorker1().getPosition(), 6);
-        Assert.assertEquals(gameTest.getPlayer1().getWorker1().getPosition(), 6);
-        Assert.assertNotNull(boardService.getField(playerRepository.findByUsername("testPlayer91").getWorker1().getPosition(), gameTest.getId()));
-        Assert.assertEquals(playerRepository.getById(player1ID).getWorker1().getPosition(), 6);
-        Assert.assertEquals(boardService.getField(playerRepository.findByUsername("testPlayer91").getWorker1().getPosition(), gameTest.getId()).getOccupier().getWorkerId(), player1.getWorker1().getWorkerId());
-
-        Assert.assertEquals(gameRepository.getById(gameTest.getId()).getGameStatus(), GameStatus.Start);
-        Assert.assertNotEquals(gameRepository.getById(gameTest.getId()).getGameStatus(), GameStatus.Move2);
-
-        gameRepository.deleteAll();
-
-    }
-
-    @Test
-    public void moveTo(){
-        gameRepository.deleteAll();
-        playerRepository.deleteAll();
-        Assert.assertNull(gameRepository.getById(1));
-        Assert.assertNull(workerNormalRepository.findById(1));
-        Assert.assertNull(playerRepository.findByUsername("testPlayer9"));
-        Game testGame = new Game();
-        Player player1 = new Player();
-        testGame.setPlayer1(player1);
-        testGame.setGameMode(GameMode.NORMAL);
-        testGame.setIsPlaying(false);
-        long player1ID = 9;
-        player1.setId(player1ID);
-        player1.setUsername("testPlayer9");
-        Game createdGame = gameService.createGame(testGame);
-
-
-        workerService.placeWorker(createdGame.getId(),player1.getWorker1().getWorkerId(), 6).getBody();
-        workerService.moveTo(createdGame.getId(),player1.getWorker1().getWorkerId(), 9);
-
-        Game gameTest = gameRepository.getById(createdGame.getId());
-
-        Assert.assertEquals(playerRepository.findByUsername("testPlayer9").getWorker1().getPosition(), 9);
-        Assert.assertNotEquals(gameTest.getPlayer1().getWorker1().getPosition(), 6);
-        Assert.assertEquals(gameTest.getPlayer1().getWorker1().getPosition(), 9);
-        Assert.assertEquals(boardService.getField(6, gameTest.getId()).getOccupier(), null );
-
-        userRepository.deleteAll();
-        gameRepository.deleteAll();
-    }
-
-    @Test
-    public void build(){
+    public Game setUpTestNormalGame(){
         userRepository.deleteAll();
         gameRepository.deleteAll();
 
@@ -146,13 +73,8 @@ public class WorkerServiceTest {
         testUser1.setBirthday("16.03.1994");
 
         User createdUser1 = userService.createUser(testUser1);
-        Assert.assertEquals(createdUser1.getStatus(), UserStatus.OFFLINE);
-
         User onlineUser1 = userService.checkUser(createdUser1);
-        Assert.assertEquals(onlineUser1.getStatus(),UserStatus.ONLINE);
 
-        User offlineUser1 = userService.logoutUser(onlineUser1);
-        Assert.assertEquals(offlineUser1.getStatus(),UserStatus.OFFLINE);
 
         //User2
         User testUser3 = new User();
@@ -161,13 +83,8 @@ public class WorkerServiceTest {
         testUser3.setBirthday("16.03.1994");
 
         User createdUser3 = userService.createUser(testUser3);
-        Assert.assertEquals(createdUser3.getStatus(), UserStatus.OFFLINE);
 
         User onlineUser3 = userService.checkUser(createdUser3);
-        Assert.assertEquals(onlineUser3.getStatus(),UserStatus.ONLINE);
-
-        User offlineUser3 = userService.logoutUser(onlineUser3);
-        Assert.assertEquals(offlineUser3.getStatus(),UserStatus.OFFLINE);
 
         //create a Game with User 1
 
@@ -181,8 +98,6 @@ public class WorkerServiceTest {
         playerOne.setUsername(createdUser1.getUsername());
         Game createdGame1 = gameService.createGame(testGame1);
 
-        Assert.assertEquals(createdGame1.getPlayer1().getUsername(), testUser1.getUsername());
-        Assert.assertEquals(createdGame1.getSize(),1);
 
         //Join the created game with createdUser2 (Player2)
         Game tempGame1 = gameService.joinLobby(createdUser3.getId(), createdGame1.getId()).getBody();
@@ -191,6 +106,92 @@ public class WorkerServiceTest {
 
         Board tempBoard = boardService.getBoard(tempGame1.getId());
 
+        return tempGame1;
+    }
+
+    @Test
+    public void placeWorker(){
+
+        gameRepository.deleteAll();
+        userRepository.deleteAll();
+        boardRepository.deleteAll();
+        playerRepository.deleteAll();
+        workerNormalRepository.deleteAll();
+
+
+        Assert.assertNull(gameRepository.getById(1));
+        Assert.assertNull(playerRepository.findByUsername("testPlayer91"));
+
+        Game createdGame = setUpTestNormalGame();
+        Player player1 = createdGame.getPlayer1();
+
+        // init board
+
+
+        workerService.placeWorker(createdGame.getId(),player1.getWorker1().getWorkerId(), 6).getBody();
+
+        Game gameTest = gameRepository.getById(createdGame.getId());
+
+        Assert.assertEquals(playerRepository.findByUsername("testUsername1").getWorker1().getPosition(), 6);
+        Assert.assertEquals(gameTest.getPlayer1().getWorker1().getPosition(), 6);
+        Assert.assertNotNull(boardService.getField(playerRepository.findByUsername("testUsername1").getWorker1().getPosition(), gameTest.getId()));
+        Assert.assertEquals(playerRepository.getById(player1.getId()).getWorker1().getPosition(), 6);
+        Assert.assertEquals(boardService.getField(playerRepository.findByUsername("testUsername1").getWorker1().getPosition(), gameTest.getId()).getOccupier().getWorkerId(), player1.getWorker1().getWorkerId());
+
+        Assert.assertEquals(gameRepository.getById(gameTest.getId()).getGameStatus(), GameStatus.Start);
+        Assert.assertNotEquals(gameRepository.getById(gameTest.getId()).getGameStatus(), GameStatus.Move2);
+
+        gameRepository.deleteAll();
+        userRepository.deleteAll();
+        boardRepository.deleteAll();
+        playerRepository.deleteAll();
+        workerNormalRepository.deleteAll();
+
+    }
+
+    @Test
+    public void moveTo(){
+        gameRepository.deleteAll();
+        userRepository.deleteAll();
+        boardRepository.deleteAll();
+        playerRepository.deleteAll();
+        workerNormalRepository.deleteAll();
+        Assert.assertNull(gameRepository.getById(1));
+        Assert.assertNull(workerNormalRepository.findById(1));
+        Assert.assertNull(playerRepository.findByUsername("testPlayer9"));
+
+        Game createdGame = setUpTestNormalGame();
+        Player player1 = createdGame.getPlayer1();
+
+        workerService.placeWorker(createdGame.getId(),player1.getWorker1().getWorkerId(), 6).getBody();
+        workerService.moveTo(createdGame.getId(),player1.getWorker1().getWorkerId(), 9);
+
+        Game gameTest = gameRepository.getById(createdGame.getId());
+
+        Assert.assertEquals(playerRepository.findByUsername("testUsername1").getWorker1().getPosition(), 9);
+        Assert.assertNotEquals(gameTest.getPlayer1().getWorker1().getPosition(), 6);
+        Assert.assertEquals(gameTest.getPlayer1().getWorker1().getPosition(), 9);
+        Assert.assertEquals(boardService.getField(6, gameTest.getId()).getOccupier(), null );
+
+        gameRepository.deleteAll();
+        userRepository.deleteAll();
+        boardRepository.deleteAll();
+        playerRepository.deleteAll();
+        workerNormalRepository.deleteAll();
+
+    }
+
+    @Test
+    public void build(){
+        gameRepository.deleteAll();
+        userRepository.deleteAll();
+        boardRepository.deleteAll();
+        playerRepository.deleteAll();
+        workerNormalRepository.deleteAll();
+
+        // set up test game
+        Game tempGame1 = setUpTestNormalGame();
+        Player playerOne = tempGame1.getPlayer1();
         playerOne.getWorker1().setPosition(4);
         //test the highlightFieldBuild
         workerService.highlightFieldBuild(playerOne.getWorker1().getPosition(), tempGame1.getId());
@@ -202,7 +203,50 @@ public class WorkerServiceTest {
 
         workerService.build(tempGame1.getId(), 5, playerOne.getWorker1().getWorkerId() );
         Assert.assertEquals(boardService.getField(5,tempGame1.getId()).getHeight(), 1);
+
+        gameRepository.deleteAll();
+        userRepository.deleteAll();
+        boardRepository.deleteAll();
+        playerRepository.deleteAll();
+        workerNormalRepository.deleteAll();
+    }
+
+    @Test
+    public void highlightMove(){
+        //setting up the a normal game without god cards
+        Game testGame = setUpTestNormalGame();
+
+        //checking the highlight function from different positions
+        ArrayList<Integer> checkList = new ArrayList<Integer>();
+        checkList.add(0);
+        checkList.add(2);
+        checkList.add(5);
+        checkList.add(6);
+        checkList.add(7);
+
+        //place worker on position 1
+        workerService.placeWorker(testGame.getId(), testGame.getPlayer1().getWorker1().getWorkerId(),1);
+        Assert.assertEquals(workerService.highlightFieldMove(1, testGame.getId()).getBody(), checkList);
+
+        //move with worker on position 6
+        workerService.moveTo(testGame.getId(), testGame.getPlayer1().getWorker1().getWorkerId(),6);
+        checkList.clear();
+        checkList.add(0);
+        checkList.add(1);
+        checkList.add(2);
+        checkList.add(5);
+        checkList.add(7);
+        checkList.add(10);
+        checkList.add(11);
+        checkList.add(12);
+
+        Assert.assertEquals(workerService.highlightFieldMove(6, testGame.getId()).getBody(), checkList);
+
+
+
     }
 
 }
+
+
 
