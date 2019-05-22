@@ -466,6 +466,38 @@ public class WorkerServiceTest {
 
     }
 
+    @Test
+    public void winningCondition(){
+        gameRepository.deleteAll();
+        userRepository.deleteAll();
+        boardRepository.deleteAll();
+        playerRepository.deleteAll();
+        workerNormalRepository.deleteAll();
+
+        Game currentGame = setUpTestNormalGame();
+        gameRepository.getById(currentGame.getId()).setGameStatus(GameStatus.Move1);
+
+        workerService.placeWorker(currentGame.getId(), currentGame.getPlayer1().getWorker1().getWorkerId(),2);
+        workerService.placeWorker(currentGame.getId(), currentGame.getPlayer1().getWorker2().getWorkerId(),1);
+        workerService.placeWorker(currentGame.getId(), currentGame.getPlayer2().getWorker1().getWorkerId(),7);
+        workerService.placeWorker(currentGame.getId(), currentGame.getPlayer2().getWorker2().getWorkerId(),6);
+
+        workerService.build(currentGame.getId(), 0, workerNormalRepository.findById(currentGame.getPlayer1().getWorker2().getWorkerId()).getWorkerId());
+        workerService.build(currentGame.getId(), 0, workerNormalRepository.findById(currentGame.getPlayer1().getWorker2().getWorkerId()).getWorkerId());
+
+        workerService.moveTo(currentGame.getId(), workerNormalRepository.findById(currentGame.getPlayer1().getWorker2().getWorkerId()).getWorkerId(), 0 );
+
+        workerService.build(currentGame.getId(), 5, workerNormalRepository.findById(currentGame.getPlayer2().getWorker2().getWorkerId()).getWorkerId());
+        workerService.build(currentGame.getId(), 5, workerNormalRepository.findById(currentGame.getPlayer2().getWorker2().getWorkerId()).getWorkerId());
+        workerService.build(currentGame.getId(), 5, workerNormalRepository.findById(currentGame.getPlayer2().getWorker2().getWorkerId()).getWorkerId());
+
+        workerService.moveTo(currentGame.getId(), workerNormalRepository.findById(currentGame.getPlayer1().getWorker2().getWorkerId()).getWorkerId(), 5);
+        System.out.println("height: "+boardService.getField(5, currentGame.getId()).getHeight());
+        System.out.println("height: "+boardService.getField(0, currentGame.getId()).getHeight());
+        Assert.assertNotEquals(currentGame.getGameStatus(), GameStatus.Winner2);
+
+    }
+
 
 }
 
