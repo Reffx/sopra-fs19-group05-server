@@ -2,6 +2,7 @@ package ch.uzh.ifi.seal.soprafs19.controller;
 
 import ch.uzh.ifi.seal.soprafs19.Application;
 
+import ch.uzh.ifi.seal.soprafs19.constant.GameMode;
 import ch.uzh.ifi.seal.soprafs19.entity.Board;
 import ch.uzh.ifi.seal.soprafs19.entity.Game;
 import ch.uzh.ifi.seal.soprafs19.entity.Player;
@@ -60,20 +61,20 @@ public class BoardControllerTest {
 
         //  create game to save into repository
         Game newGame = new Game();
-        newGame.setId(1L);
         Player player1 = new Player();
         player1.setId(1L);
         newGame.setPlayer1(player1);
+        newGame.setGameMode(GameMode.NORMAL);
         GameService gameService = new GameService(gameRepository,  playerService,  workerNormalRepository,  playerRepository,  boardRepository);
         gameService.createGame(newGame);
 
         // create newBoard to be returned
         Board testBoard = new Board();
-        testBoard.setId(1L);
+        testBoard.setId(newGame.getId());
         boardRepository.save(testBoard);
 
         // MVC test
-        MvcResult result =  this.mvc.perform(get("/games/{gameId}/board/create", 1L))
+        MvcResult result =  this.mvc.perform(get("/games/{gameId}/board/create", newGame.getId()))
                 .andExpect(status().isOk())
                 .andReturn();
 
