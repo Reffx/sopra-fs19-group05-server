@@ -384,7 +384,9 @@ public class WorkerService {
         }
         // check for god mode and current game status, update it accordingly
         if(currentGame.getGameMode().equals(GameMode.GOD)){
-            currentField.setHeight(h+1);
+            if(!buildingWorker.getGodCard().equals(GodCards.Hephaestus)) {
+                currentField.setHeight(h + 1);
+            }
             //Prometheus moving condition//
             if(buildingWorker.getGodCard().equals(GodCards.Prometheus) && currentGame.getGameStatus().equals(GameStatus.Build1)){
                 currentField.setHeight(h + 1);
@@ -433,12 +435,14 @@ public class WorkerService {
             if(buildingWorker.getGodCard().equals(GodCards.Hephaestus) && currentGame.getGameStatus().equals(GameStatus.Build1)){
                 System.out.println("Hephaestus check");
                 if(currentField.getHeight() < 2){
+                    System.out.println("CurrentField Height <2: "+ h);
                     currentField.setHeight(h + 2);
                     gameService.assignGodCard("InactiveHephaestus", buildingWorker.getPlayerId());
                     currentGame.setGameStatus(GameStatus.Move2);
                 }
                 else {
                     System.out.println("Hephaestus 1 check");
+                    System.out.println("CurrentField Height >2: "+ h);
                     currentField.setHeight(h + 1);
                     gameService.assignGodCard("InactiveHephaestus", buildingWorker.getPlayerId());
                     currentGame.setGameStatus(GameStatus.Move2);
