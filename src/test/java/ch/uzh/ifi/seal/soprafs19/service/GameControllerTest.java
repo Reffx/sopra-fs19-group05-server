@@ -147,7 +147,6 @@ public class GameControllerTest {
         Player player1 = new Player();
         player1.setId(1L);
         newGame.setPlayer1(player1);
-//        GameService gameService = new GameService(gameRepository,  playerService,  workerNormalRepository,  playerRepository,  boardRepository);
         gameService.createGame(newGame);
 
         // MVC test
@@ -174,7 +173,6 @@ public class GameControllerTest {
         Player player1 = new Player();
         player1.setId(1L);
         newGame.setPlayer1(player1);
-//        GameService gameService = new GameService(gameRepository,  playerService,  workerNormalRepository,  playerRepository,  boardRepository);
         gameService.createGame(newGame);
 
         // MVC test
@@ -207,8 +205,8 @@ public class GameControllerTest {
         newGame.setPlayer1(player1);
         newGame.setPlayer2(player2);
         gameService.createGame(newGame);
-
         Long id = newGame.getId();
+        Assert.assertNotNull(gameRepository.getById(id));
 
         // MVC test
         this.mvc.perform(put("/games/{gameId}/{playerId}", 1L))
@@ -219,6 +217,34 @@ public class GameControllerTest {
 
         //  assert the game in the repository is deleted after two players leave the lobby
         Assert.assertNull(gameRepository.getById(id));
+    }
+
+
+    @Test
+    public void setStatus() throws Exception {
+
+        //  create game to save into repository
+        Game newGame = new Game();
+        newGame.setGameMode(GameMode.NORMAL);
+        //  create new Players
+        Player player1 = new Player();
+        player1.setId(1L);
+        Player player2 = new Player();
+        player1.setId(2L);
+
+        newGame.setPlayer1(player1);
+        newGame.setPlayer2(player2);
+        gameService.createGame(newGame);
+        Long id = newGame.getId();
+        Assert.assertEquals(false, player1.getStatus());
+
+        // MVC test
+        this.mvc.perform(put("/games/{gameId}/{playerId}/status", id, 1L))
+                .andExpect(status().isOk());
+
+
+        //  assert the game in the repository is deleted after two players leave the lobby
+        Assert.assertEquals(true, player1.getStatus());
     }
 }
 
