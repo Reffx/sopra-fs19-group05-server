@@ -94,4 +94,9 @@ public class Game implements Serializable {
         Game game = (Game) o;
         return this.getId().equals(game.getId());
     }
+    @Override
+    public int hashCode() {
+        return 1;
+    }
+
 }

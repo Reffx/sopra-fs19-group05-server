@@ -93,5 +93,10 @@ public class Player implements Serializable {
         Player player = (Player) o;
         return this.getId().equals(player.getId());
     }
+    @Override
+    public int hashCode() {
+        return 1;
+    }
+
 
 }

@@ -33,5 +33,9 @@ public class Board implements Serializable {
         Board board = (Board) o;
         return this.getId() == (board.getId());
     }
+    @Override
+    public int hashCode() {
+        return 1;
+    }
 
 }
