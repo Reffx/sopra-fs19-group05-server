@@ -4,6 +4,7 @@ import ch.uzh.ifi.seal.soprafs19.Application;
 
 import ch.uzh.ifi.seal.soprafs19.constant.GameMode;
 import ch.uzh.ifi.seal.soprafs19.constant.GameStatus;
+import ch.uzh.ifi.seal.soprafs19.constant.GodCards;
 import ch.uzh.ifi.seal.soprafs19.entity.Board;
 import ch.uzh.ifi.seal.soprafs19.entity.Game;
 import ch.uzh.ifi.seal.soprafs19.entity.Player;
@@ -175,29 +176,16 @@ public class GameControllerTest {
 
 
     @Test
-    @Ignore
     public void getModeGames() throws Exception {
-
-        //  create game to save into repository
-        Game newGame = new Game();
-        newGame.setGameMode(GameMode.NORMAL);
-        Player player1 = new Player();
-        player1.setId(1L);
-        newGame.setPlayer1(player1);
-        gameService.createGame(newGame);
+        Game currentGame = setUpTestNormalGame();
 
         // MVC test
-        MvcResult result =  this.mvc.perform(get("/games/mode/{gameMode}", GameMode.NORMAL))
+        this.mvc.perform(get("/games/mode/{gameMode}", GameMode.NORMAL))
                 .andExpect(status().isFound())
                 .andReturn();
+        Assert.assertEquals(currentGame.getGameStatus(), GameStatus.Start);
+        Assert.assertEquals(currentGame.getGameMode(), GameMode.NORMAL);
 
-        // check if the returned result is the same as that in the repository
-        String content =  result.getResponse().getContentAsString();
-        ObjectMapper mapper = new ObjectMapper();
-        // use jackson object mapper to convert LinkedHashMap to Game entity
-        Game testGame = mapper.convertValue(mapper.readValue(content, List.class).get(0), Game.class);
-
-        assert(testGame.equals(newGame));
     }
 
     @Test
@@ -451,11 +439,37 @@ public class GameControllerTest {
 
     @Test
     public void surrender() throws Exception{
+        userRepository.deleteAll();
+        playerRepository.deleteAll();
+        gameRepository.deleteAll();
+        boardRepository.deleteAll();
         Game currentGame = setUpTestNormalGame();
         this.mvc.perform(put("/games/{gameId}/{playerId}/surrender", currentGame.getId(), currentGame.getPlayer1().getId()))
                 .andExpect(status().isOk());
 
         Assert.assertNotEquals(currentGame.getGameStatus(), GameStatus.Start);
+    }
+
+    //@PutMapping("/games/{gameId}/{playerId}/GodCard")
+    @Test
+    public void assignGodCard() throws Exception{
+        userRepository.deleteAll();
+        playerRepository.deleteAll();
+        gameRepository.deleteAll();
+        boardRepository.deleteAll();
+
+        Game currentGame = setUpTestNormalGame();
+
+        this.mvc.perform(put("/games/{gameId}/{playerId}/GodCard", currentGame.getId(), currentGame.getPlayer1().getId())
+                .content("Artemis"))
+                .andExpect(status().isOk());
+        Assert.assertEquals(currentGame.getPlayer1().getWorker1().getGodCard(), GodCards.Artemis);
+        this.mvc.perform(put("/games/{gameId}/{playerId}/GodCard", currentGame.getId(), currentGame.getPlayer1().getId())
+                .content("InactiveArtemis"))
+                .andExpect(status().isOk());
+        Assert.assertEquals(currentGame.getPlayer1().getWorker1().getGodCard(), GodCards.InactiveArtemis);
+        Assert.assertEquals(currentGame.getPlayer1().getWorker2().getGodCard(), GodCards.InactiveArtemis);
+
     }
 }
 

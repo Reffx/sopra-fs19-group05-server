@@ -1,4 +1,4 @@
-package ch.uzh.ifi.seal.soprafs19.controller;
+package ch.uzh.ifi.seal.soprafs19.service;
 
 import ch.uzh.ifi.seal.soprafs19.Application;
 
