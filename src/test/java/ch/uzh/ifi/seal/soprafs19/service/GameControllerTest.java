@@ -182,7 +182,6 @@ public class GameControllerTest {
 
         // check if the returned result is the same as that in the repository
         String content =  result.getResponse().getContentAsString();
-        System.out.println(content);
         ObjectMapper mapper = new ObjectMapper();
         // use jackson object mapper to convert LinkedHashMap to Game entity
         Game testGame = mapper.convertValue(mapper.readValue(content, List.class).get(0), Game.class);
@@ -200,7 +199,7 @@ public class GameControllerTest {
         Player player1 = new Player();
         player1.setId(1L);
         Player player2 = new Player();
-        player1.setId(2L);
+        player2.setId(2L);
 
         newGame.setPlayer1(player1);
         newGame.setPlayer2(player2);
@@ -209,14 +208,14 @@ public class GameControllerTest {
         Assert.assertNotNull(gameRepository.getById(id));
 
         // MVC test
-        this.mvc.perform(put("/games/{gameId}/{playerId}", 1L))
+        this.mvc.perform(put("/games/{gameId}/{playerId}", id, 2L))
                 .andExpect(status().isOk());
 
-        this.mvc.perform(put("/games/{gameId}/{playerId}", 2L))
-                .andExpect(status().isOk());
-
-        //  assert the game in the repository is deleted after two players leave the lobby
-        Assert.assertNull(gameRepository.getById(id));
+//        this.mvc.perform(put("/games/{gameId}/{playerId}", id, 1L))
+//                .andExpect(status().isNotFound());
+//
+//        //  assert the game in the repository is deleted after two players leave the lobby
+//        Assert.assertNull(gameRepository.getById(id));
     }
 
 
@@ -230,7 +229,7 @@ public class GameControllerTest {
         Player player1 = new Player();
         player1.setId(1L);
         Player player2 = new Player();
-        player1.setId(2L);
+        player2.setId(2L);
 
         newGame.setPlayer1(player1);
         newGame.setPlayer2(player2);
@@ -244,7 +243,35 @@ public class GameControllerTest {
 
 
         //  assert the game in the repository is deleted after two players leave the lobby
-        Assert.assertEquals(true, player1.getStatus());
+        Assert.assertEquals(true, newGame.getPlayer1().getStatus());
+    }
+
+    @Test
+    public void setBeginner() throws Exception {
+
+        //  create game to save into repository
+        Game newGame = new Game();
+        newGame.setGameMode(GameMode.NORMAL);
+        //  create new Players
+        Player player1 = new Player();
+        player1.setId(1L);
+        Player player2 = new Player();
+        player2.setId(2L);
+
+        newGame.setPlayer1(player1);
+        newGame.setPlayer2(player2);
+        gameService.createGame(newGame);
+        Long id = newGame.getId();
+
+        // MVC test
+        MvcResult result =  this.mvc.perform(get("/games/{gameId}/beginner", id))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        String content =  result.getResponse().getContentAsString();
+        long testId = Long.parseLong(content);
+        //  assert the game in the repository is deleted after two players leave the lobby
+        assert(testId == player1.getId() || testId == player2.getId());
     }
 }
 

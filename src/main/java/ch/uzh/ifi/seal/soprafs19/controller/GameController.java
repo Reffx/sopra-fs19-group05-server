@@ -79,11 +79,11 @@ public class GameController {
         return gameService.leaveLobby(gameId, playerId);
     }
 
-    //  delete a game
-    @PutMapping("/games/{gameId}")
-    ResponseEntity<String> deleteGame(@PathVariable Long gameId) {
-        return gameService.deleteGame(gameId);
-    }
+//    //  delete a game
+//    @PutMapping("/games/{gameId}")
+//    ResponseEntity<String> deleteGame(@PathVariable Long gameId) {
+//        return gameService.deleteGame(gameId);
+//    }
 
     @PutMapping("/games/{gameId}/{playerId}/GodCard")
     ResponseEntity<String> assignGodCard(@RequestBody String godCard, @PathVariable(name = "playerId") long playerId){
