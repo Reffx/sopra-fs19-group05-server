@@ -91,4 +91,9 @@ public class GameController {
     ResponseEntity<String> surrender(@PathVariable(name = "gameId") long gameId, @PathVariable(name = "playerId") long playerId){
         return gameService.surrender(gameId, playerId);
     }
+    //  delete a game
+   @PutMapping("/games/{gameId}")
+   ResponseEntity<String> deleteGame(@PathVariable Long gameId) {
+       return gameService.deleteGame(gameId);
+    }
 }
