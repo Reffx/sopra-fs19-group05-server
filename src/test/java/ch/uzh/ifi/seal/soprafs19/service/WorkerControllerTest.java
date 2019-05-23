@@ -9,6 +9,8 @@ import ch.uzh.ifi.seal.soprafs19.entity.Game;
 import ch.uzh.ifi.seal.soprafs19.entity.Player;
 import ch.uzh.ifi.seal.soprafs19.entity.User;
 import ch.uzh.ifi.seal.soprafs19.repository.*;
+import ch.uzh.ifi.seal.soprafs19.controller.*;
+
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Assert;
@@ -77,6 +79,8 @@ public class WorkerControllerTest {
     private UserService userService;
     @Autowired
     private BoardService boardService;
+    @Autowired
+    private WorkerService workerService;
 
     public Game setUpTestNormalGame(){
         userRepository.deleteAll();
@@ -124,7 +128,10 @@ public class WorkerControllerTest {
         Player playerTwo = tempGame1.getPlayer2();
 
         Board tempBoard = boardService.getBoard(tempGame1.getId());
-
+        playerRepository.save(playerOne);
+        playerRepository.save(playerTwo);
+        boardRepository.save(tempBoard);
+        gameRepository.save(tempGame1);
         return tempGame1;
     }
     @Test
@@ -132,6 +139,7 @@ public class WorkerControllerTest {
         userRepository.deleteAll();
         playerRepository.deleteAll();
         gameRepository.deleteAll();
+        boardRepository.deleteAll();
         Game currentGame = setUpTestNormalGame();
         Game testGame= gameRepository.getById(currentGame.getId());
         // MVC test
@@ -150,6 +158,7 @@ public class WorkerControllerTest {
         userRepository.deleteAll();
         playerRepository.deleteAll();
         gameRepository.deleteAll();
+        boardRepository.deleteAll();
         Game currentGame = setUpTestNormalGame();
         Game testGame= gameRepository.getById(currentGame.getId());
         // MVC test
@@ -162,4 +171,37 @@ public class WorkerControllerTest {
 
 
     }
+
+
+    @Test
+    public void highlightFieldBuild() throws Exception{
+        userRepository.deleteAll();
+        playerRepository.deleteAll();
+        gameRepository.deleteAll();
+        boardRepository.deleteAll();
+        Game currentGame = setUpTestNormalGame();
+        Game testGame= gameRepository.getById(currentGame.getId());
+        workerService.placeWorker(testGame.getId(),testGame.getPlayer1().getWorker1().getWorkerId(),3);
+        workerService.moveTo(testGame.getId(),testGame.getPlayer1().getWorker1().getWorkerId(),3);
+        this.mvc.perform(get("/games/{gameId}/{fieldNum}/highlight/build", testGame.getId(),3))
+                .andExpect(status().isOk())
+                .andReturn();
+    }
+
+    @Test
+    public void highlightFieldMove() throws Exception{
+        userRepository.deleteAll();
+        playerRepository.deleteAll();
+        gameRepository.deleteAll();
+        boardRepository.deleteAll();
+        Game currentGame = setUpTestNormalGame();
+        Game testGame= gameRepository.getById(currentGame.getId());
+
+        workerService.placeWorker(testGame.getId(),testGame.getPlayer1().getWorker1().getWorkerId(),3);
+        this.mvc.perform(get("/games/{gameId}/{fieldNum}/highlight/move", testGame.getId(),3))
+                .andExpect(status().isOk())
+                .andReturn();
+
+    }
+
 }
