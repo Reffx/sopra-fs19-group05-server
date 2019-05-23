@@ -3,9 +3,11 @@ package ch.uzh.ifi.seal.soprafs19.service;
 import ch.uzh.ifi.seal.soprafs19.Application;
 
 import ch.uzh.ifi.seal.soprafs19.constant.GameMode;
+import ch.uzh.ifi.seal.soprafs19.constant.GameStatus;
 import ch.uzh.ifi.seal.soprafs19.entity.Board;
 import ch.uzh.ifi.seal.soprafs19.entity.Game;
 import ch.uzh.ifi.seal.soprafs19.entity.Player;
+import ch.uzh.ifi.seal.soprafs19.entity.User;
 import ch.uzh.ifi.seal.soprafs19.repository.*;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -24,6 +26,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.context.WebApplicationContext;
 
 import javax.transaction.Transactional;
@@ -72,6 +77,10 @@ public class GameControllerTest {
     private PlayerService playerService;
     @Autowired
     private GameService gameService;
+    @Autowired
+    private BoardService boardService;
+    @Autowired
+    private UserService userService;
 
     @Test
     public void createGame() throws Exception {
@@ -276,7 +285,178 @@ public class GameControllerTest {
         assert(testId == player1.getId() || testId == player2.getId());
     }
 
+    public Game setUpTestNormalGame(){
+        userRepository.deleteAll();
+        gameRepository.deleteAll();
+//create 2 Users
 
+        //User1
+        User testUser1 = new User();
+        testUser1.setUsername("testUsername1");
+        testUser1.setPassword("test");
+        testUser1.setBirthday("16.03.1994");
+
+        User createdUser1 = userService.createUser(testUser1);
+        User onlineUser1 = userService.checkUser(createdUser1);
+
+
+        //User2
+        User testUser3 = new User();
+        testUser3.setUsername("testUsername3");
+        testUser3.setPassword("test");
+        testUser3.setBirthday("16.03.1994");
+
+        User createdUser3 = userService.createUser(testUser3);
+
+        User onlineUser3 = userService.checkUser(createdUser3);
+
+        //create a Game with User 1
+
+        Game testGame1 = new Game();
+        Player playerOne = new Player();
+        testGame1.setPlayer1(playerOne);
+        testGame1.setGameMode(GameMode.NORMAL);
+        testGame1.setIsPlaying(false);
+
+        playerOne.setId(createdUser1.getId());
+        playerOne.setUsername(createdUser1.getUsername());
+        Game createdGame1 = gameService.createGame(testGame1);
+
+
+        //Join the created game with createdUser2 (Player2)
+        Game tempGame1 = gameService.joinLobby(createdUser3.getId(), createdGame1.getId()).getBody();
+
+        Player playerTwo = tempGame1.getPlayer2();
+
+        Board tempBoard = boardService.getBoard(tempGame1.getId());
+
+        return tempGame1;
+    }
+
+    public Game setUpTestGodGame(){
+        userRepository.deleteAll();
+        gameRepository.deleteAll();
+
+
+        //create 2 Users
+
+        //User1
+        User testUser1 = new User();
+        testUser1.setUsername("testUsername1");
+        testUser1.setPassword("test");
+        testUser1.setBirthday("16.03.1994");
+
+        User createdUser1 = userService.createUser(testUser1);
+        User onlineUser1 = userService.checkUser(createdUser1);
+
+
+        //User2
+        User testUser3 = new User();
+        testUser3.setUsername("testUsername3");
+        testUser3.setPassword("test");
+        testUser3.setBirthday("16.03.1994");
+
+        User createdUser3 = userService.createUser(testUser3);
+
+        User onlineUser3 = userService.checkUser(createdUser3);
+
+        //create a Game with User 1
+
+        Game testGame1 = new Game();
+        Player playerOne = new Player();
+        testGame1.setPlayer1(playerOne);
+        testGame1.setGameMode(GameMode.GOD);
+        testGame1.setIsPlaying(false);
+
+        playerOne.setId(createdUser1.getId());
+        playerOne.setUsername(createdUser1.getUsername());
+        Game createdGame1 = gameService.createGame(testGame1);
+
+
+        //Join the created game with createdUser2 (Player2)
+        Game tempGame1 = gameService.joinLobby(createdUser3.getId(), createdGame1.getId()).getBody();
+
+        Player playerTwo = tempGame1.getPlayer2();
+
+        Board tempBoard = boardService.getBoard(tempGame1.getId());
+
+        return tempGame1;
+    }
+
+    @Test
+    public void joinLobby() throws Exception{
+        userRepository.deleteAll();
+        playerRepository.deleteAll();
+        gameRepository.deleteAll();
+        boardRepository.deleteAll();
+
+
+        //create 2 Users
+
+        //User1
+        User testUser1 = new User();
+        testUser1.setUsername("testUsername1");
+        testUser1.setPassword("test");
+        testUser1.setBirthday("16.03.1994");
+
+        User createdUser1 = userService.createUser(testUser1);
+        User onlineUser1 = userService.checkUser(createdUser1);
+
+
+        //User2
+        User testUser3 = new User();
+        testUser3.setUsername("testUsername3");
+        testUser3.setPassword("test");
+        testUser3.setBirthday("16.03.1994");
+
+        User createdUser3 = userService.createUser(testUser3);
+
+        User onlineUser3 = userService.checkUser(createdUser3);
+
+        //create a Game with User 1
+
+        Game testGame1 = new Game();
+        Player playerOne = new Player();
+        testGame1.setPlayer1(playerOne);
+        testGame1.setGameMode(GameMode.GOD);
+        testGame1.setIsPlaying(false);
+
+        playerOne.setId(createdUser1.getId());
+        playerOne.setUsername(createdUser1.getUsername());
+        Game createdGame1 = gameService.createGame(testGame1);
+
+
+        //Join the created game with createdUser2 (Player2)
+        Game tempGame1 = gameService.joinLobby(createdUser3.getId(), createdGame1.getId()).getBody();
+
+        Player playerTwo = tempGame1.getPlayer2();
+
+        // MVC test
+        this.mvc.perform(put("/games/{gameId}/{playerId}", tempGame1.getId(), playerTwo.getId()))
+                .andExpect(status().isOk());
+
+        this.mvc.perform(put("/games/{gameId}/player", tempGame1.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(playerTwo.getId().toString()))
+                .andExpect(status().is(200)).andDo(print());
+
+    }
+
+    //surrender
+    //@PutMapping("/games/{gameId}/{playerId}/surrender")
+    //@CrossOrigin
+    //ResponseEntity<String> surrender(@PathVariable(name = "gameId") long gameId, @PathVariable(name = "playerId") long playerId){
+      //  return gameService.surrender(gameId, playerId);
+    //}
+
+    @Test
+    public void surrender() throws Exception{
+        Game currentGame = setUpTestNormalGame();
+        this.mvc.perform(put("/games/{gameId}/{playerId}/surrender", currentGame.getId(), currentGame.getPlayer1().getId()))
+                .andExpect(status().isOk());
+
+        Assert.assertNotEquals(currentGame.getGameStatus(), GameStatus.Start);
+    }
 }
 
 
