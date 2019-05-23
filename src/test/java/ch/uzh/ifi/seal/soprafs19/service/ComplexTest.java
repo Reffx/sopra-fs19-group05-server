@@ -79,7 +79,6 @@ public class ComplexTest {
 
     //starting with testing user creation
     @Test
-    @Ignore
     public void createUser() throws Exception {
         userRepository.deleteAll();
         playerRepository.deleteAll();
@@ -101,12 +100,8 @@ public class ComplexTest {
         Assert.assertEquals(userRepository.findByUsername("testUser1").getUsername(), "testUser1");
         Assert.assertNotNull(userRepository.findByPassword("testPassword1").getId());
         Assert.assertEquals(userRepository.findByUsername("testUser1").getPassword(), "testPassword1");
-        System.out.print(userRepository.findByUsername("testUser1").getId());
-        //Assert.assertEquals(userRepository.findById(1).getUsername(), "testUser1");
 
 
-        //now we test if the createUser method without performing a post method
-        //Assert.assertNotNull(userRepository.findById(1));
 
         userRepository.deleteAll();
         playerRepository.deleteAll();
@@ -415,44 +410,67 @@ public class ComplexTest {
         userRepository.deleteAll();
         playerRepository.deleteAll();
     }
+
+    public Game setUpTestNormalGame(){
+        userRepository.deleteAll();
+        gameRepository.deleteAll();
+//create 2 Users
+
+        //User1
+        User testUser1 = new User();
+        testUser1.setUsername("testUsername1");
+        testUser1.setPassword("test");
+        testUser1.setBirthday("16.03.1994");
+
+        User createdUser1 = userService.createUser(testUser1);
+        User onlineUser1 = userService.checkUser(createdUser1);
+
+
+        //User2
+        User testUser3 = new User();
+        testUser3.setUsername("testUsername3");
+        testUser3.setPassword("test");
+        testUser3.setBirthday("16.03.1994");
+
+        User createdUser3 = userService.createUser(testUser3);
+
+        User onlineUser3 = userService.checkUser(createdUser3);
+
+        //create a Game with User 1
+
+        Game testGame1 = new Game();
+        Player playerOne = new Player();
+        testGame1.setPlayer1(playerOne);
+        testGame1.setGameMode(GameMode.NORMAL);
+        testGame1.setIsPlaying(false);
+
+        playerOne.setId(createdUser1.getId());
+        playerOne.setUsername(createdUser1.getUsername());
+        Game createdGame1 = gameService.createGame(testGame1);
+
+
+        //Join the created game with createdUser2 (Player2)
+        Game tempGame1 = gameService.joinLobby(createdUser3.getId(), createdGame1.getId()).getBody();
+
+        Player playerTwo = tempGame1.getPlayer2();
+
+        Board tempBoard = boardService.getBoard(tempGame1.getId());
+
+        return tempGame1;
+    }
+
     //check if a player can join a lobby twice
     @Test
-    @Ignore
     public void joinLobbyErr() throws Exception {
         userRepository.deleteAll();
         playerRepository.deleteAll();
         gameRepository.deleteAll();
+        Game currentGame = setUpTestNormalGame();
 
-        //making a post request to the games endpoint to create a game, after that the information are used to create a second game --> 409 error
-        //expected HTTP status is 409
-        this.mvc.perform(post("/users")
+        this.mvc.perform(put("/games/{gameId}/player", currentGame.getId())
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"username\": \"testUser1\", \"password\": \"testPassword\"}"))
-                .andExpect(status().is(201)).andDo(print())
-                .andExpect(jsonPath("$.username", equalTo("testUser1")));
-
-        this.mvc.perform(post("/users")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"username\": \"testUser2\", \"password\": \"testPassword\"}"))
-                .andExpect(status().is(201)).andDo(print())
-                .andExpect(jsonPath("$.username", equalTo("testUser2")));
-
-        this.mvc.perform(post("/games")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"player1\": {\"id\": \"8\", \"username\": \"testUser1\"}, \"gameMode\": \"NORMAL\",\"creationTime\": null,\"isPlaying\":false}"))
-                .andExpect(status().is(201)).andDo(print())
-                .andExpect(jsonPath("$.gameMode", equalTo("NORMAL")));
-
-        this.mvc.perform(put("/games/12/player")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("9"))
-                .andExpect(status().is(200)).andDo(print())
-                .andExpect(jsonPath("$.size", equalTo(2)));
-
-        this.mvc.perform(put("/games/12/player")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("9"))
-                .andExpect(status().is(409));
+                .content(currentGame.getPlayer1().getId().toString()))
+                .andExpect(status().is(409)).andDo(print());
 
         userRepository.deleteAll();
         gameRepository.deleteAll();

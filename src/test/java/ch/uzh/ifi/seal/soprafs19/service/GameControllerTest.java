@@ -106,49 +106,6 @@ public class GameControllerTest {
     }
 
 
-  /* @Test
-    public void joinLobby() throws Exception {
-        userRepository.deleteAll();
-        playerRepository.deleteAll();
-        gameRepository.deleteAll();
-
-        //making a post request to the games endpoint to create a game, after that the information are used to create a second game --> 409 error
-        //expected HTTP status is 409
-        this.mvc.perform(post("/users")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"username\": \"testUser1\", \"password\": \"testPassword\"}"))
-                .andExpect(status().is(201)).andDo(print())
-                .andExpect(jsonPath("$.username", equalTo("testUser1")));
-
-        this.mvc.perform(post("/users")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"username\": \"testUser2\", \"password\": \"testPassword\"}"))
-                .andExpect(status().is(201)).andDo(print())
-                .andExpect(jsonPath("$.username", equalTo("testUser2")));
-
-        this.mvc.perform(post("/games")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"player1\": {\"id\": \"1\", \"username\": \"testUser1\"}, \"gameMode\": \"NORMAL\",\"creationTime\": null,\"isPlaying\":false}"))
-                .andExpect(status().is(201)).andDo(print())
-                .andExpect(jsonPath("$.gameMode", equalTo("NORMAL")));
-
-        this.mvc.perform(put("/games/5/player")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("2"))
-                .andExpect(status().is(200)).andDo(print())
-                .andExpect(jsonPath("$.size", equalTo(2)));
-
-        this.mvc.perform(put("/games/5/player")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content("2"))
-                .andExpect(status().is(409));
-
-        userRepository.deleteAll();
-        gameRepository.deleteAll();
-        playerRepository.deleteAll();
-    }*/
-
-
     @Test
     public void getGame() throws Exception {
 
