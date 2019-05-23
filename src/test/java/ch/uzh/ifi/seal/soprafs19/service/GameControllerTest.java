@@ -10,6 +10,7 @@ import ch.uzh.ifi.seal.soprafs19.repository.*;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -165,6 +166,7 @@ public class GameControllerTest {
 
 
     @Test
+    @Ignore
     public void getModeGames() throws Exception {
 
         //  create game to save into repository
