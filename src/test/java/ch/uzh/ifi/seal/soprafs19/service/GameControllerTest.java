@@ -9,6 +9,7 @@ import ch.uzh.ifi.seal.soprafs19.entity.Player;
 import ch.uzh.ifi.seal.soprafs19.repository.*;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import javax.transaction.Transactional;
+import javax.validation.constraints.Null;
 
 
 import java.util.List;
@@ -67,7 +69,8 @@ public class GameControllerTest {
     private BoardRepository boardRepository;
     @Autowired
     private PlayerService playerService;
-
+    @Autowired
+    private GameService gameService;
 
     @Test
     public void createGame() throws Exception {
@@ -90,7 +93,9 @@ public class GameControllerTest {
         userRepository.deleteAll();
         playerRepository.deleteAll();
     }
-   /* @Test
+
+
+   @Test
     public void joinLobby() throws Exception {
         userRepository.deleteAll();
         playerRepository.deleteAll();
@@ -130,7 +135,7 @@ public class GameControllerTest {
         userRepository.deleteAll();
         gameRepository.deleteAll();
         playerRepository.deleteAll();
-    } */
+    }
 
 
     @Test
@@ -142,7 +147,7 @@ public class GameControllerTest {
         Player player1 = new Player();
         player1.setId(1L);
         newGame.setPlayer1(player1);
-        GameService gameService = new GameService(gameRepository,  playerService,  workerNormalRepository,  playerRepository,  boardRepository);
+//        GameService gameService = new GameService(gameRepository,  playerService,  workerNormalRepository,  playerRepository,  boardRepository);
         gameService.createGame(newGame);
 
         // MVC test
@@ -159,6 +164,7 @@ public class GameControllerTest {
         assert(testGame.equals(newGame));
     }
 
+
     @Test
     public void getModeGames() throws Exception {
 
@@ -168,7 +174,7 @@ public class GameControllerTest {
         Player player1 = new Player();
         player1.setId(1L);
         newGame.setPlayer1(player1);
-        GameService gameService = new GameService(gameRepository,  playerService,  workerNormalRepository,  playerRepository,  boardRepository);
+//        GameService gameService = new GameService(gameRepository,  playerService,  workerNormalRepository,  playerRepository,  boardRepository);
         gameService.createGame(newGame);
 
         // MVC test
@@ -184,6 +190,35 @@ public class GameControllerTest {
         Game testGame = mapper.convertValue(mapper.readValue(content, List.class).get(0), Game.class);
 
         assert(testGame.equals(newGame));
+    }
+
+    @Test
+    public void leaveLobby() throws Exception {
+
+        //  create game to save into repository
+        Game newGame = new Game();
+        newGame.setGameMode(GameMode.NORMAL);
+        //  create new Players
+        Player player1 = new Player();
+        player1.setId(1L);
+        Player player2 = new Player();
+        player1.setId(2L);
+
+        newGame.setPlayer1(player1);
+        newGame.setPlayer2(player2);
+        gameService.createGame(newGame);
+
+        Long id = newGame.getId();
+
+        // MVC test
+        this.mvc.perform(put("/games/{gameId}/{playerId}", 1L))
+                .andExpect(status().isOk());
+
+        this.mvc.perform(put("/games/{gameId}/{playerId}", 2L))
+                .andExpect(status().isOk());
+
+        //  assert the game in the repository is deleted after two players leave the lobby
+        Assert.assertNull(gameRepository.getById(id));
     }
 }
 
