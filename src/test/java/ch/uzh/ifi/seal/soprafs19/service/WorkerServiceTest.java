@@ -156,7 +156,7 @@ public class WorkerServiceTest {
         Player playerTwo = tempGame1.getPlayer2();
 
         Board tempBoard = boardService.getBoard(tempGame1.getId());
-
+        tempGame1.setGameStatus(GameStatus.Move1);
         return tempGame1;
     }
 
@@ -431,40 +431,51 @@ public class WorkerServiceTest {
         boardRepository.deleteAll();
         playerRepository.deleteAll();
         workerNormalRepository.deleteAll();
+        Game currentGame1 = setUpTestGodGame();
+        Game testGame1 = gameRepository.getById(currentGame1.getId());
 
-        Game currentGame = setUpTestGodGame();
-
-
-        //assign god card artemis and demeter
-        currentGame.getPlayer1().getWorker1().setGodCard(GodCards.Artemis);
-        currentGame.getPlayer1().getWorker2().setGodCard(GodCards.Artemis);
-        System.out.println("GodCard Player1: "+currentGame.getPlayer1().getWorker1().getGodCard());
-        currentGame.getPlayer2().getWorker1().setGodCard(GodCards.Demeter);
-        currentGame.getPlayer2().getWorker2().setGodCard(GodCards.Demeter);
-        currentGame.setGameStatus(GameStatus.Move1);
-
-        workerService.placeWorker(currentGame.getId(), currentGame.getPlayer1().getWorker1().getWorkerId(),0);
-        workerService.placeWorker(currentGame.getId(), currentGame.getPlayer1().getWorker2().getWorkerId(),1);
-        workerService.placeWorker(currentGame.getId(), currentGame.getPlayer2().getWorker1().getWorkerId(),5);
-        workerService.placeWorker(currentGame.getId(), currentGame.getPlayer2().getWorker2().getWorkerId(),6);
-
+        testGame1.setGameStatus(GameStatus.Move1);
+        gameRepository.save(testGame1);
+        Game testGame = gameRepository.getById(testGame1.getId());
+        gameService.assignGodCard("Artemis", workerNormalRepository.findById(testGame1.getPlayer1().getWorker1().getWorkerId()).getPlayerId());
+        gameService.assignGodCard("Demeter", workerNormalRepository.findById(testGame1.getPlayer2().getWorker1().getWorkerId()).getPlayerId());
+        workerService.placeWorker(testGame.getId(), testGame.getPlayer1().getWorker1().getWorkerId(),0);
+        workerService.placeWorker(testGame.getId(), testGame.getPlayer1().getWorker2().getWorkerId(),2);
+        workerService.placeWorker(testGame.getId(), testGame.getPlayer2().getWorker1().getWorkerId(),6);
+        workerService.placeWorker(testGame.getId(), testGame.getPlayer2().getWorker2().getWorkerId(),8);
         ArrayList<Integer> checkList = new ArrayList<Integer>();
-        checkList.add(2);
-        checkList.add(7);
-        Assert.assertEquals(workerService.highlightFieldMove(1,  gameRepository.getById(currentGame.getId()).getId()).getBody(), checkList);
-        currentGame.setGameStatus(GameStatus.Move1);
-        gameService.assignGodCard("InactiveArtemis", workerNormalRepository.findById(currentGame.getPlayer1().getWorker2().getWorkerId()).getPlayerId());
-        workerNormalRepository.findById(currentGame.getPlayer1().getWorker2().getWorkerId()).setOldPosition(1);
-        System.out.println("godcard: "+workerNormalRepository.findById(currentGame.getPlayer1().getWorker2().getWorkerId()).getGodCard());
-        workerService.moveTo(currentGame.getId(),workerNormalRepository.findById(currentGame.getPlayer1().getWorker2().getWorkerId()).getWorkerId(), 2);
+        checkList.add(1);
+        checkList.add(5);
+        Assert.assertEquals(workerService.highlightFieldMove(0,  gameRepository.getById(testGame.getId()).getId()).getBody(), checkList);
+        workerService.moveTo(testGame.getId(), workerNormalRepository.findById(testGame.getPlayer1().getWorker2().getWorkerId()).getWorkerId(), 1 );
         checkList.clear();
+        checkList.add(5);
         checkList.add(7);
+        Assert.assertEquals(workerService.highlightFieldMove(1,  gameRepository.getById(testGame.getId()).getId()).getBody(), checkList);
+        workerService.build(testGame.getId(), 0, workerNormalRepository.findById(testGame.getPlayer1().getWorker2().getWorkerId()).getWorkerId());
+
+        workerService.moveTo(testGame.getId(), workerNormalRepository.findById(testGame.getPlayer2().getWorker2().getWorkerId()).getWorkerId(), 7);
+        checkList.clear();
+        checkList.add(2);
         checkList.add(3);
         checkList.add(8);
-        checkList.add(6);
-        Assert.assertNotEquals(workerService.highlightFieldMove(2,  gameRepository.getById(currentGame.getId()).getId()).getBody(), checkList);
+        checkList.add(11);
+        checkList.add(12);
+        checkList.add(13);
+        Assert.assertEquals(workerService.highlightFieldBuild(7,  gameRepository.getById(testGame.getId()).getId()).getBody(), checkList);
+        workerService.build(testGame.getId(), 12, workerNormalRepository.findById(testGame.getPlayer2().getWorker2().getWorkerId()).getWorkerId());
+        checkList.clear();
+        checkList.add(2);
+        checkList.add(3);
+        checkList.add(8);
+        checkList.add(11);
+        checkList.add(13);
+        Assert.assertEquals(workerService.highlightFieldBuild(7,  gameRepository.getById(testGame.getId()).getId()).getBody(), checkList);
+
+
 
     }
+
 
     @Test
     public void winningCondition(){
@@ -474,27 +485,64 @@ public class WorkerServiceTest {
         playerRepository.deleteAll();
         workerNormalRepository.deleteAll();
 
-        Game currentGame = setUpTestNormalGame();
-        gameRepository.getById(currentGame.getId()).setGameStatus(GameStatus.Move1);
+        Game currentGame1 = setUpTestNormalGame();
+        gameRepository.getById(currentGame1.getId()).setGameStatus(GameStatus.Move1);
+        Game testGame = gameRepository.getById(currentGame1.getId());
+        testGame.setGameStatus(GameStatus.Move1);
+        workerService.placeWorker(testGame.getId(), testGame.getPlayer1().getWorker1().getWorkerId(),2);
+        workerService.placeWorker(testGame.getId(), testGame.getPlayer1().getWorker2().getWorkerId(),1);
+        workerService.placeWorker(testGame.getId(), testGame.getPlayer2().getWorker1().getWorkerId(),7);
+        workerService.placeWorker(testGame.getId(), testGame.getPlayer2().getWorker2().getWorkerId(),6);
 
-        workerService.placeWorker(currentGame.getId(), currentGame.getPlayer1().getWorker1().getWorkerId(),2);
-        workerService.placeWorker(currentGame.getId(), currentGame.getPlayer1().getWorker2().getWorkerId(),1);
-        workerService.placeWorker(currentGame.getId(), currentGame.getPlayer2().getWorker1().getWorkerId(),7);
-        workerService.placeWorker(currentGame.getId(), currentGame.getPlayer2().getWorker2().getWorkerId(),6);
+        workerService.build(testGame.getId(), 0, workerNormalRepository.findById(testGame.getPlayer1().getWorker2().getWorkerId()).getWorkerId());
+        workerService.build(testGame.getId(), 0, workerNormalRepository.findById(testGame.getPlayer1().getWorker2().getWorkerId()).getWorkerId());
 
-        workerService.build(currentGame.getId(), 0, workerNormalRepository.findById(currentGame.getPlayer1().getWorker2().getWorkerId()).getWorkerId());
-        workerService.build(currentGame.getId(), 0, workerNormalRepository.findById(currentGame.getPlayer1().getWorker2().getWorkerId()).getWorkerId());
+        workerService.moveTo(testGame.getId(), workerNormalRepository.findById(testGame.getPlayer1().getWorker2().getWorkerId()).getWorkerId(), 0 );
 
-        workerService.moveTo(currentGame.getId(), workerNormalRepository.findById(currentGame.getPlayer1().getWorker2().getWorkerId()).getWorkerId(), 0 );
+        workerService.build(testGame.getId(), 5, workerNormalRepository.findById(testGame.getPlayer2().getWorker2().getWorkerId()).getWorkerId());
+        workerService.build(testGame.getId(), 5, workerNormalRepository.findById(testGame.getPlayer2().getWorker2().getWorkerId()).getWorkerId());
+        workerService.build(testGame.getId(), 5, workerNormalRepository.findById(testGame.getPlayer2().getWorker2().getWorkerId()).getWorkerId());
 
-        workerService.build(currentGame.getId(), 5, workerNormalRepository.findById(currentGame.getPlayer2().getWorker2().getWorkerId()).getWorkerId());
-        workerService.build(currentGame.getId(), 5, workerNormalRepository.findById(currentGame.getPlayer2().getWorker2().getWorkerId()).getWorkerId());
-        workerService.build(currentGame.getId(), 5, workerNormalRepository.findById(currentGame.getPlayer2().getWorker2().getWorkerId()).getWorkerId());
+        workerService.moveTo(testGame.getId(), workerNormalRepository.findById(testGame.getPlayer1().getWorker2().getWorkerId()).getWorkerId(), 5);
+        System.out.println("height: "+boardService.getField(5, testGame.getId()).getHeight());
+        System.out.println("height: "+boardService.getField(0, testGame.getId()).getHeight());
+        Assert.assertNotEquals(gameRepository.getById(testGame.getId()).getGameStatus(), GameStatus.Winner2);
+        Assert.assertEquals(gameRepository.getById(testGame.getId()).getGameStatus(), GameStatus.Winner1);
 
-        workerService.moveTo(currentGame.getId(), workerNormalRepository.findById(currentGame.getPlayer1().getWorker2().getWorkerId()).getWorkerId(), 5);
-        System.out.println("height: "+boardService.getField(5, currentGame.getId()).getHeight());
-        System.out.println("height: "+boardService.getField(0, currentGame.getId()).getHeight());
-        Assert.assertNotEquals(currentGame.getGameStatus(), GameStatus.Winner2);
+    }
+
+    @Test
+    public void buildAtlasHephaestus(){
+        gameRepository.deleteAll();
+        userRepository.deleteAll();
+        boardRepository.deleteAll();
+        playerRepository.deleteAll();
+        workerNormalRepository.deleteAll();
+        Game currentGame1 = setUpTestGodGame();
+        Game testGame1 = gameRepository.getById(currentGame1.getId());
+
+        testGame1.setGameStatus(GameStatus.Move1);
+        gameRepository.save(testGame1);
+        Game testGame = gameRepository.getById(testGame1.getId());
+        gameService.assignGodCard("Atlas", workerNormalRepository.findById(testGame1.getPlayer1().getWorker1().getWorkerId()).getPlayerId());
+        gameService.assignGodCard("Hephaestus", workerNormalRepository.findById(testGame1.getPlayer2().getWorker1().getWorkerId()).getPlayerId());
+        workerService.placeWorker(testGame.getId(), testGame.getPlayer1().getWorker1().getWorkerId(),0);
+        workerService.placeWorker(testGame.getId(), testGame.getPlayer1().getWorker2().getWorkerId(),1);
+        workerService.placeWorker(testGame.getId(), testGame.getPlayer2().getWorker1().getWorkerId(),5);
+        workerService.placeWorker(testGame.getId(), testGame.getPlayer2().getWorker2().getWorkerId(),6);
+
+        workerService.moveTo(testGame.getId(), workerNormalRepository.findById(testGame.getPlayer1().getWorker2().getWorkerId()).getWorkerId(), 0 );
+        workerService.build(testGame.getId(), 0, workerNormalRepository.findById(testGame.getPlayer1().getWorker2().getWorkerId()).getWorkerId());
+        workerService.moveTo(testGame.getId(), workerNormalRepository.findById(testGame.getPlayer2().getWorker2().getWorkerId()).getWorkerId(), 5);
+        workerService.build(testGame.getId(), 10, workerNormalRepository.findById(testGame.getPlayer2().getWorker2().getWorkerId()).getWorkerId());
+
+
+
+
+        Assert.assertEquals(workerNormalRepository.findById(testGame.getPlayer1().getWorker1().getWorkerId()).getPosition(), 0);
+        Assert.assertEquals(workerNormalRepository.findById(testGame.getPlayer2().getWorker1().getWorkerId()).getPosition(),5);
+        Assert.assertEquals(boardService.getField(0, testGame.getId()).getHeight(), 4);
+        Assert.assertEquals(boardService.getField(10, testGame.getId()).getHeight(), 2);
 
     }
 
