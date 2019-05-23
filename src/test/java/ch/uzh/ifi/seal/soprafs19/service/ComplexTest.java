@@ -389,7 +389,6 @@ public class ComplexTest {
     //starting with testing game creation
 
     @Test
-    @Ignore
     public void createGameErr() throws Exception {
         userRepository.deleteAll();
         playerRepository.deleteAll();
@@ -407,8 +406,12 @@ public class ComplexTest {
                 .content("{\"player1\": {\"id\": \"2\", \"username\": \"testUser1\"}, \"gameMode\": \"NORMAL\",\"creationTime\": null,\"isPlaying\":false}"))
                 .andExpect(status().is(409));
 
+        gameRepository.deleteAll();
         userRepository.deleteAll();
+        workerNormalRepository.deleteAll();
         playerRepository.deleteAll();
+        gameRepository.deleteAll();
+
     }
 
     public Game setUpTestNormalGame(){

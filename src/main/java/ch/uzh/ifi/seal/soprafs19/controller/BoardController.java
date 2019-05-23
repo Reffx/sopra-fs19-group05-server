@@ -21,7 +21,4 @@ public class BoardController {
         return boardService.getBoard(gameId);
     }
 
-    @CrossOrigin
-    @PutMapping("board/{boardId}")
-    Board updateBoard(@RequestBody Board newBoard){ return this.boardService.updateBoard(newBoard);}
 }

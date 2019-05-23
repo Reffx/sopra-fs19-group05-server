@@ -233,7 +233,7 @@ public class GameControllerTest {
     public Game setUpTestNormalGame(){
         userRepository.deleteAll();
         gameRepository.deleteAll();
-//create 2 Users
+        //create 2 Users
 
         //User1
         User testUser1 = new User();
@@ -387,12 +387,6 @@ public class GameControllerTest {
 
     }
 
-    //surrender
-    //@PutMapping("/games/{gameId}/{playerId}/surrender")
-    //@CrossOrigin
-    //ResponseEntity<String> surrender(@PathVariable(name = "gameId") long gameId, @PathVariable(name = "playerId") long playerId){
-      //  return gameService.surrender(gameId, playerId);
-    //}
 
     @Test
     public void surrender() throws Exception{
