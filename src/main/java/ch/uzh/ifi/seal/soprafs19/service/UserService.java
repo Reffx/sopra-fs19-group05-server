@@ -3,7 +3,7 @@ package ch.uzh.ifi.seal.soprafs19.service;
 import ch.uzh.ifi.seal.soprafs19.constant.UserStatus;
 import ch.uzh.ifi.seal.soprafs19.controller.DuplicateException;
 import ch.uzh.ifi.seal.soprafs19.controller.NonExistentUserException;
-import ch.uzh.ifi.seal.soprafs19.entity.User;
+import ch.uzh.ifi.seal.soprafs19.entity.AppUser;
 import ch.uzh.ifi.seal.soprafs19.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,52 +29,52 @@ public class UserService {
     }
 
 
-    public Iterable<User> getUsers() {
+    public Iterable<AppUser> getUsers() {
         return this.userRepository.findAll();
     }
 
 
     //registration
-    public User createUser(User newUser) {
-        if(userRepository.findByUsername(newUser.getUsername())!=null) {
-            throw new DuplicateException("Username already taken" +newUser.getUsername());
+    public AppUser createUser(AppUser newAppUser) {
+        if(userRepository.findByUsername(newAppUser.getUsername())!=null) {
+            throw new DuplicateException("Username already taken" + newAppUser.getUsername());
         }
 
-        newUser.setToken(UUID.randomUUID().toString());
-        newUser.setStatus(UserStatus.OFFLINE);
-        newUser.setCreationDate((LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))));
+        newAppUser.setToken(UUID.randomUUID().toString());
+        newAppUser.setStatus(UserStatus.OFFLINE);
+        newAppUser.setCreationDate((LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))));
         //newUser.setBirthday(newUser.getBirthday());
-        userRepository.save(newUser);
-        log.debug("Created Information for User: {}", newUser);
-        return newUser;
+        userRepository.save(newAppUser);
+        log.debug("Created Information for User: {}", newAppUser);
+        return newAppUser;
     }
 
     //login
-    public User checkUser(User newUser) {
-        User loginUser = userRepository.findByUsername(newUser.getUsername());
-        if(loginUser != null && loginUser.getPassword().equals(newUser.getPassword())) {
-            User tempUser = userRepository.findByUsername(newUser.getUsername());
-            tempUser.setStatus(UserStatus.ONLINE);
-            tempUser.setToken(UUID.randomUUID().toString());
-            userRepository.save(tempUser);
-            return tempUser;
+    public AppUser checkUser(AppUser newAppUser) {
+        AppUser loginAppUser = userRepository.findByUsername(newAppUser.getUsername());
+        if(loginAppUser != null && loginAppUser.getPassword().equals(newAppUser.getPassword())) {
+            AppUser tempAppUser = userRepository.findByUsername(newAppUser.getUsername());
+            tempAppUser.setStatus(UserStatus.ONLINE);
+            tempAppUser.setToken(UUID.randomUUID().toString());
+            userRepository.save(tempAppUser);
+            return tempAppUser;
         }
-        throw new NonExistentUserException("Name: "+newUser.getPassword()+" Username: "+newUser.getUsername());
+        throw new NonExistentUserException("Name: "+ newAppUser.getPassword()+" Username: "+ newAppUser.getUsername());
     }
 
     //logout
-    public User logoutUser(User newUser) {
-        User tempUser = userRepository.findByToken(newUser.getToken());
-        tempUser.setStatus(UserStatus.OFFLINE);
-        userRepository.save(tempUser);
-        return tempUser;
+    public AppUser logoutUser(AppUser newAppUser) {
+        AppUser tempAppUser = userRepository.findByToken(newAppUser.getToken());
+        tempAppUser.setStatus(UserStatus.OFFLINE);
+        userRepository.save(tempAppUser);
+        return tempAppUser;
     }
 
     //profile
-    public User getUser(long id) {
-        User tempUser = userRepository.findById(id);
-        if(tempUser !=null) {
-            return tempUser;
+    public AppUser getUser(long id) {
+        AppUser tempAppUser = userRepository.findById(id);
+        if(tempAppUser !=null) {
+            return tempAppUser;
         }
         else {
             throw new NonExistentUserException("User couldn't be found");
@@ -82,16 +82,16 @@ public class UserService {
     }
 
     //update Username and/or Birthday
-    public User updateUser(User newUser) {
-        User tempUser = userRepository.findByToken(newUser.getToken());
-        if(userRepository.findByUsername(newUser.getUsername()) != null && userRepository.findByUsername(newUser.getUsername())!=tempUser) {
+    public AppUser updateUser(AppUser newAppUser) {
+        AppUser tempAppUser = userRepository.findByToken(newAppUser.getToken());
+        if(userRepository.findByUsername(newAppUser.getUsername()) != null && userRepository.findByUsername(newAppUser.getUsername())!= tempAppUser) {
             throw new DuplicateException("User with that Username already exists, cannot change to it.");
         }
         else {
-            tempUser.setBirthday(newUser.getBirthday());
-            tempUser.setUsername(newUser.getUsername());
-            userRepository.save(tempUser);
-            return newUser;
+            tempAppUser.setBirthday(newAppUser.getBirthday());
+            tempAppUser.setUsername(newAppUser.getUsername());
+            userRepository.save(tempAppUser);
+            return newAppUser;
         }
     }
 

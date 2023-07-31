@@ -1,15 +1,15 @@
 package ch.uzh.ifi.seal.soprafs19.service;
 
-import ch.uzh.ifi.seal.soprafs19.Application;
+import ch.uzh.ifi.seal.soprafs19.Main;
 import ch.uzh.ifi.seal.soprafs19.constant.Color;
 import ch.uzh.ifi.seal.soprafs19.constant.GameStatus;
 import ch.uzh.ifi.seal.soprafs19.constant.GodCards;
 import ch.uzh.ifi.seal.soprafs19.constant.GameMode;
 import ch.uzh.ifi.seal.soprafs19.controller.FullLobbyException;
 import ch.uzh.ifi.seal.soprafs19.controller.NonExistentGameException;
+import ch.uzh.ifi.seal.soprafs19.entity.AppUser;
 import ch.uzh.ifi.seal.soprafs19.entity.Game;
 import ch.uzh.ifi.seal.soprafs19.entity.Player;
-import ch.uzh.ifi.seal.soprafs19.entity.User;
 import ch.uzh.ifi.seal.soprafs19.repository.WorkerNormalRepository;
 import ch.uzh.ifi.seal.soprafs19.repository.GameRepository;
 import ch.uzh.ifi.seal.soprafs19.repository.UserRepository;
@@ -23,7 +23,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
-import org.springframework.web.bind.annotation.PutMapping;
 
 
 import java.util.ArrayList;
@@ -34,7 +33,7 @@ import java.util.ArrayList;
  */
 @WebAppConfiguration
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes= Application.class)
+@SpringBootTest(classes= Main.class)
 public class GameServiceTest {
 
 
@@ -294,20 +293,20 @@ public class GameServiceTest {
         Game createdGame = gameService.createGame(testGame);
 
         //create user for player2
-        User testUser1 = new User();
-        testUser1.setUsername("testUsername22");
-        testUser1.setPassword("test");
-        testUser1.setBirthday("16.03.1994");
-        User createdUser = userService.createUser(testUser1);
+        AppUser testAppUser1 = new AppUser();
+        testAppUser1.setUsername("testUsername22");
+        testAppUser1.setPassword("test");
+        testAppUser1.setBirthday("16.03.1994");
+        AppUser createdAppUser = userService.createUser(testAppUser1);
 
-        System.out.println(createdUser.getId());
+        System.out.println(createdAppUser.getId());
 
         Assert.assertNotNull(gameRepository.findByGameMode(GameMode.NORMAL));
         Assert.assertNotNull(createdGame.getPlayer1());
         Assert.assertNotNull(createdGame.getPlayer1().getWorker1());
         Assert.assertNotNull(createdGame.getPlayer1().getWorker2());
 
-        Game joinedGame = gameService.joinLobby(userService.getUser(createdUser.getId()).getId(), createdGame.getId()).getBody();
+        Game joinedGame = gameService.joinLobby(userService.getUser(createdAppUser.getId()).getId(), createdGame.getId()).getBody();
         Assert.assertNotNull(gameRepository.findByGameMode(GameMode.NORMAL));
         Assert.assertNotNull(joinedGame.getPlayer1());
         Assert.assertNotNull(joinedGame.getPlayer1().getWorker1());
@@ -339,21 +338,21 @@ public class GameServiceTest {
         Game createdGame = gameService.createGame(testGame);
 
         //create user for player2
-        User testUser1 = new User();
-        testUser1.setUsername("testUsername22");
-        testUser1.setPassword("test");
-        testUser1.setBirthday("16.03.1994");
-        User createdUser = userService.createUser(testUser1);
+        AppUser testAppUser1 = new AppUser();
+        testAppUser1.setUsername("testUsername22");
+        testAppUser1.setPassword("test");
+        testAppUser1.setBirthday("16.03.1994");
+        AppUser createdAppUser = userService.createUser(testAppUser1);
 
-        User testUser2 = new User();
-        testUser2.setUsername("testUsername23");
-        testUser2.setPassword("test");
-        testUser2.setBirthday("16.03.1997");
-        User createdUser2 = userService.createUser(testUser2);
+        AppUser testAppUser2 = new AppUser();
+        testAppUser2.setUsername("testUsername23");
+        testAppUser2.setPassword("test");
+        testAppUser2.setBirthday("16.03.1997");
+        AppUser createdAppUser2 = userService.createUser(testAppUser2);
 
-        gameService.joinLobby(userService.getUser(createdUser.getId()).getId(), createdGame.getId());
+        gameService.joinLobby(userService.getUser(createdAppUser.getId()).getId(), createdGame.getId());
         //try to join the full lobby
-        gameService.joinLobby(userService.getUser(createdUser2.getId()).getId(), createdGame.getId());
+        gameService.joinLobby(userService.getUser(createdAppUser2.getId()).getId(), createdGame.getId());
 
         gameRepository.deleteAll();
         playerRepository.deleteAll();

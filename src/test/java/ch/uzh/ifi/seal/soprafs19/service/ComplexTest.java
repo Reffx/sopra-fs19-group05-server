@@ -1,19 +1,18 @@
 package ch.uzh.ifi.seal.soprafs19.service;
 
-import ch.uzh.ifi.seal.soprafs19.Application;
+import ch.uzh.ifi.seal.soprafs19.Main;
 import ch.uzh.ifi.seal.soprafs19.constant.GameMode;
 import ch.uzh.ifi.seal.soprafs19.constant.GameStatus;
 import ch.uzh.ifi.seal.soprafs19.constant.UserStatus;
 import ch.uzh.ifi.seal.soprafs19.controller.DuplicateException;
 
+import ch.uzh.ifi.seal.soprafs19.entity.AppUser;
 import ch.uzh.ifi.seal.soprafs19.entity.Board;
 import ch.uzh.ifi.seal.soprafs19.entity.Game;
 import ch.uzh.ifi.seal.soprafs19.entity.Player;
-import ch.uzh.ifi.seal.soprafs19.entity.User;
 import ch.uzh.ifi.seal.soprafs19.repository.*;
 
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,9 +22,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-
-import javax.transaction.Transactional;
-
+import org.springframework.transaction.annotation.Transactional;
 
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -40,7 +37,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 //Board object creation
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes= Application.class)
+@SpringBootTest(classes= Main.class)
 @AutoConfigureMockMvc
 @Transactional
 public class ComplexTest {
@@ -179,34 +176,34 @@ public class ComplexTest {
         //create 2 Users
 
         //User1
-        User testUser = new User();
-        testUser.setUsername("testUsername");
-        testUser.setPassword("test");
-        testUser.setBirthday("16.03.1994");
+        AppUser testAppUser = new AppUser();
+        testAppUser.setUsername("testUsername");
+        testAppUser.setPassword("test");
+        testAppUser.setBirthday("16.03.1994");
 
-        User createdUser = userService.createUser(testUser);
-        Assert.assertEquals(createdUser.getStatus(), UserStatus.OFFLINE);
+        AppUser createdAppUser = userService.createUser(testAppUser);
+        Assert.assertEquals(createdAppUser.getStatus(), UserStatus.OFFLINE);
 
-        User onlineUser = userService.checkUser(createdUser);
-        Assert.assertEquals(onlineUser.getStatus(),UserStatus.ONLINE);
+        AppUser onlineAppUser = userService.checkUser(createdAppUser);
+        Assert.assertEquals(onlineAppUser.getStatus(),UserStatus.ONLINE);
 
-        User offlineUser = userService.logoutUser(onlineUser);
-        Assert.assertEquals(offlineUser.getStatus(),UserStatus.OFFLINE);
+        AppUser offlineAppUser = userService.logoutUser(onlineAppUser);
+        Assert.assertEquals(offlineAppUser.getStatus(),UserStatus.OFFLINE);
 
         //User2
-        User testUser2 = new User();
-        testUser2.setUsername("testUsername2");
-        testUser2.setPassword("test");
-        testUser2.setBirthday("16.03.1994");
+        AppUser testAppUser2 = new AppUser();
+        testAppUser2.setUsername("testUsername2");
+        testAppUser2.setPassword("test");
+        testAppUser2.setBirthday("16.03.1994");
 
-        User createdUser2 = userService.createUser(testUser2);
-        Assert.assertEquals(createdUser2.getStatus(), UserStatus.OFFLINE);
+        AppUser createdAppUser2 = userService.createUser(testAppUser2);
+        Assert.assertEquals(createdAppUser2.getStatus(), UserStatus.OFFLINE);
 
-        User onlineUser2 = userService.checkUser(createdUser);
-        Assert.assertEquals(onlineUser2.getStatus(),UserStatus.ONLINE);
+        AppUser onlineAppUser2 = userService.checkUser(createdAppUser);
+        Assert.assertEquals(onlineAppUser2.getStatus(),UserStatus.ONLINE);
 
-        User offlineUser2 = userService.logoutUser(onlineUser2);
-        Assert.assertEquals(offlineUser2.getStatus(),UserStatus.OFFLINE);
+        AppUser offlineAppUser2 = userService.logoutUser(onlineAppUser2);
+        Assert.assertEquals(offlineAppUser2.getStatus(),UserStatus.OFFLINE);
 
         //create a Game with User 1
 
@@ -216,20 +213,20 @@ public class ComplexTest {
         testGame.setGameMode(GameMode.NORMAL);
         testGame.setIsPlaying(false);
 
-        player1.setId(createdUser.getId());
-        player1.setUsername(createdUser.getUsername());
+        player1.setId(createdAppUser.getId());
+        player1.setUsername(createdAppUser.getUsername());
         Game createdGame = gameService.createGame(testGame);
 
-        Assert.assertEquals(createdGame.getPlayer1().getUsername(), testUser.getUsername());
+        Assert.assertEquals(createdGame.getPlayer1().getUsername(), testAppUser.getUsername());
         Assert.assertEquals(createdGame.getSize(),1);
 
         //Join the created game with createdUser2 (Player2)
-        Game tempGame = gameService.joinLobby(createdUser2.getId(), createdGame.getId()).getBody();
+        Game tempGame = gameService.joinLobby(createdAppUser2.getId(), createdGame.getId()).getBody();
 
         Player player2 = tempGame.getPlayer2();
 
         Assert.assertNotNull(tempGame.getPlayer2());
-        Assert.assertEquals(tempGame.getPlayer2().getUsername(), createdUser2.getUsername());
+        Assert.assertEquals(tempGame.getPlayer2().getUsername(), createdAppUser2.getUsername());
         Assert.assertNotNull(tempGame.getPlayer1());
         Assert.assertNotNull(tempGame.getPlayer2());
         Assert.assertNotNull(tempGame.getPlayer1().getWorker1());
@@ -239,8 +236,8 @@ public class ComplexTest {
 
         Assert.assertEquals(tempGame.getGameMode(), GameMode.NORMAL);
         Assert.assertEquals(tempGame.getGameStatus(), GameStatus.Start);
-        Assert.assertEquals(userRepository.findByUsername(createdUser.getUsername()), createdUser);
-        Assert.assertEquals(userRepository.findByUsername(createdUser2.getUsername()), createdUser2);
+        Assert.assertEquals(userRepository.findByUsername(createdAppUser.getUsername()), createdAppUser);
+        Assert.assertEquals(userRepository.findByUsername(createdAppUser2.getUsername()), createdAppUser2);
         Assert.assertEquals(tempGame.getSize(),2);
 
 
@@ -420,24 +417,24 @@ public class ComplexTest {
 //create 2 Users
 
         //User1
-        User testUser1 = new User();
-        testUser1.setUsername("testUsername1");
-        testUser1.setPassword("test");
-        testUser1.setBirthday("16.03.1994");
+        AppUser testAppUser1 = new AppUser();
+        testAppUser1.setUsername("testUsername1");
+        testAppUser1.setPassword("test");
+        testAppUser1.setBirthday("16.03.1994");
 
-        User createdUser1 = userService.createUser(testUser1);
-        User onlineUser1 = userService.checkUser(createdUser1);
+        AppUser createdAppUser1 = userService.createUser(testAppUser1);
+        AppUser onlineAppUser1 = userService.checkUser(createdAppUser1);
 
 
         //User2
-        User testUser3 = new User();
-        testUser3.setUsername("testUsername3");
-        testUser3.setPassword("test");
-        testUser3.setBirthday("16.03.1994");
+        AppUser testAppUser3 = new AppUser();
+        testAppUser3.setUsername("testUsername3");
+        testAppUser3.setPassword("test");
+        testAppUser3.setBirthday("16.03.1994");
 
-        User createdUser3 = userService.createUser(testUser3);
+        AppUser createdAppUser3 = userService.createUser(testAppUser3);
 
-        User onlineUser3 = userService.checkUser(createdUser3);
+        AppUser onlineAppUser3 = userService.checkUser(createdAppUser3);
 
         //create a Game with User 1
 
@@ -447,13 +444,13 @@ public class ComplexTest {
         testGame1.setGameMode(GameMode.NORMAL);
         testGame1.setIsPlaying(false);
 
-        playerOne.setId(createdUser1.getId());
-        playerOne.setUsername(createdUser1.getUsername());
+        playerOne.setId(createdAppUser1.getId());
+        playerOne.setUsername(createdAppUser1.getUsername());
         Game createdGame1 = gameService.createGame(testGame1);
 
 
         //Join the created game with createdUser2 (Player2)
-        Game tempGame1 = gameService.joinLobby(createdUser3.getId(), createdGame1.getId()).getBody();
+        Game tempGame1 = gameService.joinLobby(createdAppUser3.getId(), createdGame1.getId()).getBody();
 
         Player playerTwo = tempGame1.getPlayer2();
 

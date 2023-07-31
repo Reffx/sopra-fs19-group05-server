@@ -10,7 +10,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 @Entity
-public class User implements Serializable {
+public class AppUser implements Serializable {
 	
 
 	private static final long serialVersionUID = 1L;
@@ -97,11 +97,11 @@ public class User implements Serializable {
 	@Override
 		public boolean equals(Object o) {
 			if (o == this) return true;
-			if (!(o instanceof User)) {
+			if (!(o instanceof AppUser)) {
 				return false;
 			}
-			User user = (User) o;
-			return this.getId().equals(user.getId());
+			AppUser appUser = (AppUser) o;
+			return this.getId().equals(appUser.getId());
 	}
 	@Override
 	public int hashCode() {

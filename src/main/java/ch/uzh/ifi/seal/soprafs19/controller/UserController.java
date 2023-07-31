@@ -1,6 +1,6 @@
 package ch.uzh.ifi.seal.soprafs19.controller;
 
-import ch.uzh.ifi.seal.soprafs19.entity.User;
+import ch.uzh.ifi.seal.soprafs19.entity.AppUser;
 import ch.uzh.ifi.seal.soprafs19.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -23,38 +23,38 @@ public class UserController {
     }
 
     @GetMapping("/users")
-    Iterable<User> all() {
+    Iterable<AppUser> all() {
         return service.getUsers();
     }
 
     @PostMapping("/users")
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    User createUser(@RequestBody User newUser) {
-        return this.service.createUser(newUser);
+    AppUser createUser(@RequestBody AppUser newAppUser) {
+        return this.service.createUser(newAppUser);
     }
 
     @PostMapping("/login")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    User checkUser(@RequestBody User newUser) {
-        return this.service.checkUser(newUser);
+    AppUser checkUser(@RequestBody AppUser newAppUser) {
+        return this.service.checkUser(newAppUser);
     }
 
     @GetMapping("/users/{id}")
-    User getUser(@PathVariable String id) {
+    AppUser getUser(@PathVariable String id) {
         return this.service.getUser(Long.parseLong(id));
     }
 
     @CrossOrigin
     @PutMapping("/users")
-    User logoutUser(@RequestBody User newUser) {
-        return this.service.logoutUser(newUser);
+    AppUser logoutUser(@RequestBody AppUser newAppUser) {
+        return this.service.logoutUser(newAppUser);
     }
 
     @CrossOrigin
     @PutMapping("/users/{id}")
-    User updateUser(@RequestBody User newUser) {
-        return this.service.updateUser(newUser);
+    AppUser updateUser(@RequestBody AppUser newAppUser) {
+        return this.service.updateUser(newAppUser);
     }
 
 }

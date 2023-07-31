@@ -1,6 +1,6 @@
 package ch.uzh.ifi.seal.soprafs19.service;
 
-import ch.uzh.ifi.seal.soprafs19.Application;
+import ch.uzh.ifi.seal.soprafs19.Main;
 import ch.uzh.ifi.seal.soprafs19.entity.Player;
 import ch.uzh.ifi.seal.soprafs19.repository.*;
 import org.junit.Assert;
@@ -21,7 +21,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
  */
 @WebAppConfiguration
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes= Application.class)
+@SpringBootTest(classes= Main.class)
 public class PlayerServiceTest {
 
 

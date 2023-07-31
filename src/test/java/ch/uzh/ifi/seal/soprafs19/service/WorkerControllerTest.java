@@ -1,41 +1,23 @@
 package ch.uzh.ifi.seal.soprafs19.service;
 
-import ch.uzh.ifi.seal.soprafs19.Application;
+import ch.uzh.ifi.seal.soprafs19.Main;
 
 import ch.uzh.ifi.seal.soprafs19.constant.GameMode;
-import ch.uzh.ifi.seal.soprafs19.constant.GameStatus;
+import ch.uzh.ifi.seal.soprafs19.entity.AppUser;
 import ch.uzh.ifi.seal.soprafs19.entity.Board;
 import ch.uzh.ifi.seal.soprafs19.entity.Game;
 import ch.uzh.ifi.seal.soprafs19.entity.Player;
-import ch.uzh.ifi.seal.soprafs19.entity.User;
 import ch.uzh.ifi.seal.soprafs19.repository.*;
-import ch.uzh.ifi.seal.soprafs19.controller.*;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.json.JsonParser;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
-
-import javax.transaction.Transactional;
-import javax.validation.constraints.Null;
-
-
-import java.util.List;
-
-import static org.hamcrest.core.IsEqual.equalTo;
+import org.springframework.transaction.annotation.Transactional;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -47,11 +29,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes= Application.class)
+@SpringBootTest(classes= Main.class)
 @AutoConfigureMockMvc
 @Transactional
-
-
 public class WorkerControllerTest {
 
     @Autowired
@@ -90,24 +70,24 @@ public class WorkerControllerTest {
         //create 2 Users
 
         //User1
-        User testUser1 = new User();
-        testUser1.setUsername("testUsername1");
-        testUser1.setPassword("test");
-        testUser1.setBirthday("16.03.1994");
+        AppUser testAppUser1 = new AppUser();
+        testAppUser1.setUsername("testUsername1");
+        testAppUser1.setPassword("test");
+        testAppUser1.setBirthday("16.03.1994");
 
-        User createdUser1 = userService.createUser(testUser1);
-        User onlineUser1 = userService.checkUser(createdUser1);
+        AppUser createdAppUser1 = userService.createUser(testAppUser1);
+        AppUser onlineAppUser1 = userService.checkUser(createdAppUser1);
 
 
         //User2
-        User testUser3 = new User();
-        testUser3.setUsername("testUsername3");
-        testUser3.setPassword("test");
-        testUser3.setBirthday("16.03.1994");
+        AppUser testAppUser3 = new AppUser();
+        testAppUser3.setUsername("testUsername3");
+        testAppUser3.setPassword("test");
+        testAppUser3.setBirthday("16.03.1994");
 
-        User createdUser3 = userService.createUser(testUser3);
+        AppUser createdAppUser3 = userService.createUser(testAppUser3);
 
-        User onlineUser3 = userService.checkUser(createdUser3);
+        AppUser onlineAppUser3 = userService.checkUser(createdAppUser3);
 
         //create a Game with User 1
 
@@ -117,13 +97,13 @@ public class WorkerControllerTest {
         testGame1.setGameMode(GameMode.NORMAL);
         testGame1.setIsPlaying(false);
 
-        playerOne.setId(createdUser1.getId());
-        playerOne.setUsername(createdUser1.getUsername());
+        playerOne.setId(createdAppUser1.getId());
+        playerOne.setUsername(createdAppUser1.getUsername());
         Game createdGame1 = gameService.createGame(testGame1);
 
 
         //Join the created game with createdUser2 (Player2)
-        Game tempGame1 = gameService.joinLobby(createdUser3.getId(), createdGame1.getId()).getBody();
+        Game tempGame1 = gameService.joinLobby(createdAppUser3.getId(), createdGame1.getId()).getBody();
 
         Player playerTwo = tempGame1.getPlayer2();
 

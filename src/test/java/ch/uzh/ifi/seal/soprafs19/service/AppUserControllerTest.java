@@ -1,9 +1,10 @@
 package ch.uzh.ifi.seal.soprafs19.service;
 
-import ch.uzh.ifi.seal.soprafs19.Application;
-import ch.uzh.ifi.seal.soprafs19.entity.User;
+import ch.uzh.ifi.seal.soprafs19.Main;
+import ch.uzh.ifi.seal.soprafs19.entity.AppUser;
 import ch.uzh.ifi.seal.soprafs19.repository.UserRepository;
 import org.junit.Test;
+import org.springframework.transaction.annotation.Transactional;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -13,7 +14,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-import javax.transaction.Transactional;
 
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.hamcrest.core.IsNull.notNullValue;
@@ -24,10 +24,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes= Application.class)
+@SpringBootTest(classes= Main.class)
 @AutoConfigureMockMvc
 @Transactional
-public class UserControllerTest {
+public class AppUserControllerTest {
 
     @Autowired
     private MockMvc mvc;
@@ -96,9 +96,9 @@ public class UserControllerTest {
 //Checks if a User with the same username can be created
     public void UserAlreadyExistsCheck() throws Exception {
 
-        User testUser = new User();
-        testUser.setUsername("testUser");
-        testUser.setPassword("testPassword");
+        AppUser testAppUser = new AppUser();
+        testAppUser.setUsername("testUser");
+        testAppUser.setPassword("testPassword");
 
 
 
