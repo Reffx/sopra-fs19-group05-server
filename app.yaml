@@ -1,0 +1,5 @@
+runtime: java11  # Replace with your desired Java version (e.g., java8, java11, etc.)
+service: api
+#entrypoint: java -jar gs-spring-boot-0.1.0.jar  # Replace "your-spring-app.jar" with your actual JAR file name.
+runtime_config:
+  jdk: openjdk11  # Replace with your desired Java version (e.g., openjdk8, openjdk11, etc.)
