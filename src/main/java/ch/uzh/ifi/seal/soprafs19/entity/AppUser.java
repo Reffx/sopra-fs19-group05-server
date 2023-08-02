@@ -34,8 +34,6 @@ public class AppUser implements Serializable {
 	@Column(nullable = false)
 	private String creationDate;
 
-	private String birthday;
-
 	public Long getId() {
 		return id;
 	}
@@ -84,14 +82,6 @@ public class AppUser implements Serializable {
 
 	public void setStatus(UserStatus status) {
 		this.status = status;
-	}
-
-	public void setBirthday(String birthday) {
-		this.birthday = birthday;
-	}
-
-	public String getBirthday() {
-		return this.birthday;
 	}
 
 	@Override

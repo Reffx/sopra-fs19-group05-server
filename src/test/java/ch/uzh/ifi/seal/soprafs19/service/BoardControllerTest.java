@@ -62,7 +62,6 @@ public class BoardControllerTest {
         AppUser testAppUser1 = new AppUser();
         testAppUser1.setUsername("testUsername1");
         testAppUser1.setPassword("test");
-        testAppUser1.setBirthday("16.03.1994");
 
         AppUser createdAppUser1 = userService.createUser(testAppUser1);
         AppUser onlineAppUser1 = userService.checkUser(createdAppUser1);
@@ -72,7 +71,6 @@ public class BoardControllerTest {
         AppUser testAppUser3 = new AppUser();
         testAppUser3.setUsername("testUsername3");
         testAppUser3.setPassword("test");
-        testAppUser3.setBirthday("16.03.1994");
 
         AppUser createdAppUser3 = userService.createUser(testAppUser3);
 
@@ -112,7 +110,6 @@ public class BoardControllerTest {
         AppUser testAppUser1 = new AppUser();
         testAppUser1.setUsername("testUsername1");
         testAppUser1.setPassword("test");
-        testAppUser1.setBirthday("16.03.1994");
 
         AppUser createdAppUser1 = userService.createUser(testAppUser1);
         AppUser onlineAppUser1 = userService.checkUser(createdAppUser1);
@@ -122,7 +119,6 @@ public class BoardControllerTest {
         AppUser testAppUser3 = new AppUser();
         testAppUser3.setUsername("testUsername3");
         testAppUser3.setPassword("test");
-        testAppUser3.setBirthday("16.03.1994");
 
         AppUser createdAppUser3 = userService.createUser(testAppUser3);
 

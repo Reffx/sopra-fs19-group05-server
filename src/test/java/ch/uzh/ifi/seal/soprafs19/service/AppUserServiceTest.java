@@ -41,7 +41,6 @@ public class AppUserServiceTest {
         AppUser testAppUser = new AppUser();
         testAppUser.setUsername("testUsername");
         testAppUser.setPassword("test");
-        testAppUser.setBirthday("16.03.1994");
 
         AppUser createdAppUser = userService.createUser(testAppUser);
 
@@ -57,13 +56,11 @@ public class AppUserServiceTest {
         AppUser testAppUser = new AppUser();
         testAppUser.setUsername("testUsername");
         testAppUser.setPassword("test");
-        testAppUser.setBirthday("16.03.1994");
         AppUser createdAppUser = userService.createUser(testAppUser);
 
         AppUser testAppUser2 = new AppUser();
         testAppUser2.setUsername("testUsername");
         testAppUser2.setPassword("test2");
-        testAppUser2.setBirthday("16.03.1995");
         AppUser createdAppUser2 = userService.createUser(testAppUser2);
         userRepository.deleteAll();
     }
@@ -75,7 +72,6 @@ public class AppUserServiceTest {
         AppUser testAppUser = new AppUser();
         testAppUser.setUsername("testUsername");
         testAppUser.setPassword("test");
-        testAppUser.setBirthday("16.03.1994");
 
         AppUser createdAppUser = userService.createUser(testAppUser);
         Assert.assertEquals(createdAppUser.getStatus(),UserStatus.OFFLINE);
@@ -95,7 +91,6 @@ public class AppUserServiceTest {
          AppUser testAppUser = new AppUser();
          testAppUser.setUsername("testUsername");
          testAppUser.setPassword("test");
-         testAppUser.setBirthday("16.03.1994");
          AppUser createdAppUser = userService.createUser(testAppUser);
          AppUser onlineAppUser1 = userService.checkUser(createdAppUser);
          AppUser offlineAppUser1 = userService.logoutUser(onlineAppUser1);
@@ -103,7 +98,6 @@ public class AppUserServiceTest {
          AppUser testAppUser2 = new AppUser();
          testAppUser2.setUsername("testUsername2");
          testAppUser2.setPassword("test2");
-         testAppUser2.setBirthday("16.03.1995");
          AppUser createdAppUser2 = userService.createUser(testAppUser2);
          AppUser onlineAppUser2 = userService.checkUser(createdAppUser2);
          AppUser offlineAppUser2 = userService.logoutUser(onlineAppUser2);
@@ -120,14 +114,12 @@ public class AppUserServiceTest {
          AppUser testAppUser = new AppUser();
          testAppUser.setUsername("testUsername");
          testAppUser.setPassword("test");
-         testAppUser.setBirthday("16.03.1994");
 
          AppUser createdAppUser = userService.createUser(testAppUser);
 
          AppUser testAppUser2 = new AppUser();
          testAppUser2.setUsername("testUsername2");
          testAppUser2.setPassword("test2");
-         testAppUser2.setBirthday("16.03.1995");
          AppUser createdAppUser2 = userService.createUser(testAppUser2);
 
          Assert.assertNotNull(createdAppUser.getToken());
@@ -150,7 +142,6 @@ public class AppUserServiceTest {
          AppUser testAppUser = new AppUser();
          testAppUser.setUsername("testUsername");
          testAppUser.setPassword("test");
-         testAppUser.setBirthday("16.03.1994");
 
          AppUser createdAppUser = userService.createUser(testAppUser);
 
@@ -171,7 +162,6 @@ public class AppUserServiceTest {
          AppUser testAppUser = new AppUser();
          testAppUser.setUsername("testUsername");
          testAppUser.setPassword("test");
-         testAppUser.setBirthday("16.03.1994");
 
          AppUser createdAppUser = userService.createUser(testAppUser);
 
@@ -194,7 +184,6 @@ public class AppUserServiceTest {
          AppUser testAppUser = new AppUser();
          testAppUser.setUsername("testUsername");
          testAppUser.setPassword("test");
-         testAppUser.setBirthday("16.03.1994");
 
          AppUser createdAppUser = userService.createUser(testAppUser);
          Assert.assertNotNull(createdAppUser.getToken());
@@ -202,7 +191,6 @@ public class AppUserServiceTest {
          Assert.assertEquals(createdAppUser, userRepository.findByToken(createdAppUser.getToken()));
 
          createdAppUser.setUsername("newUsername");
-         createdAppUser.setBirthday("24.12.1998");
          AppUser updatedAppUser = userService.updateUser(createdAppUser);
          Assert.assertNotNull(updatedAppUser.getToken());
          Assert.assertEquals(updatedAppUser.getStatus(),UserStatus.OFFLINE);
@@ -220,7 +208,6 @@ public class AppUserServiceTest {
         AppUser testAppUser = new AppUser();
         testAppUser.setUsername("testUsername");
         testAppUser.setPassword("test");
-        testAppUser.setBirthday("16.03.1994");
 
         AppUser createdAppUser = userService.createUser(testAppUser);
         Assert.assertNotNull(createdAppUser.getToken());
@@ -230,14 +217,12 @@ public class AppUserServiceTest {
         AppUser testAppUser2 = new AppUser();
         testAppUser2.setUsername("testUsername2");
         testAppUser2.setPassword("test2");
-        testAppUser2.setBirthday("16.03.1995");
         AppUser createdAppUser2 = userService.createUser(testAppUser2);
         Assert.assertNotNull(createdAppUser2.getToken());
         Assert.assertEquals(createdAppUser2.getStatus(), UserStatus.OFFLINE);
         Assert.assertEquals(createdAppUser2, userRepository.findByToken(createdAppUser2.getToken()));
         //seeting username to testUsername2 which is already used by testUser2 --> updating user will lead to error
         createdAppUser.setUsername("testUsername2");
-        createdAppUser.setBirthday("24.12.1998");
 
         AppUser updatedAppUser = userService.updateUser(createdAppUser);
 

@@ -43,7 +43,6 @@ public class UserService {
         newAppUser.setToken(UUID.randomUUID().toString());
         newAppUser.setStatus(UserStatus.OFFLINE);
         newAppUser.setCreationDate((LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy"))));
-        //newUser.setBirthday(newUser.getBirthday());
         userRepository.save(newAppUser);
         log.debug("Created Information for User: {}", newAppUser);
         return newAppUser;
@@ -81,14 +80,13 @@ public class UserService {
         }
     }
 
-    //update Username and/or Birthday
+    //update Username
     public AppUser updateUser(AppUser newAppUser) {
         AppUser tempAppUser = userRepository.findByToken(newAppUser.getToken());
         if(userRepository.findByUsername(newAppUser.getUsername()) != null && userRepository.findByUsername(newAppUser.getUsername())!= tempAppUser) {
             throw new DuplicateException("User with that Username already exists, cannot change to it.");
         }
         else {
-            tempAppUser.setBirthday(newAppUser.getBirthday());
             tempAppUser.setUsername(newAppUser.getUsername());
             userRepository.save(tempAppUser);
             return newAppUser;

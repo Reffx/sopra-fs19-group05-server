@@ -296,7 +296,6 @@ public class GameServiceTest {
         AppUser testAppUser1 = new AppUser();
         testAppUser1.setUsername("testUsername22");
         testAppUser1.setPassword("test");
-        testAppUser1.setBirthday("16.03.1994");
         AppUser createdAppUser = userService.createUser(testAppUser1);
 
         System.out.println(createdAppUser.getId());
@@ -341,13 +340,11 @@ public class GameServiceTest {
         AppUser testAppUser1 = new AppUser();
         testAppUser1.setUsername("testUsername22");
         testAppUser1.setPassword("test");
-        testAppUser1.setBirthday("16.03.1994");
         AppUser createdAppUser = userService.createUser(testAppUser1);
 
         AppUser testAppUser2 = new AppUser();
         testAppUser2.setUsername("testUsername23");
         testAppUser2.setPassword("test");
-        testAppUser2.setBirthday("16.03.1997");
         AppUser createdAppUser2 = userService.createUser(testAppUser2);
 
         gameService.joinLobby(userService.getUser(createdAppUser.getId()).getId(), createdGame.getId());

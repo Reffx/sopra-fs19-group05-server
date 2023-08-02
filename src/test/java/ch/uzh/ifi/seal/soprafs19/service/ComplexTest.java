@@ -179,7 +179,6 @@ public class ComplexTest {
         AppUser testAppUser = new AppUser();
         testAppUser.setUsername("testUsername");
         testAppUser.setPassword("test");
-        testAppUser.setBirthday("16.03.1994");
 
         AppUser createdAppUser = userService.createUser(testAppUser);
         Assert.assertEquals(createdAppUser.getStatus(), UserStatus.OFFLINE);
@@ -194,7 +193,6 @@ public class ComplexTest {
         AppUser testAppUser2 = new AppUser();
         testAppUser2.setUsername("testUsername2");
         testAppUser2.setPassword("test");
-        testAppUser2.setBirthday("16.03.1994");
 
         AppUser createdAppUser2 = userService.createUser(testAppUser2);
         Assert.assertEquals(createdAppUser2.getStatus(), UserStatus.OFFLINE);
@@ -420,7 +418,6 @@ public class ComplexTest {
         AppUser testAppUser1 = new AppUser();
         testAppUser1.setUsername("testUsername1");
         testAppUser1.setPassword("test");
-        testAppUser1.setBirthday("16.03.1994");
 
         AppUser createdAppUser1 = userService.createUser(testAppUser1);
         AppUser onlineAppUser1 = userService.checkUser(createdAppUser1);
@@ -430,7 +427,6 @@ public class ComplexTest {
         AppUser testAppUser3 = new AppUser();
         testAppUser3.setUsername("testUsername3");
         testAppUser3.setPassword("test");
-        testAppUser3.setBirthday("16.03.1994");
 
         AppUser createdAppUser3 = userService.createUser(testAppUser3);
 
