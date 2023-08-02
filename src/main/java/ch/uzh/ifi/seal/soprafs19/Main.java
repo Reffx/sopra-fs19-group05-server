@@ -19,7 +19,10 @@ public class Main {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**").allowedMethods("*").allowedOrigins("*");
+                registry.addMapping("/**")
+                        .allowedMethods("*")
+                        .allowedOrigins("https://rhodes-app.oa.r.appspot.com", "http://localhost:3000")
+                        .allowCredentials(true);
             }
 
         };

@@ -13,6 +13,7 @@ import ch.uzh.ifi.seal.soprafs19.repository.BoardRepository;
 import ch.uzh.ifi.seal.soprafs19.repository.GameRepository;
 import ch.uzh.ifi.seal.soprafs19.repository.PlayerRepository;
 import ch.uzh.ifi.seal.soprafs19.repository.WorkerNormalRepository;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -58,8 +59,8 @@ public class GameService {
 
     //  find a game by id
     public ResponseEntity<Game> getGame(long gameId) {
-        if(gameRepository.getById(gameId) != null) {
-            return new ResponseEntity<Game>(gameRepository.getById(gameId), HttpStatus.FOUND);
+        if(gameRepository.findById(gameId).isPresent()) {
+            return new ResponseEntity<Game>(gameRepository.findById(gameId).get(), HttpStatus.FOUND);
         }
         else{
             throw new NonExistentGameException("Game was not found!");
@@ -111,7 +112,7 @@ public class GameService {
 
     //  update a game, add player1 or player2
     public ResponseEntity<Game> joinLobby(Long userId, Long gameId) {
-        Game game = gameRepository.getById(gameId);
+        Game game = gameRepository.findById(gameId).get();
         if(game.getSize()==2){
             throw new FullLobbyException("Not allowed to join full lobby!");
         }

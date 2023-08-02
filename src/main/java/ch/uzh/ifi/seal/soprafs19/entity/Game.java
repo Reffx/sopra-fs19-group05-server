@@ -16,11 +16,11 @@ public class Game implements Serializable {
     private Long id;
 
     //  unique by onetoone
-    @OneToOne(cascade = CascadeType.MERGE)        //  to map the player database to the player database
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)        //  to map the player database to the player database
     private Player player1;                    // playerId = userId
 
     //  unique by onetoone
-    @OneToOne(cascade = CascadeType.MERGE)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     private Player player2;
 
     @Column(nullable = false)
